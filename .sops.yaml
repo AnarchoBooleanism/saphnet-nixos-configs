@@ -1,0 +1,9 @@
+keys:
+  - &admin age1jwutzxs8m2cuy32vra98zt4nw0k5pnukfa3kv32ayr6hv2zfp9ascezy3c
+  - &control_server age1uyx8fnzkfk28u04nlukl8fs48h5m783w6fumd5r29h23eks3danqj7eteh
+creation_rules:
+  - path_regex: instances/control-server/secrets.yaml # Control server
+    key_groups:
+    - age:
+      - *admin
+      - *control_server

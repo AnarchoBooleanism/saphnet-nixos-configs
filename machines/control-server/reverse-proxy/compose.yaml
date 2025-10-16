@@ -1,0 +1,47 @@
+# Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
+services:
+  nginx:
+    image: nginx:${COMPOSE_NGINX_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # Main conf file
+      - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
+      - ${NGINX_PROXIES_FILE}:/etc/nginx/proxies.conf:ro
+      # conf.d files
+      - ${NGINX_CONFD_BLOCK_EXPLOITS_FILE}:/etc/nginx/conf.d/block-exploits.conf:ro
+      - ${NGINX_CONFD_PROXY_FILE}:/etc/nginx/conf.d/proxy.conf:ro
+      - ${NGINX_CONFD_SSL_FILE}:/etc/nginx/conf.d/ssl.conf:ro
+      - ${NGINX_CONFD_IP_RANGES_FILE}:/etc/nginx/conf.d/ip-ranges.conf:ro
+      # Certificate files
+      - certbot-conf:/etc/letsencrypt:ro
+      # Script to autoreload Nginx when certs are renewed
+      - ${NGINX_AUTORELOAD_FILE}:/docker-entrypoint.d/99-autoreload.sh:ro
+    environment:
+      - NGINX_MAIN_DOMAIN=${NGINX_MAIN_DOMAIN}
+      - TZ=${TZ}
+    networks: # For connecting with other services directly
+      - central-network
+  certbot:
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:${COMPOSE_CERTBOT_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    volumes:
+      - certbot-conf:/etc/lets_encrypt
+      - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
+    environment:
+      - TZ=${TZ}
+    entrypoint: |
+      # Renew certificates every 12 hours
+      /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
+
+volumes:
+  certbot-conf:
+    name: certbot-conf
+    external: true
+
+networks:
+  central-network:
+    name: central-network
+    external: true

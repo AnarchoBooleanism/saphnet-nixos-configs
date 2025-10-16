@@ -1,0 +1,14 @@
+# default-constants.toml
+# A list of defaults to use for any homelab-related machine
+
+default-username = "saphnet-user"
+timezone = "America/Los_Angeles"
+
+[networking]
+gateway = "192.168.8.1"
+nameservers = ["8.8.8.8", "8.8.4.4", "1.1.1.1"]
+
+[email]
+address = "homelab@saphnet.xyz"
+host = "mail.privateemail.com"
+port = "465"

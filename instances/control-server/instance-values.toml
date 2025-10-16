@@ -1,0 +1,17 @@
+# instance-values.toml
+# A list of values to use to instantiate the main Komodo/Ansible control server
+
+hostname = "control-server"
+domain = "int.saphnet.xyz"
+authorized-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHr+c+avIdfIU4xGN6zPh1Yjmse6L4e8f98j4JWX4lmi hihacks@valk-pc", # Directly via personal computers
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILC3RtnBmFqCn1qZuMXbQDVQqW2qJh0Z/Mspxc2Accrd hihacks@crummytop"
+]
+
+[networking]
+ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
+ip-prefix-length = 24 # 192.168.8.0/24
+interface = "ens18"
+
+[ansible-control]
+web-root = "https://semaphore.int.saphnet.xyz"

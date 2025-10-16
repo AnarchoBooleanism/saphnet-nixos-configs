@@ -1,0 +1,50 @@
+services:
+  mysql:
+    restart: unless-stopped
+    image: mysql:${COMPOSE_MYSQL_IMAGE_TAG:-latest}
+    hostname: mysql
+    volumes:
+      - semaphore-mysql:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: ${SEMAPHORE_DB_PASS}
+  semaphore:
+    container_name: semaphore
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    image: semaphoreui/semaphore:${COMPOSE_SEMAPHORE_IMAGE_TAG:-latest}
+    environment:
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: ${SEMAPHORE_DB_PASS}
+      SEMAPHORE_DB_HOST: mysql
+      SEMAPHORE_DB_PORT: 3306
+      SEMAPHORE_DB_DIALECT: mysql
+      SEMAPHORE_DB: semaphore
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_EMAIL: homelab@saphnet.xyz
+      SEMAPHORE_ADMIN: admin
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${SEMAPHORE_ACCESS_KEY_ENCRYPTION}
+      TZ: $(timedatectl show --va -p Timezone)
+      SEMAPHORE_EMAIL_ALERT: "True"
+      SEMAPHORE_EMAIL_SENDER: ${SEMAPHORE_EMAIL_SENDER}
+      SEMAPHORE_EMAIL_HOST: ${SEMAPHORE_EMAIL_HOST}
+      SEMAPHORE_EMAIL_PORT: ${SEMAPHORE_EMAIL_PORT}
+      SEMAPHORE_EMAIL_USERNAME: ${SEMAPHORE_EMAIL_USERNAME}
+      SEMAPHORE_EMAIL_PASSWORD: ${SEMAPHORE_EMAIL_PASSWORD}
+      SEMAPHORE_EMAIL_SECURE: "True"
+      SEMAPHORE_EMAIL_TLS: "True"
+      SEMAPHORE_TOTP_ENABLED: "True"
+      SEMAPHORE_TOTP_ALLOW_RECOVERY: "True"
+      SEMAPHORE_WEB_ROOT: ${SEMAPHORE_WEB_ROOT}
+    depends_on:
+      - mysql
+
+volumes:
+  semaphore-mysql:
+
+# https://semaphoreui.com/install/docker/2_16

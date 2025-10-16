@@ -1,9 +1,19 @@
-# Example to create a bios compatible gpt partition
-{ lib, ... }:
+# Configuration with a boot, ESP, swap, and a root partition, BIOS-compatible (good for default Proxmox VM)
 {
+  device ? throw "Set this to your disk device, e.g. /dev/sda",
+  ...
+}:
+{ 
+  inputs,
+  ...
+} @ args: {
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
+  
   disko.devices = {
-    disk.disk1 = {
-      device = lib.mkDefault "/dev/sda";
+    disk.main = {
+      inherit device;
       type = "disk";
       content = {
         type = "gpt";
@@ -23,30 +33,21 @@
               mountpoint = "/boot";
             };
           };
+          swap = {
+            name = "swap";
+            size = "4G";
+            content = {
+              type = "swap";
+              discardPolicy = "both"; # My proxmox nodes generally use SSDs, so yes here
+            };
+          };
           root = {
             name = "root";
             size = "100%";
             content = {
-              type = "lvm_pv";
-              vg = "pool";
-            };
-          };
-        };
-      };
-    };
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
               type = "filesystem";
               format = "ext4";
               mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
             };
           };
         };

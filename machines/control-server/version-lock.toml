@@ -1,0 +1,16 @@
+# version-lock.toml
+# Used to lock various versions, like Docker images in Compose files to specific tagged versions
+
+state-version = "25.05" # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+
+[komodo-control]
+mongo-version = "8.0.15"
+komodo-version = "1.19.5" # Core and periphery are same
+
+[ansible-control]
+mysql-version = "8.0" # Intentionally locked here
+semaphore-version = "v2.16.34"
+
+[reverse-proxy]
+nginx-version = "1.29.2"
+certbot-version = "v1.0.0-certbotv5.1.0-3" # For my custom certbot image for Namecheap, https://github.com/AnarchoBooleanism/certbot-dns-namecheap

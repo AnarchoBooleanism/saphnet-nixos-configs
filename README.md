@@ -9,9 +9,17 @@ The configuration files are inspired by Misterio77's [nix-starter-configs](https
 
 Here are some useful commands to use when writing and deploying to machines:
 
+- For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./machines/SERVER-NAME/secrets.yaml`
+    - NOTE: Make sure your age private key is in `~/.config/sops/age/key.txt`!
 - For doing fresh installs: `nix run github:nix-community/nixos-anywhere -- --flake .#generic --generate-hardware-config nixos-generate-config ./hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME>`
 
 ### Notes
 - Make sure that tabs are 2 spaces!
+- Make sure any .sh files are marked executable
 
-TODO: Learn more Nix first and really understand it
+Useful links:
+- https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/
+
+TODO: Have instructions on how to create your own machine config, and have it instantiatable
+TODO: Have instructions on how to instantiate a specific machine config
+TODO: Have instructions on how to actually deploy a machine, from creating SSH keys and other things, to creating secrets, and finally doing stuff
