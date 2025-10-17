@@ -2,7 +2,7 @@
 # A list of values to use to instantiate the main Komodo/Ansible control server
 
 hostname = "control-server"
-domain = "int.saphnet.xyz"
+domain = "int-net.saphnet.xyz"
 authorized-keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHr+c+avIdfIU4xGN6zPh1Yjmse6L4e8f98j4JWX4lmi hihacks@valk-pc", # Directly via personal computers
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILC3RtnBmFqCn1qZuMXbQDVQqW2qJh0Z/Mspxc2Accrd hihacks@crummytop"
