@@ -30,5 +30,5 @@ jobs:
         run: nix run nixpkgs#statix -- check
         continue-on-error: true
       - name: Check formatting in .nix files
-        run: git ls-files '*.nix' | xargs nix run nixpkgs#nixpkgs-fmt -- --check
+        run: git ls-files '*.nix' | xargs nix run nixpkgs#nixfmt -- --check
         continue-on-error: true
