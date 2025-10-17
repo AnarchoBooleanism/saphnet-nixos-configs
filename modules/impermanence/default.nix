@@ -5,7 +5,7 @@
   inputs,
   lib,
   ...
-} @ args: {
+}: {
   imports = [
     inputs.impermanence.nixosModules.impermanence
   ];

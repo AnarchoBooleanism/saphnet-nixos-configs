@@ -10,7 +10,7 @@
   inputs,
   secretsFile,
   ...
-} @ args:
+}:
 {
   imports = [
     inputs.sops-nix.nixosModules.sops

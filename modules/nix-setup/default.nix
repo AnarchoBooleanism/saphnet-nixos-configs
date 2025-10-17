@@ -3,7 +3,7 @@
   inputs,
   lib,
   ...
-} @ args: {
+}: {
   nixpkgs.config.allowUnfree = true;
 
   nix = let

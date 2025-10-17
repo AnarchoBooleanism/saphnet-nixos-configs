@@ -17,13 +17,12 @@
 }:
 {
   inputs,
-  outputs,
   config,
   modulesPath,
   lib,
   pkgs,
   ...
-} @ args:
+}:
 let
   versionLock = lib.importTOML ./version-lock.toml;
   revProxyDomains = [ # Note: Order matters here! The first domain is used for the name of the SSL certificate.

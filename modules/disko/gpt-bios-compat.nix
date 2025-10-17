@@ -6,7 +6,7 @@
 { 
   inputs,
   ...
-} @ args: {
+}: {
   imports = [
     inputs.disko.nixosModules.disko
   ];

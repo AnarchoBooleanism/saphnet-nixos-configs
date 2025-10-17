@@ -5,7 +5,7 @@
   config,
   pkgs,
   ...
-} @ args:
+}:
 let
   tailscalePort = 41641; # Set Tailscale port here, default is 41641
 in

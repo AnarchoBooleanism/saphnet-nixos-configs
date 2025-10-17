@@ -2,7 +2,7 @@
 {
   pkgs,
   ...
-} @ args:
+}:
 {
   environment.systemPackages = with pkgs; [
     docker

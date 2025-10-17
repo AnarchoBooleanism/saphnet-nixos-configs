@@ -2,7 +2,7 @@
 {
   pkgs,
   ...
-} @ args:
+}:
 {
   environment.systemPackages = with pkgs; [
     # Various tools for system management
