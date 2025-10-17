@@ -1,9 +1,7 @@
 # saphnet-nixos-configs
 A set of NixOS configuration files for various machines/VMs within the Sapphic Homelab/Home Server (organized by branch)
 
-Hello! You are currently reading the README for the main branch. This branch contains sample files that you can customize for different configurations.
-For the configurations of specific machines, make sure to checkout the branch corresponding to them.
-These are the configuration files for the Sapphic Homelab/Home Server, with different sections for instances (the values for actual machines), machines (blueprints for actual machines, to be instantiated), and the different modules that the machines use. These are designed to be deployed to virtual (and bare-metal) machines using `nixos-anywhere` and `nixos-rebuild`, indirectly through Ansible ([see my Ansible playbook](https://github.com/AnarchoBooleanism/saphnet-ansible-playbook)).
+Hello! These are the various configuration files for the NixOS machines within the Sapphic Homelab/Home Server, with different sections for instances (the values for actual machines), machines (blueprints for actual machines, to be instantiated), and the different modules that the machines use. These are designed to be deployed to virtual (and bare-metal) machines using `nixos-anywhere` and `nixos-rebuild`, indirectly through Ansible ([see my Ansible playbook](https://github.com/AnarchoBooleanism/saphnet-ansible-playbook)).
 
 It is recommended that you use [nixos-cloud-init-installer](https://github.com/AnarchoBooleanism/nixos-cloud-init-installer), in combination with a cloud-init drive, as a driver to deploy these configuration files with `nixos-anywhere`.
 
