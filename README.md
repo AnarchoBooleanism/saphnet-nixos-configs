@@ -7,6 +7,16 @@ It is recommended that you use [nixos-cloud-init-installer](https://github.com/A
 
 The configuration files are inspired by god464's [flake](https://github.com/god464/flake), Swarsel's [.dotfiles](https://github.com/Swarsel/.dotfiles/), Misterio77's [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs), and nix-community's [nixos-anywhere-examples](https://github.com/nix-community/nixos-anywhere-examples), among many, many other NixOS configuration repositories.
 
+### Index of contents (of the documentation):
+- [Explanation of the repository](docs/explanation.md)
+- [Guide for creating a Module](docs/module-howto.md)
+- [Guide for creating a Machine](docs/machine-howto.md)
+- [Guide for creating an Instance](docs/instance-howto.md)
+- [Guide for deploying an Instance](docs/deployment-howto.md)
+- [Style guide for writing and structuring configuration files](docs/style-guide.md)
+- Machine-specific write-ups
+  - [control-server (first and most important machine to deploy!)](machines/control-server/README.md)
+
 Here are some useful commands to use when writing and deploying to machines:
 
 - For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./machines/SERVER-NAME/secrets.yaml`

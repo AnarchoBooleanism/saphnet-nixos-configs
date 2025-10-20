@@ -1,9 +1,9 @@
 # Machine: `control-server`
-This machine is made for use as a control server for both Komodo and Ansible (as a Proxmox VM within the Sapphic Homelab).
+This Machine is made for use as a control server for both Komodo and Ansible (as a Proxmox VM within the Sapphic Homelab).
 
-As part of the deployment bootstrapping process, after Proxmox is deployed to the bare-metal hosts, `control-server` is the machine first deployed to the Sapphic Homelab, directly from another personal computer through nixos-anywhere (and indirectly through Ansible), before other machines can be deployed with Ansible and/or nixos-anywhere.
+As part of the deployment bootstrapping process, after Proxmox is deployed to the bare-metal hosts, `control-server` is the Machine first deployed to the Sapphic Homelab, directly from another personal computer through nixos-anywhere (and indirectly through Ansible), before other machines can be deployed with Ansible and/or nixos-anywhere.
 
-Because `control-server` is the most important out of all the machines in this configuration, this document is a complete guide on how to set it up and maintain it, from creating secrets and instance values, to using nixos-anywhere and updating it.
+Because `control-server` is the most important out of all the Machines in this configuration, this document is a complete guide on how to set it up and maintain it, from creating secrets and Instance values, to using nixos-anywhere and updating it.
 
 ## Quick explanation
 `control-server` has a few central services (via systemd and Docker Compose) that it serves: a Komodo control server, an Ansible control server (through Semaphore UI), and a reverse proxy, using Nginx. Many of the Docker containers listed communicate with each other through a Docker network, named `central-network`. This server should also be accessible over Tailscale.
@@ -18,15 +18,15 @@ This is a service that starts the Docker Compose configuration for the Komodo co
 This is a service that starts the Docker Compose configuration for the Ansible control server, i.e. Semaphore UI, which manages the deployment of all machines in the Sapphic Homelab network, particularly for those not running NixOS. It has to wait for `central-network` to be created before starting. As well, various secrets are passed in from sops-nix secrets files, into environmental variables, which then get passed into the relevant containers. Ansible stores its data in Docker volumes, and particularly in the form of SQL databases; these can easily be backed up using [docker-volume-rclone](https://github.com/AnarchoBooleanism/docker-volume-rclone).
 
 ### systemd.services."reverse-proxy-bootstrap"
-This is a service that uses Certbot (more specifically, an image of Certbot that has a plugin for DNS challenges with Namecheap), to create SSL certificates for `reverse-proxy` (as well as the Docker volume that stores these certificates, `certbot-conf`). `reverse-proxy` has a hard dependency on this service, as Nginx will not work without having SSL certificates configured first. It does rely on sops-nix secrets and other instance values to do its jobs correctl. This is supposed to be a one-time process, done at first boot; this is achieved by checking for the existence of a certain file that will only exist if this service has fully completed running previously, in which case, the service completes early, allowing for `reverse-proxy` to start.
+This is a service that uses Certbot (more specifically, an image of Certbot that has a plugin for DNS challenges with Namecheap), to create SSL certificates for `reverse-proxy` (as well as the Docker volume that stores these certificates, `certbot-conf`). `reverse-proxy` has a hard dependency on this service, as Nginx will not work without having SSL certificates configured first. It does rely on sops-nix secrets and other Instance values to do its jobs correctly. This is supposed to be a one-time process, done at first boot; this is achieved by checking for the existence of a certain file that will only exist if this service has fully completed running previously, in which case, the service completes early, allowing for `reverse-proxy` to start.
 
 ### systemd.services."reverse-proxy"
-This is a service that starts the Docker Compose configuration for reverse proxy for the other services listed above; the configuration uses Nginx, as well as Certbot, for automating certificate renewals. Its main goal is to enable connections to the listed services securely through HTTPS, as well as through a convenient domain name. It has to wait for `reverse-proxy-bootstrap` to complete first before it can start. As well, it has to wait for `central-network` to be created before starting, as this network is used to directly connect to other containers. In this configuration, Nginx relies on multiple .conf files, with different purposes, that are directly passed in through environment variables, and mounted according to those environment variables. Again, this does rely on sops-nix secrets and various other instance values to do its job correctly. This service also uses the `certbot-conf` volume for accessing and renewing SSL certificates, which should have been created first by `reverse-proxy-bootstrap`.
+This is a service that starts the Docker Compose configuration for reverse proxy for the other services listed above; the configuration uses Nginx, as well as Certbot, for automating certificate renewals. Its main goal is to enable connections to the listed services securely through HTTPS, as well as through a convenient domain name. It has to wait for `reverse-proxy-bootstrap` to complete first before it can start. As well, it has to wait for `central-network` to be created before starting, as this network is used to directly connect to other containers. In this configuration, Nginx relies on multiple .conf files, with different purposes, that are directly passed in through environment variables, and mounted according to those environment variables. Again, this does rely on sops-nix secrets and various other Instance values to do its job correctly. This service also uses the `certbot-conf` volume for accessing and renewing SSL certificates, which should have been created first by `reverse-proxy-bootstrap`.
 
 ## Steps to instantiate `control-server`
 These instructions are oriented for non-NixOS systems that have Nix installed, with flakes and nix-commands enabled.
 
-You will want to put any files with instance-related values in a directory within `<REPO>/instances/`. For example, in this guide, we use `<REPO>/instances/control-server`.
+You will want to put any files with Instance-related values in a directory within `<REPO>/instances/`. For example, in this guide, we use `<REPO>/instances/control-server`.
 
 ### 0. Create (or delegate) an SSH key for communication with `control-server`
 Make sure to create an SSH key (or repurpose one that you already have). This will be the one that you feed to [the NixOS installer](https://github.com/AnarchoBooleanism/nixos-cloud-init-installer) via cloud-init, allowing for secure access; likewise, the SSH key will be passed to `nixos-anywhere` during the installation process. This will also be the key that you use to access `control-server`, once it is installed. (You are welcome to use passphrases here)
@@ -76,7 +76,7 @@ keys: # Note: The names can be anything, they just need to match to what is in t
   - &control_server agePUBLICKEYFORCONTROLSERVER
 ```
 
-Furthermore, in `.sops.yaml`, add this information in `creation_rules` as a new entry (the contents of `path_regex` are just the path to the `secrets.yaml` in your soon-to-be instance directory, feel free to change it):
+Furthermore, in `.sops.yaml`, add this information in `creation_rules` as a new entry (the contents of `path_regex` are just the path to the `secrets.yaml` in your soon-to-be Instance directory, feel free to change it):
 ```yaml
 creation_rules:
   - path_regex: instances/control-server/secrets.yaml # Control server
@@ -100,12 +100,14 @@ creation_rules:
       - *control_server
 ```
 
+NOTE: The `&` before each name in `keys`, and the `*` before each name in `age` in `key_groups` in `creation_rules` are VERY important to keep!
+
 ### 3. Create `secrets.yaml` (the secrets file)
 With `.sops.yaml` ready in the root directory of the repository, you are now able to create the list of secrets, in `secrets.yaml`.
 
 First, create the directory, `<REPO>/instances/control-server` (if it does not exist yet), and within that directory, create a file named `secrets.yaml` (the secrets file), using this command: `EDITOR=nano nix run nixpkgs#sops -- ./instances/control-server/secrets.yaml` (ensure your working directory is the repository's root directory)
 
-NOTE: `control-server` in `./instances/control-server/` is just the name of the instance; you are welcome to change this to anything else, as long as it is kept consistent as you follow the whole guide.
+NOTE: `control-server` in `./instances/control-server/` is just the name of the Instance; you are welcome to change this to anything else, as long as it is kept consistent as you follow the whole guide.
 
 This command puts you into a text editor, where you can edit the actual contents of your secrets file; once you save your changes, sops will automatically encrypt the file with the public age keys from `.sops.yaml`. You can use the above command multiple times to edit the contents of the secrets file whenever you need to.
 
@@ -142,20 +144,20 @@ multilinesecret: |
 
 To exit, simply press `Ctrl+X` and type `y`. After this, you will see that `secrets.yaml` will look different, but still have info for each field (just encrypted). To edit the contents of file again, simply run the same command from before.
 
-### 4. Create the instance values
+### 4. Create the Instance values
 In the directory, `<REPO>/instances/control-server`, create a file named `instance-values.toml` with these values:
-- `hostname` (string): The main hostname to use for the instance (e.g. `control-server`)
-- `domain` (string): The domain to use, which, combined with the hostname, constitutes the FQDN of the instance (e.g. `int-net.saphnet.xyz`)
+- `hostname` (string): The main hostname to use for the Instance (e.g. `control-server`)
+- `domain` (string): The domain to use, which, combined with the hostname, constitutes the FQDN of the Instance (e.g. `int-net.saphnet.xyz`)
 - `authorized-keys` (array of strings): A list of public keys (from step 0) that are authorized to connect to `control-server`
 - `networking` (table)
-  - `ip-address` (string): The IP address to use for the instance (e.g. `192.168.8.211`)
+  - `ip-address` (string): The IP address to use for the Instance (e.g. `192.168.8.211`)
   - `ip-prefix-length` (integer): The length of the prefix that the IP address falls under (e.g. `24`)
   - `interface` (string): The name of the interface to use for the main connection (typically `ens18`)
 - `ansible-control` (table)
   - `web-root` (string): The full URL that Semaphore UI uses and advertises, with no trailing slashes (e.g. `https://semaphore.int.saphnet.xyz`)
 
 ### 5. Add an entry in `flake.nix` for `control-server`
-Now that we have the different values and secrets configured for our instance, we will need to actually turn the instance into something accessible as a NixOS configuration, within `flake.nix`. This will be used by install scripts and updaters (e.g. nixos-anywhere) to set up the particular configuration of a machine, with the values of an instance, in this case, being `control-server`.
+Now that we have the different values and secrets configured for our Instance, we will need to actually turn the Instance into something accessible as a NixOS configuration, within `flake.nix`. This will be used by install scripts and updaters (e.g. nixos-anywhere) to set up the particular configuration of a Machine, with the values of an Instance, in this case, being `control-server`.
 
 Our `flake.nix` file will look something like this:
 ```nix
@@ -180,7 +182,7 @@ Our `flake.nix` file will look something like this:
 
 ```
 
-`nixosConfigurations` in `outputs`, is where we will want to put our configuration for our instance, `control-server`.
+`nixosConfigurations` in `outputs`, is where we will want to put our configuration for our Instance, `control-server`.
 
 It should look like this:
 ```nix
@@ -208,12 +210,12 @@ In this configuration:
 - We are using x86_64 processors, for NixOS (Linux), so `system` is set to `x86_64-linux`.
 - `machines/control-server/hardware-configuration.nix` will be generated automatically by nixos-anywhere.
 - As we are using Disko, we need to pass in a Disko configuration for this NixOS configuration, which will be `impermanence-btrfs.nix` in this case. Furthermore, we need to state the name of the disk device that will be formatted and used for our system, which is `/dev/sda` in this case (as we use SCSI drives in Proxmox).
-- `machines/control-server/configuration.nix` is the main configuration file for `control-server`, but we will need to give it instance values so that particular names, details, and secrets can populate this file. This is done by passing various file paths and the parsed contents of files for our instance:
+- `machines/control-server/configuration.nix` is the main configuration file for `control-server`, but we will need to give it Instance values so that particular names, details, and secrets can populate this file. This is done by passing various file paths and the parsed contents of files for our Instance:
   - `secretsFile` is the path to our sops secrets file, being `<REPO>/instances/control-server/secrets.yaml` (from step 3).
-  - `instanceValues` is the values for this instance, being the parsed contents of `<REPO>/instances/control-server/instance-values.toml` (from step 4).
-  - `constantsValues` is the values of constants that are shared among various machines in a certain group (in this case, Sapphic Homelab machines), being the parsed contents of `<REPO>/constants/homelab-constants-values.toml`.
+  - `instanceValues` is the values for this Instance, being the parsed contents of `<REPO>/instances/control-server/instance-values.toml` (from step 4).
+  - `constantsValues` is the values of constants that are shared among various Machines in a certain group (in this case, Sapphic Homelab Machines), being the parsed contents of `<REPO>/constants/homelab-constants-values.toml`.
 
-Now that we have an entry in `nixosConfigurations` for our particular instance, we are now able to get to the deployment part of the process.
+Now that we have an entry in `nixosConfigurations` for our particular Instance, we are now able to get to the deployment part of the process.
 
 ## Steps to deploy and install `control-server`
 TODO: Finish here, think about how you'd do Ansible
