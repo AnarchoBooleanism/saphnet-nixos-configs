@@ -1,9 +1,9 @@
 # Machine: `control-server`
 This Machine is made for use as a control server for both Komodo and Ansible (as a Proxmox VM within the Sapphic Homelab).
 
-As part of the deployment bootstrapping process, after Proxmox is deployed to the bare-metal hosts, `control-server` is the Machine first deployed to the Sapphic Homelab, directly from another personal computer through nixos-anywhere (and indirectly through Ansible), before other machines can be deployed with Ansible and/or nixos-anywhere.
+As part of the deployment bootstrapping process, after Proxmox is deployed to the bare-metal hosts, `control-server` is the Machine first deployed to the Sapphic Homelab, directly from another personal computer through `nixos-anywhere` (and indirectly through Ansible), before other machines can be deployed with Ansible and/or `nixos-anywhere`.
 
-Because `control-server` is the most important out of all the Machines in this configuration, this document is a complete guide on how to set it up and maintain it, from creating secrets and Instance values, to using nixos-anywhere and updating it.
+Because `control-server` is the most important out of all the Machines in this configuration, this document is a complete guide on how to set it up and maintain it, from creating secrets and Instance values, to using `nixos-anywhere` and updating it.
 
 ## Quick explanation
 `control-server` has a few central services (via systemd and Docker Compose) that it serves: a Komodo control server, an Ansible control server (through Semaphore UI), and a reverse proxy, using Nginx. Many of the Docker containers listed communicate with each other through a Docker network, named `central-network`. This server should also be accessible over Tailscale.
@@ -157,7 +157,7 @@ In the directory, `<REPO>/instances/control-server`, create a file named `instan
   - `web-root` (string): The full URL that Semaphore UI uses and advertises, with no trailing slashes (e.g. `https://semaphore.int.saphnet.xyz`)
 
 ### 5. Add an entry in `flake.nix` for `control-server`
-Now that we have the different values and secrets configured for our Instance, we will need to actually turn the Instance into something accessible as a NixOS configuration, within `flake.nix`. This will be used by install scripts and updaters (e.g. nixos-anywhere) to set up the particular configuration of a Machine, with the values of an Instance, in this case, being `control-server`.
+Now that we have the different values and secrets configured for our Instance, we will need to actually turn the Instance into something accessible as a NixOS configuration, within `flake.nix`. This will be used by install scripts and updaters (e.g. `nixos-anywhere`) to set up the particular configuration of a Machine, with the values of an Instance, in this case, being `control-server`.
 
 Our `flake.nix` file will look something like this:
 ```nix
@@ -208,7 +208,7 @@ nixosConfigurations = {
 In this configuration:
 - `"control-server"` is the name of the NixOS configuration that will be referred to by installers using the flake in this repository (e.g. `nix run github:nix-community/nixos-anywhere -- --flake .#control-server ...`)
 - We are using x86_64 processors, for NixOS (Linux), so `system` is set to `x86_64-linux`.
-- `machines/control-server/hardware-configuration.nix` will be generated automatically by nixos-anywhere.
+- `machines/control-server/hardware-configuration.nix` will be generated automatically by `nixos-anywhere`.
 - As we are using Disko, we need to pass in a Disko configuration for this NixOS configuration, which will be `impermanence-btrfs.nix` in this case. Furthermore, we need to state the name of the disk device that will be formatted and used for our system, which is `/dev/sda` in this case (as we use SCSI drives in Proxmox).
 - `machines/control-server/configuration.nix` is the main configuration file for `control-server`, but we will need to give it Instance values so that particular names, details, and secrets can populate this file. This is done by passing various file paths and the parsed contents of files for our Instance:
   - `secretsFile` is the path to our sops secrets file, being `<REPO>/instances/control-server/secrets.yaml` (from step 3).
