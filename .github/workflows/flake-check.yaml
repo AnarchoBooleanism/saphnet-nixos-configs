@@ -18,14 +18,14 @@ jobs:
         uses: actions/checkout@v5
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v20
+      - name: Use Magic Nix Cache to cache builds between workflows
+        uses: DeterminateSystems/magic-nix-cache-action@v13
       - name: Check Nix flake inputs
         uses: DeterminateSystems/flake-checker-action@v12
         continue-on-error: true
         with:
           check-owner: false # We're using non-NixOS inputs here
           fail-mode: true
-      - name: Use Magic Nix Cache to cache builds between workflows
-        uses: DeterminateSystems/magic-nix-cache-action@v13
       - name: Check for dead code in .nix files
         run: git ls-files '*.nix' | nix run nixpkgs#deadnix
         continue-on-error: true
