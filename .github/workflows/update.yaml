@@ -26,5 +26,5 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v27
         with:
-          commit-msg: 'Bump(lock): Update flake.lock'
-          pr-title: 'Bump(lock): Update flake.lock'
+          commit-msg: 'bump(lock): Update flake.lock'
+          pr-title: 'bump(lock): Update flake.lock'
