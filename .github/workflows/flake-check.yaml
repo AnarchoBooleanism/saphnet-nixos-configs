@@ -2,9 +2,20 @@
 
 name: Flake check
 on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**' # Avoid issues with Dependabot
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github/**'
 
 jobs:
   flake-check:
@@ -22,10 +33,10 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v13
       - name: Check Nix flake inputs
         uses: DeterminateSystems/flake-checker-action@v12
-        continue-on-error: true
         with:
           check-owner: false # We're using non-NixOS inputs here
           fail-mode: true
+          check-outdated: false # update.yaml should take care of this
       - name: Check for dead code in .nix files
         run: git ls-files '*.nix' | nix run nixpkgs#deadnix
         continue-on-error: true
