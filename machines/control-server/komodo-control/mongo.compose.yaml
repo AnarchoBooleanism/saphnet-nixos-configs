@@ -22,6 +22,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DB_PASSWORD}
+    networks:
+      - komodo-network
   
   core:
     container_name: komodo-core
@@ -49,6 +51,9 @@ services:
     ## "https://host.docker.internal:8120"
     # extra_hosts:
     #   - host.docker.internal:host-gateway
+    networks: # For connecting with other services directly
+      - komodo-network
+      - central-network
 
   ## Deploy Periphery container using this block,
   ## or deploy the Periphery binary with systemd using 
@@ -70,8 +75,16 @@ services:
       ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
       ## Default: /etc/komodo.
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+    networks:
+      - komodo-network
 
 volumes:
   # Mongo
   mongo-data:
   mongo-config:
+
+networks:
+  komodo-network: # Needed for containers to connect to each other, as central-network is listed in one of them
+  central-network:
+    name: central-network
+    external: true

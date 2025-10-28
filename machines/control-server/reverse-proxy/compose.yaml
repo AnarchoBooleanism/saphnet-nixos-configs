@@ -20,10 +20,12 @@ services:
       # Script to autoreload Nginx when certs are renewed
       - ${NGINX_AUTORELOAD_FILE}:/docker-entrypoint.d/99-autoreload.sh:ro
     environment:
-      - NGINX_MAIN_DOMAIN=${NGINX_MAIN_DOMAIN}
       - TZ=${TZ}
     networks: # For connecting with other services directly
       - central-network
+    # Nginx fails trying to create this directories for some reason, so we just do it ourselves here
+    entrypoint: |
+      /bin/sh -c 'mkdir -p /var/cache/nginx/client_temp /var/lib/nginx/cache/public /var/lib/nginx/cache/private && exec /docker-entrypoint.sh nginx -g "daemon off;"'
   certbot:
     image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:${COMPOSE_CERTBOT_IMAGE_TAG:-latest}
     restart: unless-stopped
@@ -32,8 +34,8 @@ services:
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
     environment:
       - TZ=${TZ}
+    # Renew certificates every 12 hours
     entrypoint: |
-      # Renew certificates every 12 hours
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
 
 volumes:

@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: semaphore
       MYSQL_USER: semaphore
       MYSQL_PASSWORD: ${SEMAPHORE_DB_PASS}
+    networks:
+      - semaphore-network
   semaphore:
     container_name: semaphore
     restart: unless-stopped
@@ -43,8 +45,17 @@ services:
       SEMAPHORE_WEB_ROOT: ${SEMAPHORE_WEB_ROOT}
     depends_on:
       - mysql
+    networks: # For connecting with other services directly
+      - semaphore-network
+      - central-network
 
 volumes:
   semaphore-mysql:
+
+networks:
+  semaphore-network: # Needed for containers to connect to each other, as central-network is listed in one of them
+  central-network:
+    name: central-network
+    external: true
 
 # https://semaphoreui.com/install/docker/2_16
