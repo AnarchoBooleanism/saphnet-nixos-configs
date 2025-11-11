@@ -16,6 +16,16 @@
     inputs.sops-nix.nixosModules.sops
   ];
 
+  environment.persistence."/persist" = { # Ensure keys are remembered
+    files = [
+      "/var/lib/sops-nix/keys.txt"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+    ];
+  };
+
   sops = {
     defaultSopsFile = secretsFile;
     defaultSopsFormat = "yaml";
