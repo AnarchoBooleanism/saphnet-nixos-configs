@@ -36,13 +36,14 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     # Internal modules
-    (../.. + "/modules/nix-setup/default.nix")
+    (../.. + "/modules/nix-setup-types/default.nix")
     (../.. + "/modules/system-types/proxmox-vm.nix")
-    (../.. + "/modules/impermanence/default.nix")
-    (import (../.. + "/modules/sops-nix/default-impermanence.nix") {
+    (../.. + "/modules/impermanence-types/default.nix")
+    (import (../.. + "/modules/sops-nix-types/default-impermanence.nix") {
       inherit inputs secretsFile;
     })
     (../.. + "/modules/virtualization/docker.nix")
+    (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
     (../.. + "/modules/networking/tailscale.nix")
   ];
 
@@ -96,7 +97,7 @@ in
       extraGroups = ["wheel" "docker"];
     };
 
-    root.password = "password";
+    root.password = "password"; # TODO: Have a debug setting that either has password or just disables it
     # root.hashedPassword = "!"; # Disable root login
   };
 

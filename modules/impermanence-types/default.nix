@@ -1,6 +1,6 @@
 # Configuration for using Impermanence, for keeping your system clean between reboots.
-# This configuration assumes you are using BTRFS, like with modules/disko/impermancence-btrfs.nix.
-# If using sops-nix, make sure to use modules/sops-nix/default-impermanence.nix.
+# This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs.nix.
+# If using sops-nix, make sure to use modules/sops-nix-types/default-impermanence.nix.
 {
   inputs,
   lib,

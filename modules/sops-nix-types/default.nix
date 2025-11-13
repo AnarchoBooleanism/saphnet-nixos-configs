@@ -1,9 +1,9 @@
-# Configuration for sops-nix, written to work WITH Impermanence
+# Configuration for sops-nix, written to work WITHOUT Impermanence
 # NOTE: Make sure secretsFile is set to the path of a valid yaml file!
 # Furthermore, this file needs to inherit both secretsFile and inputs from your
 # configuration file importing this file.
 # To do this, in your imports section, import this file like this:
-# (import (../.. + "/modules/sops-nix/default-impermanence.nix") {
+# (import (../.. + "/modules/sops-nix-types/default-impermanence.nix") {
 #   inherit inputs secretsFile;
 # }) 
 {
@@ -16,16 +16,6 @@
     inputs.sops-nix.nixosModules.sops
   ];
 
-  environment.persistence."/persist" = { # Ensure keys are remembered
-    files = [
-      "/var/lib/sops-nix/keys.txt"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-    ];
-  };
-
   sops = {
     defaultSopsFile = secretsFile;
     defaultSopsFormat = "yaml";
@@ -34,7 +24,7 @@
       sshKeyPaths = [
         "/etc/ssh/ssh_host_ed25519_key"
       ];
-      keyFile = "/persist/var/lib/sops-nix/keys.txt";
+      keyFile = "/var/lib/sops-nix/keys.txt";
     };
 
     gnupg = {

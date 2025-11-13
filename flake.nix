@@ -34,7 +34,7 @@
           modules = [
             # Config-specific files
             machines/control-server/hardware-configuration.nix
-            (import modules/disko/impermanence-btrfs.nix { device = "/dev/sda"; }) # Need to set device name here
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; }) # Need to set device name here
             (import machines/control-server/configuration.nix {
               secretsFile = "${./instances/control-server/secrets.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/control-server/instance-values.toml}"); 

@@ -193,7 +193,7 @@ nixosConfigurations = {
     system = "x86_64-linux";
     modules = [
       machines/control-server/hardware-configuration.nix
-      (import modules/disko/impermanence-btrfs.nix { device = "/dev/sda"; })
+      (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
       (import machines/control-server/configuration.nix {
         secretsFile = "${./instances/control-server/secrets.yaml}"; 
         instanceValues = builtins.fromTOML (builtins.readFile "${./instances/control-server/instance-values.toml}"); 
