@@ -28,7 +28,7 @@
       # Configuration for NixOS itself
       # nixos-anywhere --flake .#config-name --generate-hardware-config nixos-generate-config machines/MACHINE-NAME/hardware-configuration.nix <hostname> # TODO: Update for secrets stuff
       nixosConfigurations = {
-        "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo and Ansible
+        "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
           specialArgs = {inherit inputs outputs;};
           system = "x86_64-linux";
           modules = [

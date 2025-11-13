@@ -1,21 +1,14 @@
 # Machine: `control-server`
-This Machine is made for use as a control server for both Komodo and Ansible (as a Proxmox VM within the Sapphic Homelab).
-
-As part of the deployment bootstrapping process, after Proxmox is deployed to the bare-metal hosts, `control-server` is the Machine first deployed to the Sapphic Homelab, directly from another personal computer through `nixos-anywhere` (and indirectly through Ansible), before other machines can be deployed with Ansible and/or `nixos-anywhere`.
-
-Because `control-server` is the most important out of all the Machines in this configuration, this document is a complete guide on how to set it up and maintain it, from creating secrets and Instance values, to using `nixos-anywhere` and updating it.
+This Machine is made for use as a control server for Komodo (as a Proxmox VM within the Sapphic Homelab); this guide will describe how to set it up and maintain it, from creating secrets and Instance values, to using `nixos-anywhere` and updating it.
 
 ## Quick explanation
-`control-server` has a few central services (via systemd and Docker Compose) that it serves: a Komodo control server, an Ansible control server (through Semaphore UI), and a reverse proxy, using Nginx. Many of the Docker containers listed communicate with each other through a Docker network, named `central-network`. This server should also be accessible over Tailscale.
+`control-server` has a few central services (via systemd and Docker Compose) that it serves: a Komodo control server, and a reverse proxy, using Nginx. Many of the Docker containers listed communicate with each other through a Docker network, named `central-network`. This server should also be accessible over Tailscale.
 
 ### systemd.services."central-network"
 This is a oneshot service whose goal is, on startup, check whether a Docker network named `central-network` exists. If it does not, then it creates the network, then exits. All of the containers/services that rely on `central-network` have to wait for this service to complete running before they can start, as they have a dependency on the network, which is external to all of them.
 
 ### systemd.services."komodo-control"
 This is a service that starts the Docker Compose configuration for the Komodo control server, which manages Docker containers and Docker Compose stacks across multiple machines that have Komodo Periphery installed. It has to wait for `central-network` to be created before starting. As well, various secrets are passed in from sops-nix secrets files, into environmental variables, which then get passed into the relevant containers. Komodo stores its data in `/etc/komodo`, which will need to be backed up by some other service, most likely [docker-volume-rclone](https://github.com/AnarchoBooleanism/docker-volume-rclone).
-
-### systemd.services."ansible-control"
-This is a service that starts the Docker Compose configuration for the Ansible control server, i.e. Semaphore UI, which manages the deployment of all machines in the Sapphic Homelab network, particularly for those not running NixOS. It has to wait for `central-network` to be created before starting. As well, various secrets are passed in from sops-nix secrets files, into environmental variables, which then get passed into the relevant containers. Ansible stores its data in Docker volumes, and particularly in the form of SQL databases; these can easily be backed up using [docker-volume-rclone](https://github.com/AnarchoBooleanism/docker-volume-rclone).
 
 ### systemd.services."reverse-proxy-bootstrap"
 This is a service that uses Certbot (more specifically, an image of Certbot that has a plugin for DNS challenges with Namecheap), to create SSL certificates for `reverse-proxy` (as well as the Docker volume that stores these certificates, `certbot-conf`). `reverse-proxy` has a hard dependency on this service, as Nginx will not work without having SSL certificates configured first. It does rely on sops-nix secrets and other Instance values to do its jobs correctly. This is supposed to be a one-time process, done at first boot; this is achieved by checking for the existence of a certain file that will only exist if this service has fully completed running previously, in which case, the service completes early, allowing for `reverse-proxy` to start.
@@ -120,11 +113,6 @@ For `control-server`, here is a list of secrets you will need to set:
 - tailscale-auth-key: [Authentication key for Tailscale](https://tailscale.com/kb/1085/auth-keys)
 - komodo-db-pass: Password for the SQL server of Komodo
 - komodo-passkey: Passkey for authenticating between Komodo Core / Periphery
-- semaphore-admin-pass: Password for the admin account of Semaphore
-- semaphore-db-pass: Password for the SQL server of Semaphore
-- semaphore-encryption-key: Key for encrypting access keys in database for Semaphore (generate with `head -c32 /dev/urandom | base64`)
-- semaphore-email-user: Username to use for the SMTP relay server
-- semaphore-email-pass: Password to use for the SMTP relay server
 - namecheap-api-details: [Namecheap username and API key for DNS challenges](https://www.namecheap.com/support/api/intro/)
   - You will want this in this format:
     ```yaml
@@ -153,8 +141,6 @@ In the directory, `<REPO>/instances/control-server`, create a file named `instan
   - `ip-address` (string): The IP address to use for the Instance (e.g. `192.168.8.211`)
   - `ip-prefix-length` (integer): The length of the prefix that the IP address falls under (e.g. `24`)
   - `interface` (string): The name of the interface to use for the main connection (typically `ens18`)
-- `ansible-control` (table)
-  - `web-root` (string): The full URL that Semaphore UI uses and advertises, with no trailing slashes (e.g. `https://semaphore.int.saphnet.xyz`)
 
 ### 5. Add an entry in `flake.nix` for `control-server`
 Now that we have the different values and secrets configured for our Instance, we will need to actually turn the Instance into something accessible as a NixOS configuration, within `flake.nix`. This will be used by install scripts and updaters (e.g. `nixos-anywhere`) to set up the particular configuration of a Machine, with the values of an Instance, in this case, being `control-server`.

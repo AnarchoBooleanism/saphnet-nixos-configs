@@ -12,6 +12,3 @@ authorized-keys = [
 ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
 ip-prefix-length = 24 # 192.168.8.0/24
 interface = "ens18"
-
-[ansible-control]
-web-root = "https://semaphore.int.saphnet.xyz"

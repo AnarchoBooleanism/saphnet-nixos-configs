@@ -3,11 +3,6 @@
 # - tailscale-auth-key: Authentication key for Tailscale
 # - komodo-db-pass: Password for the SQL server of Komodo
 # - komodo-passkey: Passkey for authenticating between Komodo Core / Periphery
-# - semaphore-admin-pass: Password for the admin account of Semaphore
-# - semaphore-db-pass: Password for the SQL server of Semaphore
-# - semaphore-encryption-key: Key for encrypting access keys in database for Semaphore (generate with "head -c32 /dev/urandom | base64")
-# - semaphore-email-user: Username to use for the SMTP relay server
-# - semaphore-email-pass: Password to use for the SMTP relay server
 # - namecheap-api-details: Namecheap username and API key for DNS challenges
 
 { # Custom args
@@ -27,7 +22,6 @@ let
   versionLock = lib.importTOML ./version-lock.toml;
   revProxyDomains = [ # Note: Order matters here! The first domain is used for the name of the SSL certificate.
     "komodo.int.saphnet.xyz"
-    "semaphore.int.saphnet.xyz"
   ];
 in
 {
@@ -55,11 +49,6 @@ in
       tailscale-auth-key = {};
       komodo-db-pass = {};
       komodo-passkey = {};
-      semaphore-admin-pass = {};
-      semaphore-db-pass = {};
-      semaphore-encryption-key = {};
-      semaphore-email-user = {};
-      semaphore-email-pass = {};
       namecheap-api-details = {};
     };
   };
@@ -176,47 +165,6 @@ in
       export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
-    '';
-  };
-
-  # Ansible control server, with Semaphore UI
-  systemd.services."ansible-control" = {
-    description = "Control server for Ansible (through Semaphore UI)";
-
-    wantedBy = ["multi-user.target"];
-    wants = ["network-online.target"];
-    after = [
-      "docker.service" # Docker needed, of course
-      "docker.socket"
-      "sops-nix.service" # Need to get secrets
-      "network-online.target" # Need working internet to get things
-      "central-network.service" # For communication with reverse proxy
-    ];
-
-    environment = {
-      COMPOSE_MYSQL_IMAGE_TAG = "${versionLock.ansible-control.mysql-version}";
-      COMPOSE_SEMAPHORE_IMAGE_TAG = "${versionLock.ansible-control.semaphore-version}";
-
-      SEMAPHORE_EMAIL_SENDER = "${constantsValues.email.address}";
-      SEMAPHORE_EMAIL_HOST = "${constantsValues.email.host}";
-      SEMAPHORE_EMAIL_PORT = "${constantsValues.email.port}";
-
-      SEMAPHORE_WEB_ROOT = "${instanceValues.ansible-control.web-root}";
-      # Other secret env variables that need to be passed in directly are listed in script 
-    };
-
-    script = with pkgs; ''
-      # Waiting for the network to actually come online
-      sleep 5
-
-      # Dynamically export variables from secrets files
-      export SEMAPHORE_ADMIN_PASSWORD=$(cat ${config.sops.secrets.semaphore-admin-pass.path})
-      export SEMAPHORE_DB_PASS=$(cat ${config.sops.secrets.semaphore-db-pass.path})
-      export SEMAPHORE_ACCESS_KEY_ENCRYPTION=$(cat ${config.sops.secrets.semaphore-encryption-key.path})
-      export SEMAPHORE_EMAIL_USERNAME=$(cat ${config.sops.secrets.semaphore-email-user.path})
-      export SEMAPHORE_EMAIL_PASSWORD=$(cat ${config.sops.secrets.semaphore-email-pass.path})
-
-      ${pkgs.docker}/bin/docker compose -p semaphore -f ${./semaphore-ui/compose.yaml} up
     '';
   };
 

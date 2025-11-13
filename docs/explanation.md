@@ -253,7 +253,7 @@ Here is an example of how an Instance is defined as a NixOS configuration in `fl
     in {
       nixosConfigurations = {
         ...
-        "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo and Ansible
+        "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
           specialArgs = {inherit inputs outputs;};
           system = "x86_64-linux"; # This defines the architecture of the Instance
           modules = [
@@ -287,9 +287,6 @@ authorized-keys = [
 ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
 ip-prefix-length = 24 # 192.168.8.0/24
 interface = "ens18"
-
-[ansible-control]
-web-root = "https://semaphore.int.saphnet.xyz"
 ```
 
 This defines various values (that can be publicly shared as cleartext) that make the Instance unique, with its own identity; these include the hostname, domain, authorized SSH public keys, IP address, alongside other values that are unique to the Instance.
