@@ -1,7 +1,7 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
 services:
   nginx:
-    image: nginx:1.29.2
+    image: nginx:1.29.3
     restart: unless-stopped
     ports:
       - 80:80
