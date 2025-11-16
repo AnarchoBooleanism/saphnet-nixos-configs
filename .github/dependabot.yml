@@ -15,4 +15,4 @@ updates:
       - "/machines/control-server/reverse-proxy"
       - "/machines/docker-host/komodo-periphery" # Machine: docker-host 
     schedule:
-      interval: "monthly"
+      interval: "weekly"
