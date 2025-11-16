@@ -86,14 +86,10 @@ in
       extraGroups = ["wheel" "docker"];
     };
 
-    root.password = "password"; # TODO: Have a debug setting that either has password or just disables it
-    # root.hashedPassword = "!"; # Disable root login
+    root.hashedPassword = "!"; # Disable root login
   };
 
   time.timeZone = constantsValues.timezone;
-
-  # Nicety for control server
-  programs.ssh.startAgent = true;
 
   # Central Docker network used for communication between services
   systemd.services."central-network" = {
@@ -149,9 +145,6 @@ in
     ];
 
     environment = {
-      COMPOSE_MONGO_IMAGE_TAG = "${versionLock.komodo-control.mongo-version}";
-      COMPOSE_KOMODO_IMAGE_TAG = "${versionLock.komodo-control.komodo-version}";
-
       ENV_FILE = "${./komodo-control/compose.env}"; # Need to pass this in as env argument to work with Nix store
       # Other secret env variables that need to be passed in directly are listed in script 
     };
@@ -183,8 +176,6 @@ in
     serviceConfig.Type = "oneshot"; # Really make sure reverse-proxy waits
 
     environment = {
-      CERTBOT_IMAGE_TAG = "${versionLock.reverse-proxy.certbot-version}";
-
       CERTBOT_EMAIL = "${constantsValues.email.address}";
       CERTBOT_DOMAINS = "${lib.strings.concatStringsSep "," revProxyDomains}";
 
@@ -241,9 +232,6 @@ in
     ];
 
     environment = {
-      COMPOSE_NGINX_IMAGE_TAG = "${versionLock.reverse-proxy.nginx-version}";
-      COMPOSE_CERTBOT_IMAGE_TAG = "${versionLock.reverse-proxy.certbot-version}";
-
       NGINX_CONF_FILE = "${./reverse-proxy/nginx.conf}";
       NGINX_PROXIES_FILE = "${./reverse-proxy/proxies.conf}";
       NGINX_CONFD_BLOCK_EXPLOITS_FILE = "${./reverse-proxy/nginx-conf.d/block-exploits.conf}";

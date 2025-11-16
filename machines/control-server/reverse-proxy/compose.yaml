@@ -1,7 +1,7 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
 services:
   nginx:
-    image: nginx:${COMPOSE_NGINX_IMAGE_TAG:-latest}
+    image: nginx:1.29.2
     restart: unless-stopped
     ports:
       - 80:80
@@ -27,7 +27,7 @@ services:
     entrypoint: |
       /bin/sh -c 'mkdir -p /var/cache/nginx/client_temp /var/lib/nginx/cache/public /var/lib/nginx/cache/private && exec /docker-entrypoint.sh nginx -g "daemon off;"'
   certbot:
-    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:${COMPOSE_CERTBOT_IMAGE_TAG:-latest}
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:v1.0.0-certbotv5.1.0-3
     restart: unless-stopped
     volumes:
       - certbot-conf:/etc/lets_encrypt

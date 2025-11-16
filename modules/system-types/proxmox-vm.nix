@@ -42,6 +42,7 @@
       PasswordAuthentication = false;
     };
   };
+  programs.ssh.startAgent = true; # Nicety for control server
 
   # Other tools for integrating with Proxmox
   services.qemuGuest.enable = true;
