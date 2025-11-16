@@ -79,7 +79,7 @@ Once the installer image has been completed booted into, you are welcome to chec
 
 On your main system (which has Nix installed, with flakes and nix-commands) that you are using to remotely connect to your target machine, with your working directory set as the root of this repository, you can now run nixos-anywhere with this command (make sure to fill in any blanks):
 ```bash
-nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME> -i <PATH TO TEMPORARY SSH KEY>
+nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./instances/<INSTANCE_NAME>/hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME> -i <PATH TO TEMPORARY SSH KEY>
 ```
 NOTE: If you have extra files to copy to the target system, make sure to add the following to the command: `--extra-files <PATH TO DIRECTORY WITH EXTRA FILES>`
 

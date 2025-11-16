@@ -35,8 +35,8 @@ in
       main-password-hashed = {
         neededForUsers = true; # Setting so that password works properly
       };
-      komodo-db-pass = {};
-    }
+      komodo-passkey = {};
+    };
   };
 
   environment.persistence."/persist" = { # Additional files to base ones

@@ -26,14 +26,14 @@
       inherit (self) outputs;
     in {
       # Configuration for NixOS itself
-      # nixos-anywhere --flake .#config-name --generate-hardware-config nixos-generate-config machines/MACHINE-NAME/hardware-configuration.nix <hostname> # TODO: Update for secrets stuff
+      # nixos-anywhere --flake .#config-name --generate-hardware-config nixos-generate-config instances/<INSTANCE_NAME>/hardware-configuration.nix <hostname> # TODO: Update for secrets stuff
       nixosConfigurations = {
         "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
           specialArgs = {inherit inputs outputs;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
-            machines/control-server/hardware-configuration.nix
+            instances/control-server/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; }) # Need to set device name here
             (import machines/control-server/configuration.nix {
               secretsFile = "${./instances/control-server/secrets.yaml}"; 

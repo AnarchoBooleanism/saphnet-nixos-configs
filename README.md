@@ -24,7 +24,7 @@ Here are some useful commands to use when writing to the configuration and deplo
 
 - For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./machines/SERVER-NAME/secrets.yaml`
   - NOTE: Make sure your age private key is in `~/.config/sops/age/key.txt`! Otherwise, make sure to set one of the environment variables `SOPS_AGE_KEY_FILE`, `SOPS_AGE_KEY`, or `SOPS_AGE_KEY_CMD` to your desired value beforehand.
-- For doing fresh installs: `nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME>`
+- For doing fresh installs: `nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./instance/INSTANCE_NAME/hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME>`
   - NOTE: Again, you'll generally want to perform this task through [saphnet-ansible-playbook](https://github.com/AnarchoBooleanism/saphnet-ansible-playbook), which handles the particulars of this command for you.
   - If you want to specify an SSH private key to use to connect to the remote host, make sure to add the following to the command: `-i <PATH TO SSH PRIVATE KEY>`
   - If you have extra files you want to add to your target system, make sure to add the following to the command: `--extra-files <PATH TO DIRECTORY WITH EXTRA FILES>`

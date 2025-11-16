@@ -178,7 +178,7 @@ nixosConfigurations = {
     specialArgs = {inherit inputs outputs;};
     system = "x86_64-linux";
     modules = [
-      machines/control-server/hardware-configuration.nix
+      instances/control-server/hardware-configuration.nix
       (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
       (import machines/control-server/configuration.nix {
         secretsFile = "${./instances/control-server/secrets.yaml}"; 
@@ -194,7 +194,7 @@ nixosConfigurations = {
 In this configuration:
 - `"control-server"` is the name of the NixOS configuration that will be referred to by installers using the flake in this repository (e.g. `nix run github:nix-community/nixos-anywhere -- --flake .#control-server ...`)
 - We are using x86_64 processors, for NixOS (Linux), so `system` is set to `x86_64-linux`.
-- `machines/control-server/hardware-configuration.nix` will be generated automatically by `nixos-anywhere`.
+- `instances/control-server/hardware-configuration.nix` will be generated automatically by `nixos-anywhere`.
 - As we are using Disko, we need to pass in a Disko configuration for this NixOS configuration, which will be `impermanence-btrfs.nix` in this case. Furthermore, we need to state the name of the disk device that will be formatted and used for our system, which is `/dev/sda` in this case (as we use SCSI drives in Proxmox).
 - `machines/control-server/configuration.nix` is the main configuration file for `control-server`, but we will need to give it Instance values so that particular names, details, and secrets can populate this file. This is done by passing various file paths and the parsed contents of files for our Instance:
   - `secretsFile` is the path to our sops secrets file, being `<REPO>/instances/control-server/secrets.yaml` (from step 3).
