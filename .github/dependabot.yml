@@ -9,3 +9,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "docker-compose"
+    directories:
+      - "/machines/control-server/komodo-control" # Machine: control-server
+      - "/machines/control-server/reverse-proxy"
+      - "/machines/docker-host/komodo-periphery" # Machine: docker-host 
+    schedule:
+      interval: "monthly"

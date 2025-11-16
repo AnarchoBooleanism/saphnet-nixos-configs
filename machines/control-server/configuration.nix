@@ -176,6 +176,8 @@ in
     serviceConfig.Type = "oneshot"; # Really make sure reverse-proxy waits
 
     environment = {
+      CERTBOT_IMAGE_TAG = "${versionLock.reverse-proxy.certbot-version}";
+
       CERTBOT_EMAIL = "${constantsValues.email.address}";
       CERTBOT_DOMAINS = "${lib.strings.concatStringsSep "," revProxyDomains}";
 
