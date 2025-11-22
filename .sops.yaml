@@ -1,10 +1,10 @@
 keys:
   - &admin age1ute399nzja7le5um48rzdg2nj4c7rf5jvhj7slh05mt5x79nr4wqqlwkdj
-  - &control_server age1uyx8fnzkfk28u04nlukl8fs48h5m783w6fumd5r29h23eks3danqj7eteh
+  - &control_server age1vfyd0dfhxth233hzungem5s6mgmju33j3ydx5z8utdsfg76m9pnq0xmlaa
   - &docker-host-nginx age16tx7kzg6fs9qr5t2hyjqnx9clp7vgkkh97qjrzfuldc887jxv4ts2rsaeh
-  - &docker-host-pve1 age1x452am0u3eeat7rtuxvh7557rp5ssadp47alrj3x9k9nlpvlz45sl8hp8f
+  - &docker-host-pve1 age1gnhldr9tvn3y2ndxnh9m0axtclzy4rgqxpqk5nhmpmte6mlkx4wspks77p
   - &docker-host-pve3 age1mdakaa0w4f0a62mu7r4xkk7kl547rzsf89ql58s4y8rpr3w0e9qspc7s79
-  - &docker-host-pve4 age14e9u0h76m0t7mcgnp9z9vp768e8ncclkcmf6jjavgwdpwrh2uc6qahcq6f
+  - &docker-host-pve4 age1xp72fxqglsdnxld2zvcswdhrsc2ap2w5c52ptx4dqj6k9fugtuls66yg4t
 creation_rules:
   - path_regex: instances/control-server/secrets.yaml # Control server
     key_groups:
