@@ -22,15 +22,19 @@ The configuration files are inspired by god464's [flake](https://github.com/god4
 ### Useful commands
 Here are some useful commands to use when writing to the configuration and deploying to machines:
 
-- For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./machines/SERVER-NAME/secrets.yaml`
+- For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./instances/SERVER-NAME/secrets.yaml`
   - NOTE: Make sure your age private key is in `~/.config/sops/age/key.txt`! Otherwise, make sure to set one of the environment variables `SOPS_AGE_KEY_FILE`, `SOPS_AGE_KEY`, or `SOPS_AGE_KEY_CMD` to your desired value beforehand.
 - For doing fresh installs: `nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./instance/INSTANCE_NAME/hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME>`
   - NOTE: Again, you'll generally want to perform this task through [saphnet-ansible-playbook](https://github.com/AnarchoBooleanism/saphnet-ansible-playbook), which handles the particulars of this command for you.
   - If you want to specify an SSH private key to use to connect to the remote host, make sure to add the following to the command: `-i <PATH TO SSH PRIVATE KEY>`
   - If you have extra files you want to add to your target system, make sure to add the following to the command: `--extra-files <PATH TO DIRECTORY WITH EXTRA FILES>`
 - For creating the hash of a password (store this as a secret): `nix run nixpkgs#mkpasswd -- -m sha-512 -s`
-- For creating an age key from scratch: `nix shell nixpkgs#age --command age-keygen -y <DESIRED PATH TO AGE KEY>`
+- For creating an age key from scratch: `nix shell nixpkgs#age --command age-keygen -o <DESIRED PATH TO AGE KEY>`
   - For `-o`, you'll probably want to store this in `$HOME/.config/sops/age/keys.txt`
+- For creating an ed25519 SSH key with no passphrase (the public key will be in the same path but with `.pub`): `ssh-keygen -t ed25519 -N "" -C "<USERNAME>@<HOSTNAME>" -f <PATH TO SSH PRIVATE KEY>`
+  - NOTE: For root keys, name this `ssh_host_ed25519_key`
+- For creating an RSA (4096-bit) SSH key with no passphrase (the public key will be in the same path but with `.pub`): `ssh-keygen -t rsa -b 4096 -N "" -C "<USERNAME>@<HOSTNAME>" -f <PATH TO SSH PRIVATE KEY>`
+  - NOTE: For root keys, name this `ssh_host_rsa_key`
 - For obtaining an age key from an SSH key (it needs to be an ed25519 key, not RSA): `nix run nixpkgs#ssh-to-age -- -private-key -i <PATH TO SSH PRIVATE KEY> -o <DESIRED PATH TO AGE KEY>`
   - NOTE: If you have a passphrase for the SSH key, make sure to set the environment variable `SSH_TO_AGE_PASSPHRASE` beforehand! The best way to do this is with the command `read -s SSH_TO_AGE_PASSPHRASE; export SSH_TO_AGE_PASSPHRASE`
   - For `-o`, you'll probably want to store this in `$HOME/.config/sops/age/keys.txt`

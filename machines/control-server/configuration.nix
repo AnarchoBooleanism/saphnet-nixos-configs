@@ -82,7 +82,7 @@ in
     "${constantsValues.default-username}" = {
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
-      openssh.authorizedKeys.keys = instanceValues.authorized-keys; # Deployment key for accessibility
+      openssh.authorizedKeys.keys = constantsValues.authorized-keys; # Deployment key for accessibility
       extraGroups = ["wheel" "docker"];
     };
 

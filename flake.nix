@@ -42,6 +42,63 @@
             })
           ];
         };
+        "docker-host-nginx" = nixpkgs.lib.nixosSystem { # Docker host for reverse proxy and various web services
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/docker-host-nginx/hardware-configuration.nix
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import machines/docker-host/configuration.nix {
+              secretsFile = "${./instances/docker-host-nginx/secrets.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-nginx/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
+        "docker-host-pve1" = nixpkgs.lib.nixosSystem { # Docker host on node pve1
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/docker-host-pve1/hardware-configuration.nix
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import machines/docker-host/configuration.nix {
+              secretsFile = "${./instances/docker-host-pve1/secrets.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve1/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
+        "docker-host-pve3" = nixpkgs.lib.nixosSystem { # Docker host on node pve3
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/docker-host-pve3/hardware-configuration.nix
+            modules/system-extras/intel-arc-gpu.nix # Since the target system has an Intel Arc A310
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import machines/docker-host/configuration.nix {
+              secretsFile = "${./instances/docker-host-pve3/secrets.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve3/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
+        "docker-host-pve4" = nixpkgs.lib.nixosSystem { # Docker host on node pve4
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/docker-host-pve4/hardware-configuration.nix
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import machines/docker-host/configuration.nix {
+              secretsFile = "${./instances/docker-host-pve4/secrets.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve4/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
       };
     };
 }

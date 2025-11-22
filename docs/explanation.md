@@ -278,10 +278,6 @@ Here is an example of `instance-values.toml`, for `control-server`:
 # instance-values.toml
 hostname = "control-server"
 domain = "int-net.saphnet.xyz"
-authorized-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHr+c+avIdfIU4xGN6zPh1Yjmse6L4e8f98j4JWX4lmi hihacks@valk-pc",
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILC3RtnBmFqCn1qZuMXbQDVQqW2qJh0Z/Mspxc2Accrd hihacks@crummytop"
-]
 
 [networking]
 ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
@@ -289,7 +285,7 @@ ip-prefix-length = 24 # 192.168.8.0/24
 interface = "ens18"
 ```
 
-This defines various values (that can be publicly shared as cleartext) that make the Instance unique, with its own identity; these include the hostname, domain, authorized SSH public keys, IP address, alongside other values that are unique to the Instance.
+This defines various values (that can be publicly shared as cleartext) that make the Instance unique, with its own identity; these include the hostname, domain, IP address, alongside other values that are unique to the Instance.
 
 Here is an example of `secrets.yaml`, for no machine in particular reason (as cleartext):
 
@@ -319,6 +315,10 @@ For example, in `control-server`, this is the TOML file with the constants:
 # A list of defaults to use for any homelab-related machine
 
 default-username = "saphnet-user"
+authorized-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHr+c+avIdfIU4xGN6zPh1Yjmse6L4e8f98j4JWX4lmi hihacks@valk-pc",
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILC3RtnBmFqCn1qZuMXbQDVQqW2qJh0Z/Mspxc2Accrd hihacks@crummytop"
+]
 timezone = "America/Los_Angeles"
 
 [networking]
@@ -331,7 +331,7 @@ host = "mail.privateemail.com"
 port = "465"
 ```
 
-This file defines the main username for Instances, the timezone, various networking settings that are shared for systems in the network, and email settings for SMTP.
+This file defines the main username for Instances, authorized SSH public keys, the timezone, various networking settings that are shared for systems in the network, and email settings for SMTP.
 
 And this is how the values from the TOML file are imported into the NixOS configuration when listing an Instance in `flake.nix`:
 ```nix

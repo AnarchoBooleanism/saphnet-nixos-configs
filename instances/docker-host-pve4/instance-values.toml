@@ -1,0 +1,10 @@
+# instance-values.toml
+# A list of values to use to instantiate docker-host for docker-host-pve4
+
+hostname = "docker-host-pve4"
+domain = "int-net.saphnet.xyz"
+
+[networking]
+ip-address = "192.168.8.243" # docker-host-pve4.int-net.saphnet.xyz
+ip-prefix-length = 24 # 192.168.8.0/24
+interface = "ens18"

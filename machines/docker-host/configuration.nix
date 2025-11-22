@@ -28,6 +28,7 @@ in
     })
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
+    (../.. + "/modules/networking/tailscale.nix")
   ];
 
   sops = {
@@ -35,6 +36,7 @@ in
       main-password-hashed = {
         neededForUsers = true; # Setting so that password works properly
       };
+      tailscale-auth-key = {};
       komodo-passkey = {};
     };
   };
@@ -44,9 +46,7 @@ in
       "/var/lib/docker/" # Docker
       "/etc/komodo" # Komodo
     ];
-    files = [
-
-    ];
+    files = [];
   };
 
   networking.hostName = instanceValues.hostname;
@@ -67,8 +67,8 @@ in
     "${constantsValues.default-username}" = {
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
-      openssh.authorizedKeys.keys = instanceValues.authorized-keys; # Deployment key for accessibility
-      extraGroups = ["wheel" "docker"];
+      openssh.authorizedKeys.keys = constantsValues.authorized-keys; # Deployment key for accessibility
+      extraGroups = ["wheel" "docker" "video" "render" ];
     };
   
     root.hashedPassword = "!"; # Disable root login
