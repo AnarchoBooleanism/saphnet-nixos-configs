@@ -46,7 +46,9 @@ in
       "/var/lib/docker/" # Docker
       "/etc/komodo" # Komodo
     ];
-    files = [];
+    files = [
+      "/var/lib/tailscale/tailscaled.state" # Tailscale
+    ];
   };
 
   networking.hostName = instanceValues.hostname;
