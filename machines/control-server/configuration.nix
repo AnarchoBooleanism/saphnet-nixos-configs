@@ -56,10 +56,10 @@ in
   environment.persistence."/persist" = { # Additional files to base ones
     directories = [
       "/var/lib/docker/" # Docker
+      "/var/lib/tailscale/" # Tailscale
       "/etc/komodo" # Komodo
     ];
     files = [
-      "/var/lib/tailscale/tailscaled.state" # Tailscale
       "/var/lib/reverse-proxy-bootstrap-complete" # For initial SSL cert bootstrapping
     ];
   };

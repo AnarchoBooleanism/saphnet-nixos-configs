@@ -45,10 +45,9 @@ in
     directories = [
       "/var/lib/docker/" # Docker
       "/etc/komodo" # Komodo
+      "/var/lib/tailscale" # Tailscale
     ];
-    files = [
-      "/var/lib/tailscale/tailscaled.state" # Tailscale
-    ];
+    files = [];
   };
 
   networking.hostName = instanceValues.hostname;

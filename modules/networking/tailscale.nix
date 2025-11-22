@@ -1,6 +1,6 @@
 # Tailscale config, with space for different names and such
 # NOTE: Make sure, in your secrets file, that you have a "tailscale-auth-key" entry for your Tailscale auth key.
-# NOTE: If using Impermanence, make sure to have /var/lib/tailscale/tailscaled.state as persistent.
+# NOTE: If using Impermanence, make sure to have /var/lib/tailscale as persistent.
 {
   config,
   pkgs,
