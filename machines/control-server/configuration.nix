@@ -157,6 +157,9 @@ in
       export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
       export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
+      # Export other variables
+      export TZ=$(timedatectl show --va -p Timezone)
+
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';
   };

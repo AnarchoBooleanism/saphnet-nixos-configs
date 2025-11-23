@@ -6,6 +6,7 @@
 {
   environment.systemPackages = with pkgs; [
     # Various tools for system management
+    pciutils
     vim
     man-db
     git
