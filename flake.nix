@@ -97,7 +97,6 @@
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve4/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
-            instances/docker-host-pve4/pterodactyl-nfs-mount.nix
           ];
         };
       };
