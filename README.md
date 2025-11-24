@@ -38,6 +38,7 @@ Here are some useful commands to use when writing to the configuration and deplo
 - For obtaining an age key from an SSH key (it needs to be an ed25519 key, not RSA): `nix run nixpkgs#ssh-to-age -- -private-key -i <PATH TO SSH PRIVATE KEY> -o <DESIRED PATH TO AGE KEY>`
   - NOTE: If you have a passphrase for the SSH key, make sure to set the environment variable `SSH_TO_AGE_PASSPHRASE` beforehand! The best way to do this is with the command `read -s SSH_TO_AGE_PASSPHRASE; export SSH_TO_AGE_PASSPHRASE`
   - For `-o`, you'll probably want to store this in `$HOME/.config/sops/age/keys.txt`
+- For performing an upgrade on a NixOS system on the host itself: `sudo nixos-rebuild switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME>`
 
 ### Note on using Nix
 In order to deploy and do other tasks with the contents of the repository, you'll want to have Nix available, with both flakes and nix-commands enabled.

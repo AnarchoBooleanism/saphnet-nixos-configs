@@ -20,8 +20,8 @@
   ];
 
   boot.initrd = { # Support nfs systems
-    supportedFilesystems = [ "nfs" ];
-    kernelModules = [ "nfs" ];
+    supportedFilesystems = [ "nfs" "nfsv4" "overlay" ];
+    kernelModules = [ "nfs" "nfsv4" "overlay" ];
   };
 
   # GRUB bootloader
