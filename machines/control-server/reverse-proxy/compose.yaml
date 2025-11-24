@@ -30,7 +30,7 @@ services:
     image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:v1.0.0-certbotv5.1.0-3
     restart: unless-stopped
     volumes:
-      - certbot-conf:/etc/lets_encrypt
+      - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
     environment:
       - TZ=${TZ}
