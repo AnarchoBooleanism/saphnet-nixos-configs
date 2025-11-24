@@ -6,6 +6,7 @@
 {
   environment.systemPackages = with pkgs; [
     # Various tools for system management
+    nfs-utils
     pciutils
     vim
     man-db
@@ -17,6 +18,11 @@
     dmidecode
     ncdu
   ];
+
+  boot.initrd = { # Support nfs systems
+    supportedFilesystems = [ "nfs" ];
+    kernelModules = [ "nfs" ];
+  };
 
   # GRUB bootloader
   boot.loader.grub = {
