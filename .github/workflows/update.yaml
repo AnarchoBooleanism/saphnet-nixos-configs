@@ -25,7 +25,7 @@ jobs:
           check-outdated: false # This is the workflow for updating...
           fail-mode: true
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v27
+        uses: DeterminateSystems/update-flake-lock@v28
         with:
           commit-msg: 'bump(lock): Update flake.lock'
           pr-title: 'bump(lock): Update flake.lock'
