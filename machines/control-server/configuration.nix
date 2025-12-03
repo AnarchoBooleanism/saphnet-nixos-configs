@@ -237,13 +237,7 @@ in
     ];
 
     environment = {
-      NGINX_CONF_FILE = "${./reverse-proxy/nginx.conf}";
       NGINX_PROXIES_FILE = "${./reverse-proxy/proxies.conf}";
-      NGINX_CONFD_BLOCK_EXPLOITS_FILE = "${./reverse-proxy/nginx-conf.d/block-exploits.conf}";
-      NGINX_CONFD_PROXY_FILE = "${./reverse-proxy/nginx-conf.d/proxy.conf}";
-      NGINX_CONFD_SSL_FILE = "${./reverse-proxy/nginx-conf.d/ssl.conf}";
-      NGINX_CONFD_IP_RANGES_FILE = "${./reverse-proxy/nginx-conf.d/ip-ranges.conf}";
-      NGINX_AUTORELOAD_FILE = "${./reverse-proxy/99-autoreload.sh}";
 
       # Other secret env variables that need to be passed in directly are listed in script
       NAMECHEAP_API_DETAILS_FILE = "${config.sops.secrets.namecheap-api-details.path}";

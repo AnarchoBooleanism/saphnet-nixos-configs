@@ -1,31 +1,21 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
+
 services:
   nginx:
-    image: nginx:1.29.3
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.1.0
     restart: unless-stopped
     ports:
       - 80:80
       - 443:443
     volumes:
       # Main conf file
-      - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
       - ${NGINX_PROXIES_FILE}:/etc/nginx/proxies.conf:ro
-      # conf.d files
-      - ${NGINX_CONFD_BLOCK_EXPLOITS_FILE}:/etc/nginx/conf.d/block-exploits.conf:ro
-      - ${NGINX_CONFD_PROXY_FILE}:/etc/nginx/conf.d/proxy.conf:ro
-      - ${NGINX_CONFD_SSL_FILE}:/etc/nginx/conf.d/ssl.conf:ro
-      - ${NGINX_CONFD_IP_RANGES_FILE}:/etc/nginx/conf.d/ip-ranges.conf:ro
       # Certificate files
       - certbot-conf:/etc/letsencrypt:ro
-      # Script to autoreload Nginx when certs are renewed
-      - ${NGINX_AUTORELOAD_FILE}:/docker-entrypoint.d/99-autoreload.sh:ro
     environment:
       - TZ=${TZ}
     networks: # For connecting with other services directly
       - central-network
-    # Nginx fails trying to create this directories for some reason, so we just do it ourselves here
-    entrypoint: |
-      /bin/sh -c 'mkdir -p /var/cache/nginx/client_temp /var/lib/nginx/cache/public /var/lib/nginx/cache/private && exec /docker-entrypoint.sh nginx -g "daemon off;"'
   certbot:
     image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:v1.0.0-certbotv5.1.0-3
     restart: unless-stopped
