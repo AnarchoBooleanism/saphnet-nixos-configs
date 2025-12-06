@@ -1,7 +1,7 @@
 # version-lock.toml
 # Used to lock various versions, like Docker images in Compose files to specific tagged versions
 
-state-version = "25.05" # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+state-version = "25.11" # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 
 [reverse-proxy]
 certbot-version = "v1.0.0-certbotv5.1.0-3" # For my custom certbot image for Namecheap, https://github.com/AnarchoBooleanism/certbot-dns-namecheap
