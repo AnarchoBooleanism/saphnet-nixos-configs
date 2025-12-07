@@ -46,6 +46,7 @@ in
       "/var/lib/docker/" # Docker
       "/etc/komodo" # Komodo
       "/var/lib/tailscale" # Tailscale
+      "/var/lib/pterodactyl" # Pterodactyl (for docker-host-pve4)
     ];
     files = [];
   };
