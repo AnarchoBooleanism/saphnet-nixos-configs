@@ -4,7 +4,8 @@
 default-username = "saphnet-user"
 authorized-keys = [ # Try to rotate these every now and then...
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHYjHkLEoqnhIg91FVA32nL7qbJe2l+Iy+t/WX98z7td hihacks@valk-pc", # Directly via personal computers
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICBb79Z1HFfgBM2XVyURzsXRG0b0fJRNplyN3v80CF8j hihacks@crummytop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICBb79Z1HFfgBM2XVyURzsXRG0b0fJRNplyN3v80CF8j hihacks@crummytop",
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook" # Ansible
 ]
 timezone = "America/Los_Angeles"
 
