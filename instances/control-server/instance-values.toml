@@ -6,5 +6,5 @@ domain = "int-net.saphnet.xyz"
 
 [networking]
 ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
-ip-prefix-length = 24 # 192.168.8.0/24
+ip-prefix-length = 23 # 192.168.8.0/23
 interface = "ens18"

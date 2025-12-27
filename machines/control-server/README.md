@@ -139,7 +139,7 @@ In the directory, `<REPO>/instances/control-server`, create a file named `instan
 - `authorized-keys` (array of strings): A list of public keys (from step 0) that are authorized to connect to `control-server`
 - `networking` (table)
   - `ip-address` (string): The IP address to use for the Instance (e.g. `192.168.8.211`)
-  - `ip-prefix-length` (integer): The length of the prefix that the IP address falls under (e.g. `24`)
+  - `ip-prefix-length` (integer): The length of the prefix that the IP address falls under (e.g. `23`)
   - `interface` (string): The name of the interface to use for the main connection (typically `ens18`)
 
 ### 5. Add an entry in `flake.nix` for `control-server`

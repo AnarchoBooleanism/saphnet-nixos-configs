@@ -245,7 +245,7 @@ networking.interfaces."ens18" = {
   ipv4.addresses = [
     {
       address = 192.168.0.2;
-      prefixLength = 24;
+      prefixLength = 23;
     }
   ];
 };
@@ -259,7 +259,7 @@ This is what each line does in this example, in the various parts of the `networ
 - `useDHCP = false;` - Disables DHCP for the `ens18` interface, as we plan to use a static IP for this system.
 - `ipv4.addresses = [ ... ];` - This configures the list of IP addresses that the `ens18` interface uses; this is an array of attribute sets (mapping to IP addresses).
 - `address = 192.168.0.2;` - This sets an IP address for the `ens18` interface: `192.168.0.2`.
-- `prefixLength = 24;` - This sets the length of the prefix for the aforementioned IP address. Combined with the previous address, we would get a prefix of `192.168.0.0/24`.
+- `prefixLength = 23;` - This sets the length of the prefix for the aforementioned IP address. Combined with the previous address, we would get a prefix of `192.168.0.0/23`.
 
 Remember that these networking settings are HIGHLY network-dependent, and hardware/hypervisor-dependent! You are welcome to use as many or as little networking settings as you wish. Also, I recommend that your FQDN is mapped (via DNS) to the actual IP address that your system will use.
 
