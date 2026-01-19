@@ -2,7 +2,7 @@
 
 services:
   nginx:
-    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.1.0
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.1.1
     restart: unless-stopped
     ports:
       - 80:80
