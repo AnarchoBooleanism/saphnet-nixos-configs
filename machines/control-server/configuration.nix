@@ -38,7 +38,9 @@ in
     })
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
-    (../.. + "/modules/networking/tailscale.nix")
+    (import (../.. + "/modules/networking/tailscale.nix") {
+      inherit inputs secretsFile;
+    })
   ];
 
   sops = {
@@ -185,7 +187,7 @@ in
       CERTBOT_DOMAINS = "${lib.strings.concatStringsSep "," revProxyDomains}";
 
       # Other secret env variables that need to be passed in directly are listed in script 
-      NAMECHEAP_API_DETAILS_FILE = "${config.sops.secrets.namecheap-api-details.path}";
+      NAMECHEAP_API_DETAILS_FILE = config.sops.secrets.namecheap-api-details.path;
     };
 
     script = with pkgs; ''
@@ -240,7 +242,7 @@ in
       NGINX_PROXIES_FILE = "${./reverse-proxy/proxies.conf}";
 
       # Other secret env variables that need to be passed in directly are listed in script
-      NAMECHEAP_API_DETAILS_FILE = "${config.sops.secrets.namecheap-api-details.path}";
+      NAMECHEAP_API_DETAILS_FILE = config.sops.secrets.namecheap-api-details.path;
     };
 
     script = with pkgs; ''

@@ -92,7 +92,7 @@ Here is an example of a Module, for configuring Machines that are meant to be ru
 
 This file defines different packages that are useful for headless VMs, like `man-db` and `git`, a bootloader that works for VMs that don't use UEFI, kernel parameters for enabling a serial console, settings for OpenSSH (for headless access), as well as other settings and services that help with Proxmox integration and security.
 
-Here is another example of a Module, for Tailscale functionality, `<REPO>/modules/networking/tailscale.nix`:
+Here is another example of a Module, for Tailscale functionality, a previous version of `<REPO>/modules/networking/tailscale.nix`:
 ```nix
 # Tailscale config, with space for different names and such
 {
@@ -113,7 +113,7 @@ in
   services.tailscale = {
     enable = true;
     port = tailscalePort;
-    authKeyFile = "${config.sops.secrets.tailscale-auth-key.path}";
+    authKeyFile = config.sops.secrets.tailscale-auth-key.path;
   };
 
   # Configure firewall (if relevant)
@@ -311,18 +311,20 @@ These are usually imported as parsed TOML files, as an argument for a Machine's 
 
 For example, in `control-server`, this is the TOML file with the constants:
 ```toml
-# homelab-constants-values.toml
+# default-constants.toml
 # A list of defaults to use for any homelab-related machine
 
 default-username = "saphnet-user"
-authorized-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHr+c+avIdfIU4xGN6zPh1Yjmse6L4e8f98j4JWX4lmi hihacks@valk-pc",
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILC3RtnBmFqCn1qZuMXbQDVQqW2qJh0Z/Mspxc2Accrd hihacks@crummytop"
+authorized-keys = [ # Try to rotate these every now and then...
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHYjHkLEoqnhIg91FVA32nL7qbJe2l+Iy+t/WX98z7td hihacks@valk-pc", # Directly via personal computers
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICBb79Z1HFfgBM2XVyURzsXRG0b0fJRNplyN3v80CF8j hihacks@crummytop",
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook" # Ansible
 ]
 timezone = "America/Los_Angeles"
 
 [networking]
 gateway = "192.168.8.1"
+subnet = "192.168.8.0/23"
 nameservers = ["8.8.8.8", "8.8.4.4", "1.1.1.1"]
 
 [email]

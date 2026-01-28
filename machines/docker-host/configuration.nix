@@ -28,7 +28,11 @@ in
     })
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
-    (../.. + "/modules/networking/tailscale.nix")
+    (import (../.. + "/modules/networking/tailscale.nix") {
+      inherit inputs secretsFile;
+      routesAdvertised = [ constantsValues.networking.subnet ];
+      isExitNode = true;
+    })
   ];
 
   sops = {

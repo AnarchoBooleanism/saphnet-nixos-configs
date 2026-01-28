@@ -11,6 +11,7 @@ timezone = "America/Los_Angeles"
 
 [networking]
 gateway = "192.168.8.1"
+subnet = "192.168.8.0/23"
 nameservers = ["8.8.8.8", "8.8.4.4", "1.1.1.1"]
 
 [email]
