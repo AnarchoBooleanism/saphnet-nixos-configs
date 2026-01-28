@@ -8,6 +8,7 @@
     # Various tools for system management
     nfs-utils
     pciutils
+    python314
     vim
     man-db
     git
