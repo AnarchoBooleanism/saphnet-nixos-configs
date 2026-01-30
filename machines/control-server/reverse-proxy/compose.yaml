@@ -1,32 +1,36 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
 
+x-common:
+  TIMEZONE: &timezone "${TZ}"
+
 services:
   nginx:
     image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.1.1
-    restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+    environment:
+      TZ: *timezone
     volumes:
       # Main conf file
       - ${NGINX_PROXIES_FILE}:/etc/nginx/proxies.conf:ro
       # Certificate files
       - certbot-conf:/etc/letsencrypt:ro
-    environment:
-      - TZ=${TZ}
     networks: # For connecting with other services directly
       - central-network
+    restart: unless-stopped
+  
   certbot:
     image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:v1.0.0-certbotv5.1.0-3
-    restart: unless-stopped
+    entrypoint: |
+      /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
+    environment:
+      TZ: *timezone
     volumes:
       - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
-    environment:
-      - TZ=${TZ}
     # Renew certificates every 12 hours
-    entrypoint: |
-      /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
+    restart: unless-stopped
 
 volumes:
   certbot-conf:

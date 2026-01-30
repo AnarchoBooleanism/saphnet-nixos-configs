@@ -13,33 +13,32 @@ services:
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
     command: --quiet --wiredTigerCacheSizeGB 0.25
-    restart: unless-stopped
     # ports:
-    #   - 27017:27017
+    #   - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${KOMODO_DB_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${KOMODO_DB_PASSWORD}"
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DB_PASSWORD}
     networks:
       - komodo-network
+    restart: unless-stopped
   
   core:
-    container_name: komodo-core
     image: ghcr.io/moghtech/komodo-core:1.19.5
-    labels:
-      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
-    restart: unless-stopped
+    container_name: komodo-core
     depends_on:
       - mongo
+    labels:
+      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
     ports:
-      - 9120:9120
-    env_file: ${ENV_FILE}
+      - "9120:9120"
+    env_file: "${ENV_FILE}"
     environment:
       KOMODO_DATABASE_ADDRESS: mongo:27017
-      KOMODO_DATABASE_USERNAME: ${KOMODO_DB_USERNAME}
-      KOMODO_DATABASE_PASSWORD: ${KOMODO_DB_PASSWORD}
+      KOMODO_DATABASE_USERNAME: "${KOMODO_DB_USERNAME}"
+      KOMODO_DATABASE_PASSWORD: "${KOMODO_DB_PASSWORD}"
     volumes:
       ## Store dated backups of the database - https://komo.do/docs/setup/backup
       - ${COMPOSE_KOMODO_BACKUPS_PATH}:/backups
@@ -54,16 +53,16 @@ services:
     networks: # For connecting with other services directly
       - komodo-network
       - central-network
+    restart: unless-stopped
 
   ## Deploy Periphery container using this block,
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    container_name: komodo-periphery
     image: ghcr.io/moghtech/komodo-periphery:1.19.5
+    container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
-    restart: unless-stopped
     env_file: ${ENV_FILE}
     volumes:
       ## Mount external docker socket
@@ -77,6 +76,7 @@ services:
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
     networks:
       - komodo-network
+    restart: unless-stopped
 
 volumes:
   # Mongo
