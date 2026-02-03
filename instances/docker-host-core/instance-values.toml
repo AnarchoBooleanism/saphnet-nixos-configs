@@ -1,0 +1,10 @@
+# instance-values.toml
+# A list of values to use to instantiate docker-host for docker-host-core
+
+hostname = "docker-host-core"
+domain = "int-net.saphnet.xyz"
+
+[networking]
+ip-address = "192.168.8.202" # docker-host-core.int-net.saphnet.xyz
+ip-prefix-length = 23 # 192.168.8.0/23
+interface = "ens18"
