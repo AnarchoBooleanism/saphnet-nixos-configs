@@ -19,6 +19,7 @@
     bash-completion
     dmidecode
     ncdu
+    vnstat
   ];
 
   boot.initrd = { # Support nfs systems
@@ -60,4 +61,7 @@
   # Security-related items
   security.apparmor.enable = true;
   services.fail2ban.enable = true;
+
+  # Monitoring
+  services.vnstat.enable = true;
 }

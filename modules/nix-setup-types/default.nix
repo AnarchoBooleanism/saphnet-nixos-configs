@@ -11,7 +11,7 @@
   in {
     settings = {
       # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes";
+      experimental-features = "nix-command flakes pipe-operators";
       # Opinionated: disable global registry
       flake-registry = "";
     };
