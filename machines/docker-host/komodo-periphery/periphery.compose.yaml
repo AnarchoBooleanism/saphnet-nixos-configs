@@ -7,7 +7,7 @@
 
 services:
   periphery:
-    image: ghcr.io/moghtech/komodo-periphery:1.19@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1
+    image: ghcr.io/moghtech/komodo-periphery:1.19@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1 # To only update intentionally
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
