@@ -4,4 +4,4 @@
 state-version = "25.11" # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 
 [reverse-proxy]
-certbot-version = "v1.0.0-certbotv5.2.2-1" # For my custom certbot image for Namecheap, https://github.com/AnarchoBooleanism/certbot-dns-namecheap
+certbot-version = "v1.0.0-certbotv5.3.0-1" # For my custom certbot image for Namecheap, https://github.com/AnarchoBooleanism/certbot-dns-namecheap

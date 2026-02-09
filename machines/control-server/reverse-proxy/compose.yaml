@@ -5,7 +5,7 @@ x-common:
 
 services:
   nginx:
-    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.1.1
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:latest@sha256:a7752ca17e5c0dc8f69e55c39a1f63b36e48962dd9320aa1341f7a313cc26eff
     ports:
       - "80:80"
       - "443:443"
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
   
   certbot:
-    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:v1.0.0-certbotv5.1.0-3
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:2ab2e6c5f513bc5b83e64ecc86dd19b936b4b2ecc0336ca778934910bf79047e
     entrypoint: |
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
     environment:

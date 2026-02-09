@@ -14,5 +14,10 @@ updates:
       - "/machines/control-server/komodo-control" # Machine: control-server
       - "/machines/control-server/reverse-proxy"
       - "/machines/docker-host/komodo-periphery" # Machine: docker-host 
+    groups:
+      komodo:
+        patterns:
+          - "komodo-core"
+          - "komodo-periphery"
     schedule:
       interval: "weekly"
