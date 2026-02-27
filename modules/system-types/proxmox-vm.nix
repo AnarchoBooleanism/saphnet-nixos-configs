@@ -6,20 +6,33 @@
 {
   environment.systemPackages = with pkgs; [
     # Various tools for system management
+    # System monitoring
+    htop
+    iotop
+    nvtop
+    ncdu
+    dmidecode
+    # Network monitoring, diagnosis
+    net-tools
+    nmap
+    tcpdump
+    vnstat
+    bind
+    # Miscellaneous
     nfs-utils
     pciutils
+    zsh
     tmux
+    screen
     python314
+    nano
     vim
+    emacs
     man-db
     git
     curl
     rsync
-    htop
     bash-completion
-    dmidecode
-    ncdu
-    vnstat
   ];
 
   boot.initrd = { # Support nfs systems
