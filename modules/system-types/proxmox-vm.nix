@@ -9,7 +9,7 @@
     # System monitoring
     htop
     iotop
-    nvtop
+    nvtopPackages.full
     ncdu
     dmidecode
     # Network monitoring, diagnosis
