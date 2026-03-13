@@ -6,9 +6,6 @@
 }: {
   nixpkgs.config.allowUnfree = true;
 
-  # Custom-added: Set trusted-users for remote building
-  nix.settings.trusted-users = [ "root" "@wheel" ];
-
   nix = let
     flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
   in {

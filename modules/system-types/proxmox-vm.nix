@@ -67,6 +67,9 @@
   };
   programs.ssh.startAgent = true; # Nicety for control server
 
+  # Make remote builds more easy
+  nix.settings.trusted-users = [ "root" "@wheel" ];
+
   # Other tools for integrating with Proxmox
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
