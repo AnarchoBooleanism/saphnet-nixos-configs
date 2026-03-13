@@ -6,6 +6,9 @@
 }: {
   nixpkgs.config.allowUnfree = true;
 
+  # Custom-added: Set trusted-users for remote building
+  nix.settings.trusted-users = [ "root" "@wheel" ];
+
   nix = let
     flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
   in {
@@ -14,8 +17,6 @@
       experimental-features = "nix-command flakes pipe-operators";
       # Opinionated: disable global registry
       flake-registry = "";
-      # Custom-added: Set trusted-users for reomte building
-      trusted-users = [ "root" "@wheel" ];
     };
     # Opinionated: disable channels
     channel.enable = false;
