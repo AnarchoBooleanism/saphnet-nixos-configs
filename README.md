@@ -39,7 +39,11 @@ Here are some useful commands to use when writing to the configuration and deplo
   - NOTE: If you have a passphrase for the SSH key, make sure to set the environment variable `SSH_TO_AGE_PASSPHRASE` beforehand! The best way to do this is with the command `read -s SSH_TO_AGE_PASSPHRASE; export SSH_TO_AGE_PASSPHRASE`
   - For `-o`, you'll probably want to store this in `$HOME/.config/sops/age/keys.txt`
 - For performing an upgrade on a NixOS system on the host itself: `sudo nixos-rebuild switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME>`
-
+  - Since many VMs that will be deployed to are run on Proxmox hosts that use ZFS on consumer-grade SSDs, nixos-rebuild will easily saturate IO on these drives with all the writes that it performs, and cause the hosts to crash. To limit how many jobs are being run at a time (to limit IO usage), add the argument `--max-jobs <NUMBER OF JOBS>`.
+    - This is an example: `sudo nixos-rebuild switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --max-jobs 2`
+- For performing an upgrade on a remote NixOS system, doing the building on your own machine: `nix run nixpkgs#nixos-rebuild -- switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --target-host <USERNAME>@<HOSTNAME> --ask-sudo-password`
+  - NOTE: You may want to set the arguments for the SSH command (on the host). To do this, simply add the environment variable, `NIX_SSHOPTS`, with the value being your list of arguments.
+  - As an example, this is what it would look like when using the host's SSH config (to use the available private keys), on a typical Sapphic Homelab setup: `NIX_SSHOPTS="-F /home/<HOST USERNAME>/.ssh/config" nix run nixpkgs#nixos-rebuild -- switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --target-host saphnet-user@<HOSTNAME>.int-net.saphnet.xyz --ask-sudo-password`
 ### Note on using Nix
 In order to deploy and do other tasks with the contents of the repository, you'll want to have Nix available, with both flakes and nix-commands enabled.
 
