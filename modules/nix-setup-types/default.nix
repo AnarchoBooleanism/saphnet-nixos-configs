@@ -14,6 +14,8 @@
       experimental-features = "nix-command flakes pipe-operators";
       # Opinionated: disable global registry
       flake-registry = "";
+      # Custom-added: Set trusted-users for reomte building
+      nix.settings.trusted-users = [ "root" "@wheel" ];
     };
     # Opinionated: disable channels
     channel.enable = false;
