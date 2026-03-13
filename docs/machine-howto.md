@@ -678,7 +678,7 @@ Finally, you might want to import sops-nix secrets into your Docker Compose serv
 systemd.services."example-service" = {
   ... # Lines omitted for brevity
   environment = {
-    SECRET_1_FILE = "${config.sops.secrets.secret1.path}";
+    SECRET_1_FILE = config.sops.secrets.secret1.path;
     ...
   };
 

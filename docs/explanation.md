@@ -287,7 +287,7 @@ interface = "ens18"
 
 This defines various values (that can be publicly shared as cleartext) that make the Instance unique, with its own identity; these include the hostname, domain, IP address, alongside other values that are unique to the Instance.
 
-Here is an example of `secrets.yaml`, for no machine in particular reason (as cleartext):
+Here is an example of `secrets.yaml`, for no machine in particular (as cleartext):
 
 ```yaml
 my-very-secret-password: password123
@@ -311,7 +311,7 @@ These are usually imported as parsed TOML files, as an argument for a Machine's 
 
 For example, in `control-server`, this is the TOML file with the constants:
 ```toml
-# default-constants.toml
+# homelab-constants-values.toml
 # A list of defaults to use for any homelab-related machine
 
 default-username = "saphnet-user"

@@ -1,4 +1,4 @@
-# default-constants.toml
+# homelab-constants-values.toml
 # A list of defaults to use for any homelab-related machine
 
 default-username = "saphnet-user"
