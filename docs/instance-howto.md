@@ -173,7 +173,6 @@ With an entry in the `.sops.yaml` file present, we are now able to create and ed
 
 If successful, you should have the file open and editable. You are now welcome to add your secrets, as mappings of keys to values, in the YAML format, like this (note that this is not an actual file that is present in the repository):
 ```yaml
-main-password: yc31jvn9Kcqqp2UhLLWa%hNj
 main-password-hashed: $6$Z3KN0Zei8bXbemfA$rc7n4eU86i/YQOQL2ZqNBg4uyf3QZ3hlpZSI6T6w1VqL2u94nh0RnnOar4ApGEfEyCoOcdiL./XrrVHPzKuHf1
 my-api-key: myapikeyhere_123456789abcdef123
 ```
@@ -185,7 +184,7 @@ Once you exit the editor, you should see that the resulting file has many of the
 If you wish to decrypt or encrypt the file directly, you can run the commands  `nix run nixpkgs#sops -- decrypt --in-place ./instances/INSTANCE-NAME/secrets.yaml` and `nix run nixpkgs#sops -- encrypt --in-place ./instances/INSTANCE-NAME/secrets.yaml` respectively.
 
 #### On creating password hashes
-It is generally best practice to have a NixOS flake use a password hash, as opposed to a plaintext password, to make it harder for potential attackers on the system to obtain it. Furthermore, Machines are generally set up to use password hashes. You are welcome to have the password written out in the secrets file, but make sure that sops-nix does not actually import it as a secret.
+It is generally best practice to have a NixOS flake use a password hash, as opposed to a plaintext password, to make it harder for potential attackers on the system to obtain it. Furthermore, Machines are generally set up to use password hashes; be sure to save the actual passwords somewhere secure.
 
 To create a password hash, enter your desired password as input in this command: `nix run nixpkgs#mkpasswd -- -m sha-512 -s`
 
