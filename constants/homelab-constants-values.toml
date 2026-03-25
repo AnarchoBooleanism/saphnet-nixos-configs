@@ -18,3 +18,6 @@ nameservers = ["8.8.8.8", "8.8.4.4", "1.1.1.1"]
 address = "homelab@saphnet.xyz"
 host = "mail.privateemail.com"
 port = "465"
+
+[komodo]
+core-public-key = "MCowBQYDK2VuAyEA0Eln2iV4qEGKReCXLsA68JOD/2ogITYJgzZXOjhD9EI="

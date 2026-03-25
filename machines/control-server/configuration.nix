@@ -148,6 +148,7 @@ in
 
     environment = {
       ENV_FILE = "${./komodo-control/compose.env}"; # Need to pass this in as env argument to work with Nix store
+      KOMODO_PUBLIC_KEY = constantsValues.komodo.core-public-key;
       # Other secret env variables that need to be passed in directly are listed in script 
     };
 

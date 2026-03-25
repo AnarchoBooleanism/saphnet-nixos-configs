@@ -96,6 +96,7 @@ in
 
     environment = {
       PERIPHERY_ROOT_DIRECTORY = "/etc/komodo";
+      KOMODO_PUBLIC_KEY = constantsValues.komodo.core-public-key;
       # Other secret env variables that need to be passed in directly are listed in script 
     };
 
