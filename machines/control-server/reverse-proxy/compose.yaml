@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
   
   certbot:
-    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:929c152ae8e7dfbba0daeb23d77758d4ba37c49eb6371d3110e238216ea2c485
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:8bf8b77f0d3ec89f58298693ec22238e916ae4227011bb4df35eb0b7a95be685
     entrypoint: |
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
     environment:
