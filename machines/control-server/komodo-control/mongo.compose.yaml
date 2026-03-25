@@ -26,8 +26,9 @@ services:
     restart: unless-stopped
   
   core:
-    image: ghcr.io/moghtech/komodo-core:1.19@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade # To only update intentionally
+    image: ghcr.io/moghtech/komodo-core:2@sha256:417339e4a899d726c4ab6c56acf6b770cf7c6a067e231a2753b2dcf37f9a318b # To only update intentionally
     container_name: komodo-core
+    init: true
     depends_on:
       - mongo
     labels:
@@ -40,6 +41,7 @@ services:
       KOMODO_DATABASE_USERNAME: "${KOMODO_DB_USERNAME}"
       KOMODO_DATABASE_PASSWORD: "${KOMODO_DB_PASSWORD}"
     volumes:
+      - komodo-keys:/config/keys
       ## Store dated backups of the database - https://komo.do/docs/setup/backup
       - ${COMPOSE_KOMODO_BACKUPS_PATH}:/backups
       ## Store sync files on server
@@ -59,7 +61,7 @@ services:
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    image: ghcr.io/moghtech/komodo-periphery:1.19@sha256:bd79cf960ed054fe8e02384322303e462448679b1149dde48bbef151417255b1 # To only update intentionally
+    image: ghcr.io/moghtech/komodo-periphery:2@sha256:cc9aff8b621d49bbcca394e1538d9d9ea28c48bcfd2d6c8a6f9d5d3eef7f8341 # To only update intentionally
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
@@ -79,6 +81,8 @@ services:
     restart: unless-stopped
 
 volumes:
+  # Komodo
+  komodo-keys:
   # Mongo
   mongo-data:
   mongo-config:
