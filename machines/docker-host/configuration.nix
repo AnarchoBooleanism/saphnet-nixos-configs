@@ -41,7 +41,6 @@ in
         neededForUsers = true; # Setting so that password works properly
       };
       tailscale-auth-key = {};
-      komodo-passkey = {};
     };
   };
 
@@ -105,7 +104,6 @@ in
       sleep 5
 
       # Dynamically export variables from secrets files
-      export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/periphery.compose.yaml} up
     '';

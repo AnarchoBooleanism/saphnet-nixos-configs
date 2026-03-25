@@ -2,7 +2,6 @@
 # - main-password-hashed: Hash of the login password (pass this into "nix run nixpkgs#mkpasswd -- -m sha-512 -s")
 # - tailscale-auth-key: Authentication key for Tailscale
 # - komodo-db-pass: Password for the SQL server of Komodo
-# - komodo-passkey: Passkey for authenticating between Komodo Core / Periphery
 # - namecheap-api-details: Namecheap username and API key for DNS challenges
 
 { # Custom args
@@ -50,7 +49,6 @@ in
       };
       tailscale-auth-key = {};
       komodo-db-pass = {};
-      komodo-passkey = {};
       namecheap-api-details = {};
     };
   };
@@ -158,7 +156,6 @@ in
 
       # Dynamically export variables from secrets files
       export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
-      export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
       # Export other variables
       export TZ=$(timedatectl show --va -p Timezone)

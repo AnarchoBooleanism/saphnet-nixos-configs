@@ -112,7 +112,6 @@ For `control-server`, here is a list of secrets you will need to set:
 - main-password-hashed: The hash of your login password (create by passing your password into `nix run nixpkgs#mkpasswd -- -m sha-512 -s`)
 - tailscale-auth-key: [Authentication key for Tailscale](https://tailscale.com/kb/1085/auth-keys)
 - komodo-db-pass: Password for the SQL server of Komodo
-- komodo-passkey: Passkey for authenticating between Komodo Core / Periphery
 - namecheap-api-details: [Namecheap username and API key for DNS challenges](https://www.namecheap.com/support/api/intro/)
   - You will want this in this format:
     ```yaml
