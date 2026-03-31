@@ -1,3 +1,9 @@
+# NOTE: You need to set these sops-nix variables first before deploying!
+# - main-password-hashed: Hash of the login password (pass this into "nix run nixpkgs#mkpasswd -- -m sha-512 -s")
+# - tailscale-auth-key: Authentication key for Tailscale
+# - komodo-sops-key: SOPS key to use for decrypting secrets in saphnet-compose-configs
+# - komodo-public-key: Public key with which to connect to Komodo Core (get from Settings -> Public Key)
+
 { # Custom args
   secretsFile ? throw "Set this to the path of your instance's secrets file",
   instanceValues ? throw "Set this to the contents of your instance's values file",
@@ -41,6 +47,8 @@ in
         neededForUsers = true; # Setting so that password works properly
       };
       tailscale-auth-key = {};
+      komodo-sops-key = {};
+      komodo-public-key = {};
     };
   };
 
@@ -95,7 +103,7 @@ in
 
     environment = {
       PERIPHERY_ROOT_DIRECTORY = "/etc/komodo";
-      KOMODO_PUBLIC_KEY = constantsValues.komodo.core-public-key;
+      KOMODO_SOPS_KEY_PATH = config.sops.secrets.komodo-sops-key.path;
       # Other secret env variables that need to be passed in directly are listed in script 
     };
 
@@ -104,6 +112,7 @@ in
       sleep 5
 
       # Dynamically export variables from secrets files
+      export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
 
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/periphery.compose.yaml} up
     '';

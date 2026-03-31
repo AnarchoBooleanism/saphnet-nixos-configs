@@ -112,6 +112,10 @@ For `control-server`, here is a list of secrets you will need to set:
 - main-password-hashed: The hash of your login password (create by passing your password into `nix run nixpkgs#mkpasswd -- -m sha-512 -s`)
 - tailscale-auth-key: [Authentication key for Tailscale](https://tailscale.com/kb/1085/auth-keys)
 - komodo-db-pass: Password for the SQL server of Komodo
+- komodo-sops-key: SOPS key to use for decrypting secrets in saphnet-compose-configs (create with `nix shell nixpkgs#age --command age-keygen`)
+- komodo-public-key: Public key with which to connect to Komodo Core (get from Settings -> Public Key)
+- komodo-git-token: Git token to allow access to Git repositories (e.g. GitHub)
+- komodo-docker-token: Git token to allow access to Docker registries (e.g. ghcr.io)
 - namecheap-api-details: [Namecheap username and API key for DNS challenges](https://www.namecheap.com/support/api/intro/)
   - You will want this in this format:
     ```yaml

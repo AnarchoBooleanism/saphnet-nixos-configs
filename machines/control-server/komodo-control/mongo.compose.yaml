@@ -40,6 +40,11 @@ services:
       KOMODO_DATABASE_ADDRESS: mongo:27017
       KOMODO_DATABASE_USERNAME: "${KOMODO_DB_USERNAME}"
       KOMODO_DATABASE_PASSWORD: "${KOMODO_DB_PASSWORD}"
+      # Key file for SOPS, to use in sops commands
+      SOPS_AGE_KEY_FILE: "/root/.config/sops/age/keys.txt"
+      # More custom vars
+      GIT_ACCESS_TOKEN: "${GIT_ACCESS_TOKEN}"
+      DOCKER_ACCESS_TOKEN: "${DOCKER_ACCESS_TOKEN}"
     volumes:
       - komodo-keys:/config/keys
       ## Store dated backups of the database - https://komo.do/docs/setup/backup
@@ -47,7 +52,9 @@ services:
       ## Store sync files on server
       # - /path/to/syncs:/syncs
       ## Optionally mount a custom core.config.toml
-      # - /path/to/core.config.toml:/config/config.toml
+      - ${KOMODO_CONFIG_PATH}:/config/config.toml
+      # SOPS key
+      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
     ## Allows for systemd Periphery connection at 
     ## "https://host.docker.internal:8120"
     # extra_hosts:
@@ -61,7 +68,7 @@ services:
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    image: ghcr.io/moghtech/komodo-periphery:2@sha256:cc9aff8b621d49bbcca394e1538d9d9ea28c48bcfd2d6c8a6f9d5d3eef7f8341 # To only update intentionally
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.0.0@sha256:1674e59f7eafffe5a80b8ec1219dde364638f1f8f74f08f339667405d03c4b5a # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers

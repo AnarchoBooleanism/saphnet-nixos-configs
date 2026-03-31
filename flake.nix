@@ -26,7 +26,10 @@
       inherit (self) outputs;
     in {
       # Configuration for NixOS itself
-      # nixos-anywhere --flake .#config-name --generate-hardware-config nixos-generate-config instances/<INSTANCE_NAME>/hardware-configuration.nix <hostname> # TODO: Update for secrets stuff
+      # nix run github:nix-community/nixos-anywhere -- \
+      # --flake .#<INSTANCE_NAME> \
+      # --generate-hardware-config nixos-generate-config ./instances/INSTANCE_NAME/hardware-configuration.nix \
+      # --target-host root@<IP ADDRESS/HOSTNAME>
       nixosConfigurations = {
         "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
           specialArgs = {inherit inputs outputs;};

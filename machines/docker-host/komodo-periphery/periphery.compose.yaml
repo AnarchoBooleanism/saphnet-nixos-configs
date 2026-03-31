@@ -7,7 +7,7 @@
 
 services:
   periphery:
-    image: ghcr.io/moghtech/komodo-periphery:2@sha256:cc9aff8b621d49bbcca394e1538d9d9ea28c48bcfd2d6c8a6f9d5d3eef7f8341 # To only update intentionally
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.0.0@sha256:1674e59f7eafffe5a80b8ec1219dde364638f1f8f74f08f339667405d03c4b5a # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
@@ -30,6 +30,8 @@ services:
       ## Usually whitelisting just /etc/hostname gives correct size for single root disk.
       PERIPHERY_INCLUDE_DISK_MOUNTS: "/etc/hostname"
       # PERIPHERY_EXCLUDE_DISK_MOUNTS: /snap,/etc/repos
+      # Key file for SOPS, to use in sops commands
+      SOPS_AGE_KEY_FILE: "/root/.config/sops/age/keys.txt"
     volumes:
       ## Mount external docker socket
       - /var/run/docker.sock:/var/run/docker.sock
@@ -39,7 +41,9 @@ services:
       ## Must be the same inside and outside the container,
       ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
       ## Default: /etc/komodo.
-      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo} # TODO: Look through config file, see what environment variables are needed
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      # SOPS key
+      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
     ## If you want to use a custom periphery config file, use command to pass it to periphery.
     # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
     restart: unless-stopped

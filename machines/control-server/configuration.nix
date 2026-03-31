@@ -2,6 +2,10 @@
 # - main-password-hashed: Hash of the login password (pass this into "nix run nixpkgs#mkpasswd -- -m sha-512 -s")
 # - tailscale-auth-key: Authentication key for Tailscale
 # - komodo-db-pass: Password for the SQL server of Komodo
+# - komodo-sops-key: SOPS key to use for decrypting secrets in saphnet-compose-configs
+# - komodo-public-key: Public key with which to connect to Komodo Core (get from Settings -> Public Key)
+# - komodo-git-token: Git token to allow access to Git repositories (e.g. GitHub)
+# - komodo-docker-token: Git token to allow access to Docker registries (e.g. ghcr.io)
 # - namecheap-api-details: Namecheap username and API key for DNS challenges
 
 { # Custom args
@@ -49,6 +53,10 @@ in
       };
       tailscale-auth-key = {};
       komodo-db-pass = {};
+      komodo-sops-key = {};
+      komodo-public-key = {};
+      komodo-git-token = {};
+      komodo-docker-token = {};
       namecheap-api-details = {};
     };
   };
@@ -146,7 +154,8 @@ in
 
     environment = {
       ENV_FILE = "${./komodo-control/compose.env}"; # Need to pass this in as env argument to work with Nix store
-      KOMODO_PUBLIC_KEY = constantsValues.komodo.core-public-key;
+      KOMODO_CONFIG_PATH = "${./komodo-control/core.config.toml}";
+      KOMODO_SOPS_KEY_PATH = config.sops.secrets.komodo-sops-key.path;
       # Other secret env variables that need to be passed in directly are listed in script 
     };
 
@@ -156,6 +165,9 @@ in
 
       # Dynamically export variables from secrets files
       export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
+      export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
+      export GIT_ACCESS_TOKEN=$(cat ${config.sops.secrets.komodo-git-token.path})
+      export DOCKER_ACCESS_TOKEN=$(cat ${config.sops.secrets.komodo-docker-token.path})
 
       # Export other variables
       export TZ=$(timedatectl show --va -p Timezone)
