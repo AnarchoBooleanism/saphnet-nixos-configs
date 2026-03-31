@@ -5,22 +5,22 @@ keys:
   - &docker-host-pve3 age1mdakaa0w4f0a62mu7r4xkk7kl547rzsf89ql58s4y8rpr3w0e9qspc7s79
   - &docker-host-pve4 age1xp72fxqglsdnxld2zvcswdhrsc2ap2w5c52ptx4dqj6k9fugtuls66yg4t
 creation_rules:
-  - path_regex: instances/control-server/secrets.yaml # Control server
+  - path_regex: (^|\/)instances/control-server/secrets\.yaml$ # Control server
     key_groups:
     - age:
       - *admin
       - *control_server
-  - path_regex: instances/docker-host-core/secrets.yaml # docker-host-core
+  - path_regex: (^|\/)instances/docker-host-core/secrets\.yaml$ # docker-host-core
     key_groups:
     - age:
       - *admin
       - *docker-host-core
-  - path_regex: instances/docker-host-pve3/secrets.yaml # docker-host-pve3
+  - path_regex: (^|\/)instances/docker-host-pve3/secrets\.yaml$ # docker-host-pve3
     key_groups:
     - age:
       - *admin
       - *docker-host-pve3
-  - path_regex: instances/docker-host-pve4/secrets.yaml # docker-host-pve4
+  - path_regex: (^|\/)instances/docker-host-pve4/secrets\.yaml$ # docker-host-pve4
     key_groups:
     - age:
       - *admin
