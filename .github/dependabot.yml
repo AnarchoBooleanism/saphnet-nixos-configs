@@ -16,9 +16,9 @@ updates:
     groups:
       komodo:
         patterns:
-          - "ghcr.io/moghtech/komodo-core"
-          - "ghcr.io/moghtech/komodo-periphery"
-          - "ghcr.io/nikhil-gohil/komodo-periphery-sops"
+          - "moghtech/komodo-core"
+          - "moghtech/komodo-periphery"
+          - "nikhil-gohil/komodo-periphery-sops"
           - "mongo:8"
     schedule:
       interval: "weekly"
@@ -28,7 +28,7 @@ updates:
     groups:
       reverse-proxy:
         patterns:
-          - "ghcr.io/anarchobooleanism/certbot-dns-namecheap"
-          - "ghcr.io/anarchobooleanism/saphnet-nginx"
+          - "anarchobooleanism/certbot-dns-namecheap"
+          - "anarchobooleanism/saphnet-nginx"
     schedule:
       interval: "weekly"
