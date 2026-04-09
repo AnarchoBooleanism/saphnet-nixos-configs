@@ -9,15 +9,26 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "docker-compose"
+  - package-ecosystem: "docker-compose" # Komodo
     directories:
       - "/machines/control-server/komodo-control" # Machine: control-server
-      - "/machines/control-server/reverse-proxy"
       - "/machines/docker-host/komodo-periphery" # Machine: docker-host 
     groups:
       komodo:
         patterns:
-          - "komodo-core"
-          - "komodo-periphery"
+          - "ghcr.io/moghtech/komodo-core"
+          - "ghcr.io/moghtech/komodo-periphery"
+          - "ghcr.io/nikhil-gohil/komodo-periphery-sops"
+          - "mongo:8"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker-compose"
+    directories:
+      - "/machines/control-server/reverse-proxy" # Machine: control-server
+    groups:
+      reverse-proxy:
+        patterns:
+          - "ghcr.io/anarchobooleanism/certbot-dns-namecheap"
+          - "ghcr.io/anarchobooleanism/saphnet-nginx"
     schedule:
       interval: "weekly"
