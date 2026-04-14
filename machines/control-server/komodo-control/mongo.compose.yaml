@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
   
   core:
-    image: ghcr.io/moghtech/komodo-core:2@sha256:2bbbb1efd3534211dac35091e0818f10398d9bdd98fdbf0ddef09e9e0b5ec4ba # To only update intentionally
+    image: ghcr.io/moghtech/komodo-core:2@sha256:8a7dbba232e4e49797bb412be5f78207c89fcf22cc2727b38631ae30f7518a4c # To only update intentionally
     container_name: komodo-core
     init: true
     depends_on:
@@ -68,7 +68,7 @@ services:
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.1.1@sha256:aefc24ff2f9d68fd9f182280e1a3a49ac9450c2cbf98f220a535b9838052ca76 # Temporary for now until Komodo adds SOPS or we build in-house solution
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.1.2@sha256:a7849539864080708afc9a59dfd377f159a289cf621e7fe75c6c67ee16e020c0 # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
