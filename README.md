@@ -43,7 +43,7 @@ Here are some useful commands to use when writing to the configuration and deplo
     - This is an example: `sudo nixos-rebuild switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --max-jobs 2`
 - For performing an upgrade on a remote NixOS system, doing the building on your own machine: `nix run nixpkgs#nixos-rebuild -- switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --target-host <USERNAME>@<HOSTNAME> --ask-sudo-password`
   - NOTE: You may want to set the arguments for the SSH command (on the host). To do this, simply add the environment variable, `NIX_SSHOPTS`, with the value being your list of arguments.
-  - As an example, this is what it would look like when using the host's SSH config (to use the available private keys), on a typical Sapphic Homelab setup: `NIX_SSHOPTS="-F /home/<HOST USERNAME>/.ssh/config" nix run nixpkgs#nixos-rebuild -- switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --target-host saphnet-user@<HOSTNAME>.int-net.saphnet.xyz --ask-sudo-password`
+  - As an example, this is what it would look like when using the host's SSH config (to use the available private keys), on a typical Sapphic Homelab setup: `NIX_SSHOPTS="-F $HOME/.ssh/config" nix run nixpkgs#nixos-rebuild -- switch --flake github:AnarchoBooleanism/saphnet-nixos-configs#<FLAKE NAME> --target-host saphnet-user@<HOSTNAME>.int-net.saphnet.xyz --ask-sudo-password`
 ### Note on using Nix
 In order to deploy and do other tasks with the contents of the repository, you'll want to have Nix available, with both flakes and nix-commands enabled.
 
