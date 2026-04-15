@@ -1,6 +1,7 @@
 keys:
   - &admin age1ute399nzja7le5um48rzdg2nj4c7rf5jvhj7slh05mt5x79nr4wqqlwkdj
-  - &control_server age1vfyd0dfhxth233hzungem5s6mgmju33j3ydx5z8utdsfg76m9pnq0xmlaa
+  - &control-server age1vfyd0dfhxth233hzungem5s6mgmju33j3ydx5z8utdsfg76m9pnq0xmlaa
+  - &dev-server age1y6pk7dpt5afj04lep3v052huwf76llq36gcc7vn2hpmjqgzrpg6sjt8cr9
   - &docker-host-core age16tx7kzg6fs9qr5t2hyjqnx9clp7vgkkh97qjrzfuldc887jxv4ts2rsaeh
   - &docker-host-pve3 age1mdakaa0w4f0a62mu7r4xkk7kl547rzsf89ql58s4y8rpr3w0e9qspc7s79
   - &docker-host-pve4 age1xp72fxqglsdnxld2zvcswdhrsc2ap2w5c52ptx4dqj6k9fugtuls66yg4t
@@ -9,7 +10,12 @@ creation_rules:
     key_groups:
     - age:
       - *admin
-      - *control_server
+      - *control-server
+  - path_regex: (^|\/)instances/dev-server/secrets\.yaml$ # Dev server
+    key_groups:
+    - age:
+      - *admin
+      - *dev-server
   - path_regex: (^|\/)instances/docker-host-core/secrets\.yaml$ # docker-host-core
     key_groups:
     - age:

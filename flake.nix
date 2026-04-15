@@ -45,6 +45,23 @@
             })
           ];
         };
+        "dev-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/dev-server/hardware-configuration.nix
+            (import modules/disko-types/btrfs-subvolumes-separate-home.nix {
+              rootDevice = "/dev/sda";
+              homeDevice = "/dev/sdb";
+            }) # Need to set device name here
+            (import machines/dev-server/configuration.nix {
+              secretsFile = "${./instances/dev-server/secrets.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/dev-server/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
         "docker-host-core" = nixpkgs.lib.nixosSystem { # Docker host for reverse proxy and various web services
           specialArgs = {inherit inputs outputs;};
           system = "x86_64-linux";

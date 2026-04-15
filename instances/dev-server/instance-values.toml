@@ -1,0 +1,16 @@
+# instance-values.toml
+# A list of values to use to instantiate the dev server
+
+hostname = "dev-server"
+domain = "int-net.saphnet.xyz"
+
+[networking]
+ip-address = "192.168.8.164" # control-server.int-net.saphnet.xyz
+ip-prefix-length = 23 # 192.168.8.0/23
+interface = "ens18"
+
+[users."naguerr2"]
+authorized-keys = [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxN4vMa7ngvfCD7lTZZmR1JDZwMaCJrTZQZNLNbhnOCvqUDTXBU6FBhvB2SCqii4p2ZtrCe6Hg7El0o6BAqiTUAur3gyjq7HnqTdgO3fAu251ar4a2TPQmIxP7wV0yKPhTPuivESJyyFPjgaQgJCwyH5YAHW4t9WvuFYS3eXc+HFbAUftg2TcdKmEIY6ZKKin4CFj+FBQWQb3k22oDocUitcQUC+00YsrtrtSqJJqbuWlq2CaZYsdMFy+lUtcB6Bny/EX4UrzvqF7eJKB2nhFIbzcIhwTcI+BA42+MUubR+uUHRq4zOnKlNnNdR9ybesjEWJI0PPI+7GNyilk0kfbXg3leRFrual1ef97prc4ijg5fXsUyiSc6IRx9pWhVTa4goecFFVRT3QDl5hjMQLh6n6WJJ7bq+vTnfaS5aWSBpLJdC7OISdQXq5t5OACSla71MXmCLR0kc6AVu0YWPjLBpPT3a788j2esCqWKChk8eq5Sud2P3CdNBueyJsIk/q8= hihacks@crummytop",
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCyhCHD7EWRK/46XvkGwXjEfZ6gFxNIMco6PygtebcxlzmB19/3VEEc14wT2drRjqYXSQd7rOS49SQ4kQBPsLUcURW3YjOErVHZpJYVJo1WaJ39xgQUSkvWeSINRNMYhnYQGsv5sgTtIp8LUaMKAQD2M0TIvMkWtg7WlJyJqa0byYubenD29e4Y4eSdBWBNRws0sgEyU3tEv0JnGFVicCGyHGCerISxGYP2820AirjLhgEZw5NU/4DDDanzoR3mVKwALuseI/2eKfisDAwearzEXWKcG8jRe/88DZOFVAjUI1eJJbetZfHCqHo98j0IhzIdWQMgwxxdyLJa6HXSprbuPyGF01w6Q4CA42Vm+JF5KjEHVN4aMHrd7qk65811momcZ+BMiY5pO50fAyiAY8YUrqGyyQbEI94C0a03FMEHXr8vb5/+X3PLX+9NOPXNWXw2domCdL8Drt7E5XqtlREEJJwYp7soCzedVag1ALWadJN/clYGfnzHXa475CGMwqs= hihacks@valk-pc"
+]
