@@ -82,6 +82,8 @@ in
 
   time.timeZone = constantsValues.timezone;
 
+  programs.nix-ld.enable = true; # Needed for VS Code Server to work
+
   environment.systemPackages = with pkgs; [
     # Important tools to have for dev server, does overlap with proxmox-vm Module
     # System monitoring
@@ -143,6 +145,7 @@ in
     hyfetch
     # Miscellaneous
     bash-completion
+    keychain
     man-db
     nfs-utils
     pciutils
