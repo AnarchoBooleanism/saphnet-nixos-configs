@@ -113,7 +113,7 @@ in
     perl
     pipx
     python314
-    python314Packages.pip
+    # python314Packages.pip
     qemu_full
     rustc
     # User tools
