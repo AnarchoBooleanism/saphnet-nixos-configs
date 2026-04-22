@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
   
   core:
-    image: ghcr.io/moghtech/komodo-core:2@sha256:8a7dbba232e4e49797bb412be5f78207c89fcf22cc2727b38631ae30f7518a4c # To only update intentionally
+    image: ghcr.io/moghtech/komodo-core:2.1.2@sha256:8a7dbba232e4e49797bb412be5f78207c89fcf22cc2727b38631ae30f7518a4c
     container_name: komodo-core
     init: true
     depends_on:
