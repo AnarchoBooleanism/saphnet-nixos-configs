@@ -63,6 +63,7 @@ in
     ];
   };
 
+  users.mutableUsers = false; # Since we're handling passwords with sops-nix
   users.users = {
     "${constantsValues.default-username}" = {
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
