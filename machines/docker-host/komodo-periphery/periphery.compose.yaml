@@ -7,7 +7,7 @@
 
 services:
   periphery:
-    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.1.2@sha256:a7849539864080708afc9a59dfd377f159a289cf621e7fe75c6c67ee16e020c0 # Temporary for now until Komodo adds SOPS or we build in-house solution
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.2.0@sha256:c4029270134e542aa86e5e5745d80035c56308efedc03920f0dcfad28ca2b09e # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
