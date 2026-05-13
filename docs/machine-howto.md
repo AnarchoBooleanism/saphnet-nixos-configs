@@ -541,6 +541,20 @@ systemd.services."komodo-control" = {
 ```
 In this example, in the script section of the service, which is run when the system itself is running, we run the `cat` command with the path of the secret (from `configs.sops.secrets.<SECRET_NAME>.path`), and the output of this command is read into the environment variables (which are exported) for the secrets that our Docker Compose file is looking for. This allows for us to pass secrets themselves into services and programs, instead of just their paths.
 
+#### IMPORTANT: If using sops-nix to handle user passwords
+
+> **NOTE**: If you are using sops-nix to handle **Linux user passwords**, failing to follow these instructions will result in changes to sops-nix user password secrets not being reflected in `/etc/shadow`, and therefore, the password itself not actually changing on a deployed Instance!
+
+In your Machine's `configuration.nix` file, make sure to set `users.mutableUsers` to `false`, to allow NixOS to modify `/etc/shadow` upon a rebuild:
+```nix
+{
+  users.mutableUsers = false;
+  users.users = {...};
+}
+```
+
+The `users.mutableUsers` attribute determines whether the system preserves manual changes done with `passwd`, and therefore, whether to update user password hash entries in `/etc/shadow` when they already exist. If set to `false`, it means that the flake configuration is the source of truth for `/etc/shadow`, and that NixOS is solely responsible for that file, allowing it to update entries for user password hashes, if they already exist; this also means that manual changes done with `passwd` will be overriden upon a rebuild.
+
 #### IMPORTANT: If using Impermanence with sops-nix
 
 > **NOTE**: If you are using Impermanence **and** sops-nix, failing to follow these instructions will result in sops-nix secrets being inaccessible to the services and programs that require them!
