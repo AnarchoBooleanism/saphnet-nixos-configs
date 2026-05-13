@@ -39,7 +39,7 @@ in
 
   sops = {
     secrets = {
-      main-password-hashed = {
+      main-password-hashed-fix = {
         neededForUsers = true; # Setting so that password works properly
       };
       tailscale-auth-key = {};
