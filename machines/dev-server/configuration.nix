@@ -39,7 +39,7 @@ in
 
   sops = {
     secrets = {
-      main-password-hashed-fix = {
+      main-password-hashed = {
         neededForUsers = true; # Setting so that password works properly
       };
       tailscale-auth-key = {};
@@ -66,7 +66,7 @@ in
   users.mutableUsers = false; # Since we're handling passwords with sops-nix
   users.users = {
     "${constantsValues.default-username}" = {
-      hashedPasswordFile = config.sops.secrets.main-password-hashed-fix.path;
+      hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
       openssh.authorizedKeys.keys = constantsValues.authorized-keys; # Deployment key for accessibility
       extraGroups = ["wheel" "docker" "video" "render"];
