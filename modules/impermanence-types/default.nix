@@ -39,39 +39,39 @@
     after = [ "initrd-root-device.target" ];
     before = [ "sysroot.mount" ];
 
-    path = with pkgs; [
-      btrfs-progs
-      findutils
-      coreutils
-      util-linux
-    ];
+    # path = with pkgs; [
+    #   btrfs-progs
+    #   findutils
+    #   coreutils
+    #   util-linux
+    # ];
 
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";
 
     script = ''
-      mkdir /btrfs_tmp
-      mount /dev/root_vg/root /btrfs_tmp
+      ${pkgs.coreutils}/bin/mkdir /btrfs_tmp
+      ${pkgs.util-linux}/bin/mount /dev/root_vg/root /btrfs_tmp
       if [[ -e /btrfs_tmp/root ]]; then
-          mkdir -p /btrfs_tmp/old_roots
-          timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-          mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+          ${pkgs.coreutils}/bin/mkdir -p /btrfs_tmp/old_roots
+          timestamp=$(${pkgs.coreutils}/bin/date --date="@$(${pkgs.coreutils}/bin/stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+          ${pkgs.coreutils}/bin/mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
       fi
 
       delete_subvolume_recursively() {
           IFS=$'\n'
-          for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+          for i in $(${pkgs.btrfs-progs}/bin/btrfs subvolume list -o "$1" | ${pkgs.coreutils}/bin/cut -f 9- -d ' '); do
               delete_subvolume_recursively "/btrfs_tmp/$i"
           done
-          btrfs subvolume delete "$1"
+          ${pkgs.btrfs-progs}/bin/btrfs subvolume delete "$1"
       }
 
-      for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+      for i in $(${pkgs.findutils}/bin/find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
           delete_subvolume_recursively "$i"
       done
 
-      btrfs subvolume create /btrfs_tmp/root
-      umount /btrfs_tmp
+      ${pkgs.btrfs-progs}/bin/btrfs subvolume create /btrfs_tmp/root
+      ${pkgs.util-linux}/bin/umount /btrfs_tmp
     '';
   };
 
