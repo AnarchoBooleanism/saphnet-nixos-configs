@@ -114,7 +114,7 @@ in
     jdk25_headless
     kubernetes
     perl
-    pipx
+    # pipx # TEMPORARY: pipx is broken on nixpkgs 26.05, see https://github.com/NixOS/nixpkgs/issues/522307
     python314
     # python314Packages.pip
     qemu_full
