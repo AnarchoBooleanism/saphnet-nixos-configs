@@ -85,6 +85,10 @@ in
 
   programs.nix-ld.enable = true; # Needed for VS Code Server to work
 
+  # The custom Disko setup leads to problems otherwise
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   environment.systemPackages = with pkgs; [
     # Important tools to have for dev server, does overlap with proxmox-vm Module
     # System monitoring
