@@ -46,7 +46,14 @@
     # devices = [ ];
     efiSupport = true;
     efiInstallAsRemovable = true;
+
+    # Better to not have the boot drive fill up
+    configurationLimit = 5;
   };
+
+  # systemd bootloader
+  # Again, better to not have the boot drive fill up
+  boot.loader.systemd-boot.configurationLimit = 5;
 
   # Enable serial console, for direct access
   boot.kernelParams = [

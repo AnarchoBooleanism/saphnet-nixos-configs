@@ -56,3 +56,4 @@ There are a few ways you can do this:
 Links that have helped with the creation of this repository:
 - https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/
 - https://bmcgee.ie/posts/2022/11/getting-nixos-to-keep-a-secret/
+- https://www.reddit.com/r/NixOS/comments/1m6y9eh/comment/n4pty1e/
