@@ -39,12 +39,12 @@
     after = [ "initrd-root-device.target" ];
     before = [ "sysroot.mount" ];
 
-    path = with pkgs; [
-      btrfs-progs
-      # findutils
-      # coreutils
-      # util-linux
-    ];
+    # path = with pkgs; [
+    #   btrfs-progs
+    #   findutils
+    #   coreutils
+    #   util-linux
+    # ];
 
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";
