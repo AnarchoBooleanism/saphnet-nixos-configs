@@ -4,6 +4,7 @@
 {
   inputs,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -31,30 +32,72 @@
     ];
   };
 
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    mkdir /btrfs_tmp
-    mount /dev/root_vg/root /btrfs_tmp
-    if [[ -e /btrfs_tmp/root ]]; then
-        mkdir -p /btrfs_tmp/old_roots
-        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-        mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-    fi
+  boot.initrd.systemd.services."impermanence-root-rollback" = {
+    description = "Rollback the root subvolume to an empty state, while archiving roots of the past 30 days";
 
-    delete_subvolume_recursively() {
-        IFS=$'\n'
-        for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-            delete_subvolume_recursively "/btrfs_tmp/$i"
-        done
-        btrfs subvolume delete "$1"
-    }
+    wantedBy = [ "initrd-root-device.target" ];
+    after = [ "initrd-root-device.target" ];
+    before = [ "sysroot.mount" ];
 
-    for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-        delete_subvolume_recursively "$i"
-    done
+    path = with pkgs; [
+      btrfs-progs
+      findutils
+      coreutils
+    ];
 
-    btrfs subvolume create /btrfs_tmp/root
-    umount /btrfs_tmp
-  '';
+    unitConfig.DefaultDependencies = "no";
+    serviceConfig.Type = "oneshot";
+
+    script = ''
+      mkdir /btrfs_tmp
+      mount /dev/root_vg/root /btrfs_tmp
+      if [[ -e /btrfs_tmp/root ]]; then
+          mkdir -p /btrfs_tmp/old_roots
+          timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+          mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+      fi
+
+      delete_subvolume_recursively() {
+          IFS=$'\n'
+          for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+              delete_subvolume_recursively "/btrfs_tmp/$i"
+          done
+          btrfs subvolume delete "$1"
+      }
+
+      for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+          delete_subvolume_recursively "$i"
+      done
+
+      btrfs subvolume create /btrfs_tmp/root
+      umount /btrfs_tmp
+    '';
+  };
+
+  # boot.initrd.postDeviceCommands = lib.mkAfter ''
+  #   mkdir /btrfs_tmp
+  #   mount /dev/root_vg/root /btrfs_tmp
+  #   if [[ -e /btrfs_tmp/root ]]; then
+  #       mkdir -p /btrfs_tmp/old_roots
+  #       timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+  #       mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+  #   fi
+
+  #   delete_subvolume_recursively() {
+  #       IFS=$'\n'
+  #       for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+  #           delete_subvolume_recursively "/btrfs_tmp/$i"
+  #       done
+  #       btrfs subvolume delete "$1"
+  #   }
+
+  #   for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+  #       delete_subvolume_recursively "$i"
+  #   done
+
+  #   btrfs subvolume create /btrfs_tmp/root
+  #   umount /btrfs_tmp
+  # '';
 
   fileSystems."/persist".neededForBoot = true;
 }
