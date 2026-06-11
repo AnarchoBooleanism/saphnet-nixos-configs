@@ -33,7 +33,7 @@
   };
 
   boot.initrd.systemd.services."impermanence-root-rollback" = {
-    description = "Rollback the root subvolume to an empty state, while archiving roots of the past 30 days";
+    description = "Rollback root subvolume to empty state, archiving roots from past 30 days";
 
     wantedBy = [ "initrd-root-device.target" ];
     after = [ "initrd-root-device.target" ];
@@ -43,6 +43,7 @@
       btrfs-progs
       findutils
       coreutils
+      util-linux
     ];
 
     unitConfig.DefaultDependencies = "no";
