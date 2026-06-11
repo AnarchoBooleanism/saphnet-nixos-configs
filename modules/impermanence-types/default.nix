@@ -32,6 +32,13 @@
     ];
   };
 
+  boot.initrd.systemd.storePaths = with pkgs; [
+    btrfs-progs
+    findutils
+    coreutils
+    util-linux
+  ];
+
   boot.initrd.systemd.services."impermanence-root-rollback" = {
     description = "Rollback root subvolume to empty state, archiving roots from past 30 days";
 
