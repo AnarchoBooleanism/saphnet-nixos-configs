@@ -4,7 +4,6 @@
 {
   inputs,
   lib,
-  pkgs,
   ...
 }: {
   imports = [
@@ -33,22 +32,26 @@
   };
 
   boot.initrd.systemd.services."impermanence-root-rollback" = {
-    description = "Rollback root subvolume to empty state, archiving roots from past 30 days";
+    description = "Rollback root subvolume to empty state, keeping archives from past 30 days";
 
     wantedBy = [ "initrd-root-device.target" ];
     after = [ "initrd-root-device.target" ];
     before = [ "sysroot.mount" ];
 
-    # path = with pkgs; [
-    #   btrfs-progs
-    #   findutils
-    #   coreutils
-    #   util-linux
-    # ];
-
     unitConfig.DefaultDependencies = "no";
     serviceConfig.Type = "oneshot";
 
+    # !!! IMPORTANT NOTE !!! (Save yourself from more hours of agony...)
+    # For scripts in early-stage services like this (running in initrd), any binary you run, especially
+    # "mount", MUST be referred to with their full path, in /bin.
+    # Otherwise, running commands, like "mount", WILL result in a "command not found" error, with the
+    # service failing before it can do anything.
+    # Filling in the "path" attribute, used for systemd services, with Nix package names, will not do
+    # anything at all, and neither using systemd.initrd.systemd.storePaths, nor directly referring to
+    # the binaries within the Nix store (e.g. "${pkgs.util-linux}/bin/mount") will get the service to
+    # run the necessary binary.
+    # Also, before you ask, all of the packages needed for this job are already included with the
+    # initrd environment of NixOS.
     script = ''
       /bin/mkdir /btrfs_tmp
       /bin/mount /dev/root_vg/root /btrfs_tmp
@@ -73,56 +76,7 @@
       /bin/btrfs subvolume create /btrfs_tmp/root
       /bin/umount /btrfs_tmp
     '';
-    # script = ''
-    #   ${pkgs.coreutils}/bin/mkdir /btrfs_tmp
-    #   ${pkgs.util-linux}/bin/mount /dev/root_vg/root /btrfs_tmp
-    #   if [[ -e /btrfs_tmp/root ]]; then
-    #       ${pkgs.coreutils}/bin/mkdir -p /btrfs_tmp/old_roots
-    #       timestamp=$(${pkgs.coreutils}/bin/date --date="@$(${pkgs.coreutils}/bin/stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-    #       ${pkgs.coreutils}/bin/mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-    #   fi
-
-    #   delete_subvolume_recursively() {
-    #       IFS=$'\n'
-    #       for i in $(${pkgs.btrfs-progs}/bin/btrfs subvolume list -o "$1" | ${pkgs.coreutils}/bin/cut -f 9- -d ' '); do
-    #           delete_subvolume_recursively "/btrfs_tmp/$i"
-    #       done
-    #       ${pkgs.btrfs-progs}/bin/btrfs subvolume delete "$1"
-    #   }
-
-    #   for i in $(${pkgs.findutils}/bin/find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-    #       delete_subvolume_recursively "$i"
-    #   done
-
-    #   ${pkgs.btrfs-progs}/bin/btrfs subvolume create /btrfs_tmp/root
-    #   ${pkgs.util-linux}/bin/umount /btrfs_tmp
-    # '';
   };
-
-  # boot.initrd.postDeviceCommands = lib.mkAfter ''
-  #   mkdir /btrfs_tmp
-  #   mount /dev/root_vg/root /btrfs_tmp
-  #   if [[ -e /btrfs_tmp/root ]]; then
-  #       mkdir -p /btrfs_tmp/old_roots
-  #       timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-  #       mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
-  #   fi
-
-  #   delete_subvolume_recursively() {
-  #       IFS=$'\n'
-  #       for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-  #           delete_subvolume_recursively "/btrfs_tmp/$i"
-  #       done
-  #       btrfs subvolume delete "$1"
-  #   }
-
-  #   for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
-  #       delete_subvolume_recursively "$i"
-  #   done
-
-  #   btrfs subvolume create /btrfs_tmp/root
-  #   umount /btrfs_tmp
-  # '';
 
   fileSystems."/persist".neededForBoot = true;
 }
