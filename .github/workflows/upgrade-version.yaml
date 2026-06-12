@@ -11,6 +11,8 @@ permissions:
 
 env:
   NIXOS_RELEASES_API_URL: "https://endoflife.date/api/v1/products/nixos/"
+  GITHUB_AUTHOR_EMAIL: "github-actions[bot]@users.noreply.github.com"
+  GITHUB_AUTHOR_NAME: "github-actions[bot]"
 
 jobs:
   upgrade-nixos-version:
@@ -71,6 +73,10 @@ jobs:
         if: env.NIXOS_UPGRADE_AVAILABLE == 'true'
       - name: Update flake.lock
         run: |
+          # Make sure Git commits work
+          git config --global user.email "${{ env.GITHUB_AUTHOR_EMAIL }}"
+          git config --global user.name "${{ env.GITHUB_AUTHOR_NAME }}"
+
           # Might as well do all inputs
           nix flake update --commit-lock-file
 
@@ -95,6 +101,8 @@ jobs:
             ```
             ${{ env.GIT_COMMIT_MESSAGE }}
             ```
+          author: |
+            ${{ env.GITHUB_AUTHOR_NAME }} ${{ env.GITHUB_AUTHOR_EMAIL }}
           add-paths: |
             flake.nix
             flake.lock
