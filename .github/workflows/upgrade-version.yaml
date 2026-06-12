@@ -72,7 +72,15 @@ jobs:
       - name: Update flake.lock
         run: |
           # Might as well do all inputs
-          nix flake update
+          nix flake update --commit-lock-file
+
+          # Save commit message from lock file update as environment variable
+          DELIMITER=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          COMMIT_MESSAGE="$(git log --format=%b -n 1)"
+          echo "GIT_COMMIT_MESSAGE<<$DELIMITER" >> $GITHUB_ENV
+          echo "$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "$DELIMITER" >> $GITHUB_ENV
+          echo "GIT_COMMIT_MESSAGE is: ${COMMIT_MESSAGE}"
         if: env.NIXOS_UPGRADE_AVAILABLE == 'true'
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8
@@ -81,6 +89,12 @@ jobs:
           branch: "nixos-upgrade-${{ env.LATEST_NIXOS_RELEASE }}"
           sign-commits: true
           title: "upgrade: Change NixOS flake version to ${{ env.LATEST_NIXOS_RELEASE }}"
+          body: |
+            This commit upgrades the version of NixOS, as referred to as the nixpkgs input, from ${{ env.CURRENT_NIXOS_VERSION }} to ${{ env.LATEST_NIXOS_RELEASE }}.
+
+            ```
+            ${{ env.GIT_COMMIT_MESSAGE }}
+            ```
           add-paths: |
             flake.nix
             flake.lock
