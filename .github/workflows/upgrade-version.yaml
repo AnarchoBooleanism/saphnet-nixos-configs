@@ -68,12 +68,12 @@ jobs:
           # but we are modifying flake.nix, we need to be able to match any version that is
           # already in flake.nix, in case there is a mismatch.
           sed -E -i "s|(nixpkgs\.url = \"github:nixos/nixpkgs/nixos-)[0-9]{2}\.[0-9]{2}|\1${LATEST_NIXOS_RELEASE}|" flake.nix
-        if: env.NIXOS_UPGRADE_AVAILABLE == true
+        if: env.NIXOS_UPGRADE_AVAILABLE == 'true'
       - name: Update flake.lock
         run: |
           # Might as well do all inputs
           nix flake update
-        if: env.NIXOS_UPGRADE_AVAILABLE == true
+        if: env.NIXOS_UPGRADE_AVAILABLE == 'true'
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8
         with:
@@ -84,4 +84,4 @@ jobs:
           add-paths: |
             flake.nix
             flake.lock
-        if: env.NIXOS_UPGRADE_AVAILABLE == true
+        if: env.NIXOS_UPGRADE_AVAILABLE == 'true'
