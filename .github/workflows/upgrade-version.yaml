@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     # At 01:00 on day-of-month 7, every June & December (roughly a week or two after NixOS release)
-    - cron: '0 1 7 6,12 *' 
+    - cron: '0 1 7 6,12 *'
 
 permissions:
   pull-requests: write
@@ -34,7 +34,7 @@ jobs:
             | sub("nixos-"; "")
           ')
 
-          echo "The current NixOS version of the repository is $VERSION"
+          echo "The current NixOS version of the repository is $version"
           echo "CURRENT_NIXOS_VERSION=${version}" >> $GITHUB_ENV
       - name: Find the latest available NixOS version
         run: |
