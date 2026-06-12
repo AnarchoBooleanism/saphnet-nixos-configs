@@ -101,8 +101,6 @@ jobs:
             ```
             ${{ env.GIT_COMMIT_MESSAGE }}
             ```
-          author: |
-            ${{ env.GITHUB_AUTHOR_NAME }} ${{ env.GITHUB_AUTHOR_EMAIL }}
           add-paths: |
             flake.nix
             flake.lock
