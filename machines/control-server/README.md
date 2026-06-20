@@ -55,7 +55,7 @@ If using Ansible, you might want to store the SSH key and/or age key in the vaul
 NOTE: Alternatively, to just create an age key, run `nix shell nixpkgs#age --command age-keygen -o $HOME/.config/sops/age/keys.txt`)
 
 ### 2. Create/fill out `.sops.yaml`
-Now that we have our age keys created, we will need to fill out `.sops.yaml` with our public age keys and the details of how we want to deal with our `secrets.yaml` file, for sops-nix to work.
+Now that we have our age keys created, we will need to fill out `.sops.yaml` with our public age keys and the details of how we want to deal with our `secrets.enc.yaml` file, for sops-nix to work.
 
 First, we will need to derive the public keys from our private age key files.
 
@@ -69,10 +69,10 @@ keys: # Note: The names can be anything, they just need to match to what is in t
   - &control_server agePUBLICKEYFORCONTROLSERVER
 ```
 
-Furthermore, in `.sops.yaml`, add this information in `creation_rules` as a new entry (the contents of `path_regex` are just the path to the `secrets.yaml` in your soon-to-be Instance directory, feel free to change it):
+Furthermore, in `.sops.yaml`, add this information in `creation_rules` as a new entry (the contents of `path_regex` are just the path to the `secrets.enc.yaml` in your soon-to-be Instance directory, feel free to change it):
 ```yaml
 creation_rules:
-  - path_regex: instances/control-server/secrets.yaml # Control server
+  - path_regex: (^|\/)instances/control-server/secrets\.enc\.yaml$ # Control server
     key_groups:
     - age: # This is the list of the users, of whom their encryption keys will be used to encrypt the secrets in a way that only one decryption key is needed at a time
       - *admin
@@ -86,7 +86,7 @@ keys:
   - &control_server agePUBLICKEYFORCONTROLSERVER
 
 creation_rules:
-  - path_regex: instances/control-server/secrets.yaml # Control server
+  - path_regex: (^|\/)instances/control-server/secrets\.enc\.yaml$ # Control server
     key_groups:
     - age:
       - *admin
@@ -95,10 +95,10 @@ creation_rules:
 
 NOTE: The `&` before each name in `keys`, and the `*` before each name in `age` in `key_groups` in `creation_rules` are VERY important to keep!
 
-### 3. Create `secrets.yaml` (the secrets file)
-With `.sops.yaml` ready in the root directory of the repository, you are now able to create the list of secrets, in `secrets.yaml`.
+### 3. Create `secrets.enc.yaml` (the secrets file)
+With `.sops.yaml` ready in the root directory of the repository, you are now able to create the list of secrets, in `secrets.enc.yaml`.
 
-First, create the directory, `<REPO>/instances/control-server` (if it does not exist yet), and within that directory, create a file named `secrets.yaml` (the secrets file), using this command: `EDITOR=nano nix run nixpkgs#sops -- ./instances/control-server/secrets.yaml` (ensure your working directory is the repository's root directory)
+First, create the directory, `<REPO>/instances/control-server` (if it does not exist yet), and within that directory, create a file named `secrets.enc.yaml` (the secrets file), using this command: `EDITOR=nano nix run nixpkgs#sops -- ./instances/control-server/secrets.enc.yaml` (ensure your working directory is the repository's root directory)
 
 NOTE: `control-server` in `./instances/control-server/` is just the name of the Instance; you are welcome to change this to anything else, as long as it is kept consistent as you follow the whole guide.
 
@@ -133,7 +133,7 @@ multilinesecret: |
   secretkey4
 ```
 
-To exit, simply press `Ctrl+X` and type `y`. After this, you will see that `secrets.yaml` will look different, but still have info for each field (just encrypted). To edit the contents of file again, simply run the same command from before.
+To exit, simply press `Ctrl+X` and type `y`. After this, you will see that `secrets.enc.yaml` will look different, but still have info for each field (just encrypted). To edit the contents of file again, simply run the same command from before.
 
 ### 4. Create the Instance values
 In the directory, `<REPO>/instances/control-server`, create a file named `instance-values.toml` with these values:
@@ -184,7 +184,7 @@ nixosConfigurations = {
       instances/control-server/hardware-configuration.nix
       (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
       (import machines/control-server/configuration.nix {
-        secretsFile = "${./instances/control-server/secrets.yaml}"; 
+        secretsFile = "${./instances/control-server/secrets.enc.yaml}"; 
         instanceValues = builtins.fromTOML (builtins.readFile "${./instances/control-server/instance-values.toml}"); 
         constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
       })
@@ -200,7 +200,7 @@ In this configuration:
 - `instances/control-server/hardware-configuration.nix` will be generated automatically by `nixos-anywhere`.
 - As we are using Disko, we need to pass in a Disko configuration for this NixOS configuration, which will be `impermanence-btrfs.nix` in this case. Furthermore, we need to state the name of the disk device that will be formatted and used for our system, which is `/dev/sda` in this case (as we use SCSI drives in Proxmox).
 - `machines/control-server/configuration.nix` is the main configuration file for `control-server`, but we will need to give it Instance values so that particular names, details, and secrets can populate this file. This is done by passing various file paths and the parsed contents of files for our Instance:
-  - `secretsFile` is the path to our sops secrets file, being `<REPO>/instances/control-server/secrets.yaml` (from step 3).
+  - `secretsFile` is the path to our sops secrets file, being `<REPO>/instances/control-server/secrets.enc.yaml` (from step 3).
   - `instanceValues` is the values for this Instance, being the parsed contents of `<REPO>/instances/control-server/instance-values.toml` (from step 4).
   - `constantsValues` is the values of constants that are shared among various Machines in a certain group (in this case, Sapphic Homelab Machines), being the parsed contents of `<REPO>/constants/homelab-constants-values.toml`.
 

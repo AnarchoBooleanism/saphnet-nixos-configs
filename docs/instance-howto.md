@@ -26,7 +26,7 @@ Here is an example, for `docker-host-core`:
             instances/docker-host-core/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
-              secretsFile = "${./instances/docker-host-core/secrets.yaml}"; 
+              secretsFile = "${./instances/docker-host-core/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-core/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
@@ -138,7 +138,7 @@ throw "Have you forgotten to run nixos-anywhere with `--generate-hardware-config
 This file will need to be directly imported as a module in our entry in nixosConfigurations in the `flake.nix` files.
 
 ### Secrets files
-Generally, any Instance that will be accessible by other machines, has to call external services with specific tokens, or is otherwise long-lived will need to store specific values as secrets, and have a place to store these secrets. These secrets can include values such as passwords, password hashes, tokens, and API keys. This is usually in the form of a `secrets.yaml`, a YAML file with values that are automatically encrypted with sops, and will automatically be imported by sops-nix.
+Generally, any Instance that will be accessible by other machines, has to call external services with specific tokens, or is otherwise long-lived will need to store specific values as secrets, and have a place to store these secrets. These secrets can include values such as passwords, password hashes, tokens, and API keys. This is usually in the form of a `secrets.enc.yaml`, a YAML file with values that are automatically encrypted with sops, and will automatically be imported by sops-nix.
 
 Before creating a secrets file, you will first need to have an entry for it in the `.sops.yaml` file in the root of the repository, as well as a age keypair to be used with sops by the Instance.
 
@@ -155,7 +155,7 @@ keys:
   ...
 creation_rules:
   ...
-  - path_regex: instances/docker-host-core/secrets.yaml # docker-host-core
+  - path_regex: (^|\/)instances/docker-host-core/secrets\.enc\.yaml$ # docker-host-core
     key_groups:
     - age:
       - *admin
@@ -169,7 +169,7 @@ In `creation_rules`, we have an entry for our secrets file. This entry has the `
 
 Note that we also have a specific age key for `admin`, and that `admin` is in the list of age `key_groups` for our entry for `docker-host-core`. The way that sops works is by encrypting the secrets file multiple times for each key, in separate locations. The key for `admin` is listed, so that we can modify the secrets file oureslves; make sure that you have an age key in `$HOME/.config/sops/age/keys.txt`, which should be the same one listed in `keys` in the `.sops.yaml`.
 
-With an entry in the `.sops.yaml` file present, we are now able to create and edit our secrets file. We will need to run sops with the `edit` command to do so, like this: `EDITOR=nano nix run nixpkgs#sops -- edit ./instances/INSTANCE-NAME/secrets.yaml`
+With an entry in the `.sops.yaml` file present, we are now able to create and edit our secrets file. We will need to run sops with the `edit` command to do so, like this: `EDITOR=nano nix run nixpkgs#sops -- edit ./instances/INSTANCE-NAME/secrets.enc.yaml`
 
 If successful, you should have the file open and editable. You are now welcome to add your secrets, as mappings of keys to values, in the YAML format, like this (note that this is not an actual file that is present in the repository):
 ```yaml
@@ -181,7 +181,7 @@ If you are unsure of what secrets to add, start with all of the secrets values t
 
 Once you exit the editor, you should see that the resulting file has many of the same key names as above, but with the values encrypted, as well as some other information for sops to use. If you want to edit the file again, use the same `sops edit` command as before (and make sure the key for `admin` is in `$HOME/.config/sops/age/keys.txt`).
 
-If you wish to decrypt or encrypt the file directly, you can run the commands  `nix run nixpkgs#sops -- decrypt --in-place ./instances/INSTANCE-NAME/secrets.yaml` and `nix run nixpkgs#sops -- encrypt --in-place ./instances/INSTANCE-NAME/secrets.yaml` respectively.
+If you wish to decrypt or encrypt the file directly, you can run the commands  `nix run nixpkgs#sops -- decrypt --in-place ./instances/INSTANCE-NAME/secrets.enc.yaml` and `nix run nixpkgs#sops -- encrypt --in-place ./instances/INSTANCE-NAME/secrets.enc.yaml` respectively.
 
 #### On creating password hashes
 It is generally best practice to have a NixOS flake use a password hash, as opposed to a plaintext password, to make it harder for potential attackers on the system to obtain it. Furthermore, Machines are generally set up to use password hashes; be sure to save the actual passwords somewhere secure.

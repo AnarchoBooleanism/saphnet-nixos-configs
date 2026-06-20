@@ -22,7 +22,7 @@ The configuration files are inspired by god464's [flake](https://github.com/god4
 ### Useful commands
 Here are some useful commands to use when writing to the configuration and deploying to machines:
 
-- For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./instances/SERVER-NAME/secrets.yaml`
+- For editing SOPS secrets files: `EDITOR=nano nix run nixpkgs#sops -- edit ./instances/SERVER-NAME/secrets.enc.yaml`
   - NOTE: Make sure your age private key is in `~/.config/sops/age/key.txt`! Otherwise, make sure to set one of the environment variables `SOPS_AGE_KEY_FILE`, `SOPS_AGE_KEY`, or `SOPS_AGE_KEY_CMD` to your desired value beforehand.
 - For doing fresh installs: `nix run github:nix-community/nixos-anywhere -- --flake .#<INSTANCE_NAME> --generate-hardware-config nixos-generate-config ./instances/INSTANCE_NAME/hardware-configuration.nix --target-host root@<IP ADDRESS/HOSTNAME>`
   - NOTE: Again, you'll generally want to perform this task through [saphnet-ansible-playbook](https://github.com/AnarchoBooleanism/saphnet-ansible-playbook), which handles the particulars of this command for you.

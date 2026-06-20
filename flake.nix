@@ -39,7 +39,7 @@
             instances/control-server/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; }) # Need to set device name here
             (import machines/control-server/configuration.nix {
-              secretsFile = "${./instances/control-server/secrets.yaml}"; 
+              secretsFile = "${./instances/control-server/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/control-server/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
@@ -56,7 +56,7 @@
               homeDevice = "/dev/sdb";
             }) # Need to set device name here
             (import machines/dev-server/configuration.nix {
-              secretsFile = "${./instances/dev-server/secrets.yaml}"; 
+              secretsFile = "${./instances/dev-server/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/dev-server/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
@@ -70,7 +70,7 @@
             instances/docker-host-core/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
-              secretsFile = "${./instances/docker-host-core/secrets.yaml}"; 
+              secretsFile = "${./instances/docker-host-core/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-core/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
@@ -85,7 +85,7 @@
             modules/system-extras/intel-arc-gpu.nix # Since the target system has an Intel Arc A310
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
-              secretsFile = "${./instances/docker-host-pve3/secrets.yaml}"; 
+              secretsFile = "${./instances/docker-host-pve3/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve3/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
@@ -99,7 +99,7 @@
             instances/docker-host-pve4/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
-              secretsFile = "${./instances/docker-host-pve4/secrets.yaml}"; 
+              secretsFile = "${./instances/docker-host-pve4/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve4/instance-values.toml}"); 
               constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
             })
