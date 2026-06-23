@@ -5,7 +5,7 @@ x-common:
 
 services:
   nginx:
-    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.4.0@sha256:460810b4ab2d226a4b7c3bc29e63ac3484228b6af0e7494a8aad1edf21bb8ba3
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.5.0@sha256:1074e51a7cb31512a4294fa705801fd8d985833e7866a52d9629c3ec2db62566
     ports:
       - "80:80"
       - "443:443"
