@@ -32,6 +32,8 @@ in
     })
     (import (../.. + "/modules/networking/tailscale.nix") {
       inherit inputs secretsFile;
+      routesAdvertised = [ constantsValues.networking.subnet ];
+      isExitNode = true;
     })
   ];
 
