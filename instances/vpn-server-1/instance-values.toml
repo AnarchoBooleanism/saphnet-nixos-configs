@@ -1,0 +1,10 @@
+# instance-values.toml
+# A list of values to use to instantiate the main VPN node server
+
+hostname = "vpn-server-1"
+domain = "int-net.saphnet.xyz"
+
+[networking]
+ip-address = "192.168.8.63" # vpn-server-1.int-net.saphnet.xyz
+ip-prefix-length = 23 # 192.168.8.0/23
+interface = "ens18"

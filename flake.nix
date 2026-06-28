@@ -105,6 +105,20 @@
             })
           ];
         };
+        "vpn-server-1" = nixpkgs.lib.nixosSystem { # Server to connect to as a VPN node
+          specialArgs = {inherit inputs outputs;};
+          system = "x86_64-linux";
+          modules = [
+            # Config-specific files
+            instances/docker-host-core/hardware-configuration.nix
+            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import machines/vpn-server/configuration.nix {
+              secretsFile = "${./instances/vpn-server-1/secrets.enc.yaml}"; 
+              instanceValues = builtins.fromTOML (builtins.readFile "${./instances/vpn-server-1/instance-values.toml}"); 
+              constantsValues = builtins.fromTOML (builtins.readFile "${./constants/homelab-constants-values.toml}"); 
+            })
+          ];
+        };
       };
     };
 }

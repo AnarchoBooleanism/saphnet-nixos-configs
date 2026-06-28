@@ -5,6 +5,7 @@ keys:
   - &docker-host-core age16tx7kzg6fs9qr5t2hyjqnx9clp7vgkkh97qjrzfuldc887jxv4ts2rsaeh
   - &docker-host-pve3 age1mdakaa0w4f0a62mu7r4xkk7kl547rzsf89ql58s4y8rpr3w0e9qspc7s79
   - &docker-host-pve4 age1xp72fxqglsdnxld2zvcswdhrsc2ap2w5c52ptx4dqj6k9fugtuls66yg4t
+  - &vpn-server-1 age1wrgz770t7sk6pe5fppgc2wqxdzl67xtmml3neme2dyyfhh0nr36qxf9wzz
 creation_rules:
   - path_regex: (^|\/)instances/control-server/secrets\.enc\.yaml$ # Control server
     key_groups:
@@ -31,3 +32,8 @@ creation_rules:
     - age:
       - *admin
       - *docker-host-pve4
+  - path_regex: (^|\/)instances/vpn-server-1/secrets\.enc\.yaml$ # vpn-server-1
+    key_groups:
+    - age:
+      - *admin
+      - *vpn-server-1
