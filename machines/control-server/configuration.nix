@@ -35,6 +35,14 @@ in
     # Internal modules
     (../.. + "/modules/nix-setup-types/default.nix")
     (../.. + "/modules/system-types/proxmox-vm.nix")
+    (import (../.. + "/modules/user-login-types/default.nix") {
+      # Note: This expects you to have something for the "main-password-hashed" sops-nix secret
+      inherit inputs secretsFile;
+      defaultUsername = constantsValues.default-username;
+      authorizedKeys = constantsValues.authorized-keys;
+      cicdUsername = constantsValues.cicd-username;
+      cicdAuthorizedKeys = constantsValues.cicd-authorized-keys;
+    })
     (../.. + "/modules/impermanence-types/default.nix")
     (import (../.. + "/modules/sops-nix-types/default-impermanence.nix") {
       inherit inputs secretsFile;
@@ -48,9 +56,6 @@ in
 
   sops = {
     secrets = {
-      main-password-hashed = {
-        neededForUsers = true; # Setting so that password works properly
-      };
       tailscale-auth-key = {};
       komodo-db-pass = {};
       komodo-sops-key = {};
@@ -84,18 +89,6 @@ in
         prefixLength = instanceValues.networking.ip-prefix-length;
       }
     ];
-  };
-
-  users.mutableUsers = false; # Since we're handling passwords with sops-nix
-  users.users = {
-    "${constantsValues.default-username}" = {
-      hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
-      isNormalUser = true;
-      openssh.authorizedKeys.keys = constantsValues.authorized-keys; # Deployment key for accessibility
-      extraGroups = ["wheel" "docker"];
-    };
-
-    root.hashedPassword = "!"; # Disable root login
   };
 
   time.timeZone = constantsValues.timezone;
