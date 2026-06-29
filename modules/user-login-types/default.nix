@@ -54,37 +54,10 @@
     {
       users = ["${cicdUsername}"];
       commands = [
-        # All commands needed for nixos-rebuild
-        # Thanks to https://www.reddit.com/r/NixOS/comments/1ktcaqq/comment/mtt91a1/
-        # {
-        #   command = "/run/current-system/sw/bin/systemd-run";
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = "/nix/store/*/bin/switch-to-configuration";
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = "/run/current-system/sw/bin/nix-store";
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = "/run/current-system/sw/bin/nix-env";
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = "/run/current-system/sw/bin/nix-build";
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = ''/bin/sh -c "readlink -e /nix/var/nix/profiles/system || readlink -e /run/current-system"'';
-        #   options = ["NOPASSWD"];
-        # }
-        # {
-        #   command = "/run/current-system/sw/bin/nix-collect-garbage";
-        #   options = ["NOPASSWD"];
-        # }
         {
+          # TODO: NOPASSWD on ALL commands is dangerous, but we kind of need this for our Ansible
+          # playbook, so find ways to make this more secure! So whether separate Ansible keys for
+          # each instance, auto-rotation, or whatnot.
           command = "ALL";
           options = ["NOPASSWD"];
         }
