@@ -33,7 +33,7 @@ in
       defaultUsername = constantsValues.default-username;
       authorizedKeys = constantsValues.authorized-keys;
       cicdUsername = constantsValues.cicd-username;
-      cicdAuthorizedKeys = constantsValues.cicd-authorized-keys;
+      cicdAuthorizedKeys = instanceValues.cicd-authorized-keys;
     })
     (import (../.. + "/modules/sops-nix-types/default.nix") {
       inherit inputs secretsFile;

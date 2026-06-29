@@ -4,6 +4,11 @@
 hostname = "vpn-server-1"
 domain = "int-net.saphnet.xyz"
 
+cicd-authorized-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook", # To remove
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAa0SEqcoD/j+6y8EpY8eQBE7ZtfWGtDkNWoP9xz5Oj saphnet-ansible-playbook" # ansible: 2026-06-29
+]
+
 [networking]
 ip-address = "192.168.8.63" # vpn-server-1.int-net.saphnet.xyz
 ip-prefix-length = 23 # 192.168.8.0/23

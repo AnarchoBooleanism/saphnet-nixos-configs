@@ -32,7 +32,7 @@ in
       defaultUsername = constantsValues.default-username;
       authorizedKeys = constantsValues.authorized-keys;
       cicdUsername = constantsValues.cicd-username;
-      cicdAuthorizedKeys = constantsValues.cicd-authorized-keys;
+      cicdAuthorizedKeys = instanceValues.cicd-authorized-keys;
     })
     (../.. + "/modules/impermanence-types/default.nix")
     (import (../.. + "/modules/sops-nix-types/default-impermanence.nix") {

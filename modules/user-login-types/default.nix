@@ -1,5 +1,9 @@
 # Default setup, with a default user to log in with, and a dedicated CI/CD user for automation purposes
 # This assumes you have sops-nix set up!
+
+# Even with this module imported, you are still able to configure other users (under users.users) and
+# their secrets (under sops.secrets) in your Machine's configuration!
+
 # NOTE: Make sure, in your secrets file, that you have a "main-password-hashed" entry.
 #       (You can create this with "nix run nixpkgs#mkpasswd -- -m sha-512 -s")
 # To add this Module, in your imports section, import this file like this:
@@ -9,7 +13,7 @@
 #   defaultUsername = constantsValues.default-username;
 #   authorizedKeys = constantsValues.authorized-keys;
 #   cicdUsername = constantsValues.cicd-username;
-#   cicdAuthorizedKeys = constantsValues.cicd-authorized-keys;
+#   cicdAuthorizedKeys = instanceValues.cicd-authorized-keys;
 # })
 {
   defaultUsername, # Typically "saphnet-user"
