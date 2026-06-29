@@ -1,9 +1,20 @@
 # Default setup, with a default user to log in with, and a dedicated CI/CD user for automation purposes
-# This assumes you have sops-nix set up! TODO: Write documentation on sops secrets
+# This assumes you have sops-nix set up!
+# NOTE: Make sure, in your secrets file, that you have a "main-password-hashed" entry.
+#       (You can create this with "nix run nixpkgs#mkpasswd -- -m sha-512 -s")
+# To add this Module, in your imports section, import this file like this:
+# (import (../.. + "/modules/user-login-types/default.nix") {
+#   # Note: This expects you to have something for the "main-password-hashed" sops-nix secret
+#   inherit inputs secretsFile;
+#   defaultUsername = constantsValues.default-username;
+#   authorizedKeys = constantsValues.authorized-keys;
+#   cicdUsername = constantsValues.cicd-username;
+#   cicdAuthorizedKeys = constantsValues.cicd-authorized-keys;
+# })
 {
-  defaultUsername, # Typically saphnet-user
+  defaultUsername, # Typically "saphnet-user"
   authorizedKeys,
-  cicdUsername, # Typically cicd
+  cicdUsername, # Typically "cicd"
   cicdAuthorizedKeys,
   ...
 }:
