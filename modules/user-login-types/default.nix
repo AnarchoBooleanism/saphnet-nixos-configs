@@ -62,7 +62,7 @@
           # NOTE: NOPASSWD for ALL commands is dangerous, so ensure you have
           # other safeguards for attacks against the cicd user!
           # We have it set to ALL, since the inner workings of nixos-rebuild
-          # makes it difficult to determine a list of commands to whitelist.
+          # make it difficult to determine a list of commands to whitelist.
           command = "ALL";
           options = ["NOPASSWD"];
         }
