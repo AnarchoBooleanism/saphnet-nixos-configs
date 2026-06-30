@@ -69,6 +69,15 @@ $HOME/example-directory (/ on the target system)
 ```
 Everything that would be stored in `$HOME/example-directory/` is instead stored in `$HOME/example-directory/persist/`.
 
+### Note on creating host SSH keys
+If creating host SSH keys, note that they cannot have a passphrase, as they are intended for system use (without interaction), and that the comment follows the `root@<HOSTNAME>` pattern; for example, a key for the `docker-host-core` (which would have the `docker-host-core` as its hostname) would look like `ed-25519 EXAMPLEkeyHERE123456789==abC root@docker-host-core`. Furthermore, a host will need keys of both the ed25519 and RSA algorithms, under `ssh_host_ed25519_key` and `ssh_host_rsa_key`, respectively, as well as their corresponding public keys (e.g. `ssh_host_rsa_key.pub`).
+
+To generate such an SSH key, for the ed25519 algorithm, run this command: `ssh-keygen -t ed25519 -N "" -C "root@<HOSTNAME>" -f "<DESIRED DIRECTORY>/ssh_host_ed25519_key"`
+
+As well, to generate such an SSH key, for the RSA algorithm, run this command (note that 4096 bits is recommended for RSA keys, as of writing): `ssh-keygen -t rsa -b 4096 -N "" -C "root@<HOSTNAME>" -f "<DESIRED DIRECTORY>/ssh_host_rsa_key"`
+
+Both of the above commands will also generate corresponding public key files in the same directory.
+
 ## Booting up nixos-cloud-init-installer and running nixos-anywhere
 
 With all prerequisites for deployment ready, we are now able to start the installation process.

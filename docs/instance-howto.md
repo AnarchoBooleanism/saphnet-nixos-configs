@@ -59,8 +59,8 @@ default-username = "saphnet-user"
 authorized-keys = [ # Try to rotate these every now and then...
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHYjHkLEoqnhIg91FVA32nL7qbJe2l+Iy+t/WX98z7td hihacks@valk-pc", # Directly via personal computers
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICBb79Z1HFfgBM2XVyURzsXRG0b0fJRNplyN3v80CF8j hihacks@crummytop",
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook" # Ansible
 ]
+cicd-username = "cicd"
 timezone = "America/Los_Angeles"
 
 [networking]
@@ -202,13 +202,17 @@ The core of an Instance's configuration is the `instance-values.toml` file. In t
 hostname = "docker-host-core"
 domain = "int-net.saphnet.xyz"
 
+cicd-authorized-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPxGC5NHaSFgc+f/VoCBRYrJLCmVwmb5dppqoFO30ib5 saphnet-ansible-playbook", # ansible: 2026-06-29
+]
+
 [networking]
 ip-address = "192.168.8.202" # docker-host-core.int-net.saphnet.xyz
 ip-prefix-length = 23 # 192.168.8.0/23
 interface = "ens18"
 ```
 
-This TOML config is very simple: it defines the FQDN of the Instance (the host), with `docker-host-core` being the main hostname, and the domain being `int-net.saphnet.xyz`, the IP address & prefix length (`192.168.8.202/23`), and the specific interface to bind to with the IP address (`ens18`, the general default for a Linux VM under Proxmox). Most `instance-values.toml` files will have at least these specific values, if they do not have the exact same structure, but be sure to consult the Machine configuration file and its Modules for any other values that are referred and need to be defined in this file.
+This TOML config is very simple: it defines the FQDN of the Instance (the host), with `docker-host-core` being the main hostname, and the domain being `int-net.saphnet.xyz`, a list of authorized SSH keys for the `cicd` user to accept, the IP address & prefix length (`192.168.8.202/23`), and the specific interface to bind to with the IP address (`ens18`, the general default for a Linux VM under Proxmox). Most `instance-values.toml` files will have at least these specific values, if they do not have the exact same structure, but be sure to consult the Machine configuration file and its Modules for any other values that are referred and need to be defined in this file.
 
 With all of the files that are needed to complete an Instance all set up, from the secrets file to the `instance-values.toml` file, we are now able to successfully deploy the Instance to an actual system.
 

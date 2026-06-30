@@ -59,9 +59,10 @@
       users = ["${cicdUsername}"];
       commands = [
         {
-          # TODO: NOPASSWD on ALL commands is dangerous, but we kind of need this for our Ansible
-          # playbook, so find ways to make this more secure! So whether separate Ansible keys for
-          # each instance, auto-rotation, or whatnot.
+          # NOTE: NOPASSWD for ALL commands is dangerous, so ensure you have
+          # other safeguards for attacks against the cicd user!
+          # We have it set to ALL, since the inner workings of nixos-rebuild
+          # makes it difficult to determine a list of commands to whitelist.
           command = "ALL";
           options = ["NOPASSWD"];
         }

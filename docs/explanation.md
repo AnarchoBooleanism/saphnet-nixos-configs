@@ -276,8 +276,14 @@ In this file, `control-server` is an entry defined in `outputs.nixosConfiguratio
 Here is an example of `instance-values.toml`, for `control-server`:
 ```toml
 # instance-values.toml
+# A list of values to use to instantiate the main Komodo/Ansible control server
+
 hostname = "control-server"
 domain = "int-net.saphnet.xyz"
+
+cicd-authorized-keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA+SX6/CO0OENm91qVFyFpz9JYU1OdOjpB0JF3guQu+U saphnet-ansible-playbook", # ansible: 2026-06-29
+]
 
 [networking]
 ip-address = "192.168.8.211" # control-server.int-net.saphnet.xyz
@@ -318,8 +324,8 @@ default-username = "saphnet-user"
 authorized-keys = [ # Try to rotate these every now and then...
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHYjHkLEoqnhIg91FVA32nL7qbJe2l+Iy+t/WX98z7td hihacks@valk-pc", # Directly via personal computers
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICBb79Z1HFfgBM2XVyURzsXRG0b0fJRNplyN3v80CF8j hihacks@crummytop",
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook" # Ansible
 ]
+cicd-username = "cicd"
 timezone = "America/Los_Angeles"
 
 [networking]

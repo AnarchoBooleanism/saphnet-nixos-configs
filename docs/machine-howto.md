@@ -591,6 +591,92 @@ in
 
 Once the specific variety of this Module, being the `default-impermanence.nix` file, is imported, we will not need to worry about doing any other tasks until we start with the Instance-creation stage, as this variety of the Module handles storing necessary files for decrypting secrets, such as `/var/lib/sops/keys.txt` and SSH hosts key, in the persistent directory (e.g. `/persist`). Still, do remember that these files are more reliably available during startup in their location within the persistent directory (e.g. `/persist`), rather than in their location within the root directory.
 
+
+### `user-login-types`
+
+For various common user configurations, there exist Modules that do most of the work of defining the basic users; in many situations, the importation of these Modules into the `configuration.nix` may be sufficient for the Machine's needs. When importing these Modules, you are still able to define extra users under `users.users`, as long as they don't overlap with the names of the users defined in the Module.
+
+For example, this is the configuration for the default `user-login-types` Module, in `default.nix`:
+```nix
+{
+  defaultUsername, # Typically "saphnet-user"
+  authorizedKeys,
+  cicdUsername, # Typically "cicd"
+  cicdAuthorizedKeys,
+  ...
+}:
+{
+  config,
+  ...
+}:
+{
+  sops = {
+    secrets = {
+      main-password-hashed = {
+        neededForUsers = true; # Setting so that password works properly
+      };
+    };
+  };
+
+  users.mutableUsers = false; # Since we're handling passwords with sops-nix
+  users.users = {
+    "${defaultUsername}" = {
+      hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
+      isNormalUser = true;
+      openssh.authorizedKeys.keys = authorizedKeys;
+      extraGroups = ["wheel" "docker" "video" "render"];
+    };
+
+    "${cicdUsername}" = {
+      hashedPassword = "!";
+      isNormalUser = true;
+      openssh.authorizedKeys.keys = cicdAuthorizedKeys;
+      extraGroups = ["wheel"];
+    };
+
+    root.hashedPassword = "!"; # Disable root login
+  };
+
+  security.sudo.extraRules = [
+    {
+      users = ["${cicdUsername}"];
+      commands = [
+        {
+          # NOTE: NOPASSWD for ALL commands is dangerous, so ensure you have
+          # other safeguards for attacks against the cicd user!
+          # We have it set to ALL, since the inner workings of nixos-rebuild
+          # makes it difficult to determine a list of commands to whitelist.
+          command = "ALL";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
+}
+```
+
+It defines a default user (typically named `saphnet-user`) that can be logged into, with access to sudo, among other functionality, such as Docker. It also defines a user for CI/CD tools (e.g. Ansible) to log into, with no password, and the ability to run any command with sudo, without a password. Both of the users are defined as being normal users (meaning that they have home directories and access to shells, as opposed to system users), and have their own set of authorized SSH keys for logging in with. Furthermore, this Module disables login to the `root` user by setting its password hash to `!`, a hash to which no value will match to.
+
+The Module above assumes that sops-nix is configured for the Machine, and that specific secrets are already configured; for the default user, the password is defined as a SOPS secret, under `main-password-hashed`.
+
+Note that this Module is defined as a curried function: the outer function takes in `defaultUsername`, the name of the default user (typically `saphnet-user`), `authorizedKeys`, an array of SSH public keys (as strings) for the default user, `cicdUsername`, the name of the CI/CD user (typically `cicd`), and `cicdAuthorizedKeys, an array of SSH public keys (as strings) for the CI/CD user. This is an example of how this Module would be imported into a Machine:
+```nix
+imports = [
+  ... # For brevity
+  (import (../.. + "/modules/user-login-types/default.nix") {
+    # Note: This expects you to have something for the "main-password-hashed" sops-nix secret
+    inherit inputs secretsFile;
+    defaultUsername = constantsValues.default-username;
+    authorizedKeys = constantsValues.authorized-keys;
+    cicdUsername = constantsValues.cicd-username;
+    cicdAuthorizedKeys = instanceValues.cicd-authorized-keys;
+  })
+  ...
+];
+```
+
+This imports the Module, passing in the arguments that the function expects: in this case, `defaultUsername`, `authorizedKeys`, and `cicdUsername` are assigned values from the the constantsValues attribute set, which ultimately comes from the constants file that the Instance uses. However, `cicdAuthorizedKeys` is assigned values from the instanceValues attribute set, which differs between Instances; this is to limit the blast radius in the case that a private key for one specific Instance is exposed. A typical Machine using this Module usually works in this manner, simply using what is defined in Constants and Instance-specific files.
+
 ### Features based on Docker Compose 
 
 Many services or pieces of functionality may be based on Docker containers and volumes, as defined with a Docker Compose file; this allows for easy portability to non-NixOS systems, access to software with better availability in Docker than in NixOS, and, importantly, the ability to easily host services within containers. For example, the Komodo functionality in the Machines, `control-server` and `docker-host`, is mostly defined with Docker Compose files. These Docker Compose files are usually in a subdirectory under the directory dedicated for a Machin. This approach allows for many possibilities, but there are numerous considerations and limitations imposed by having our Docker Compose files (and other files they rely on) being distributed with our NixOS flake, which we will cover in this section. 
