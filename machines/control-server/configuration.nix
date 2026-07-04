@@ -151,6 +151,7 @@ in
 
     environment = {
       KOMODO_CONFIG_TEMPLATE_PATH = "${./komodo-control/core.config.toml.template}";
+      KOMODO_SOPS_KEY_PATH = config.sops.secrets.komodo-sops-key.path;
       KOMODO_BOOTSTRAP_SYNC_PATH = "${./komodo-control/bootstrap-sync.toml}";
       # Other secret env variables that need to be passed in directly are listed in script 
     };
