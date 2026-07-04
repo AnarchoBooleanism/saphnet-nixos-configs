@@ -150,6 +150,7 @@ in
     ];
 
     environment = {
+      ENV_FILE = "${./komodo-control/compose.env}"; # Since the periphery service expects to be given a .env file
       KOMODO_CONFIG_TEMPLATE_PATH = "${./komodo-control/core.config.toml.template}";
       KOMODO_SOPS_KEY_PATH = config.sops.secrets.komodo-sops-key.path;
       KOMODO_BOOTSTRAP_SYNC_PATH = "${./komodo-control/bootstrap-sync.toml}";
