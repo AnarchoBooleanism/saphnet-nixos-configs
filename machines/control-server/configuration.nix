@@ -150,7 +150,7 @@ in
     ];
 
     environment = {
-      KOMODO_CONFIG_TEMPLATE_PATH = "${./komodo-control/core.config.toml.template}}";
+      KOMODO_CONFIG_TEMPLATE_PATH = "${./komodo-control/core.config.toml.template}";
       KOMODO_BOOTSTRAP_SYNC_PATH = "${./komodo-control/bootstrap-sync.toml}";
       # Other secret env variables that need to be passed in directly are listed in script 
     };
