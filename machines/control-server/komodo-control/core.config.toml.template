@@ -109,7 +109,7 @@
 ## There shouldn't be a need to change this, just mount a volume.
 ## Env: KOMODO_SYNC_DIRECTORY
 ## Default: /syncs
-# sync_directory = "/syncs"
+sync_directory = "/syncs"
 
 ## Configure the repo directory (inside the container).
 ## There shouldn't be a need to change this, just mount a volume.
@@ -561,7 +561,7 @@
 [[git_provider]]
 domain = "github.com"
 accounts = [
-	{ username = "AnarchoBooleanism", token = "${GIT_ACCESS_TOKEN}" }
+	{ username = "AnarchoBooleanism", token = "$GIT_ACCESS_TOKEN" }
 ]
 
 ######################
@@ -590,7 +590,7 @@ accounts = [
 [[docker_registry]]
 domain = "ghcr.io"
 accounts = [
-	{ username = "AnarchoBooleanism", token = "${DOCKER_ACCESS_TOKEN}" }
+	{ username = "AnarchoBooleanism", token = "$DOCKER_ACCESS_TOKEN" }
 ]
 
 ###########

@@ -4,6 +4,7 @@
 # - komodo-db-pass: Password for the SQL server of Komodo
 # - komodo-sops-key: SOPS key to use for decrypting secrets in saphnet-compose-configs
 # - komodo-public-key: Public key with which to connect to Komodo Core (get from Settings -> Public Key)
+# - komodo-webhook-secret: Secret that needs to be used when running Komodo webhooks (create with "nix run nixpkgs#openssl -- rand -base64 32")
 # - komodo-git-token: Git token to allow access to Git repositories (e.g. GitHub)
 # - komodo-docker-token: Git token to allow access to Docker registries (e.g. ghcr.io)
 # - namecheap-api-details: Namecheap username and API key for DNS challenges
@@ -60,6 +61,7 @@ in
       komodo-db-pass = {};
       komodo-sops-key = {};
       komodo-public-key = {};
+      komodo-webhook-secret = {};
       komodo-git-token = {};
       komodo-docker-token = {};
       namecheap-api-details = {};
@@ -74,6 +76,7 @@ in
     ];
     files = [
       "/var/lib/reverse-proxy-bootstrap-complete" # For initial SSL cert bootstrapping
+      "/var/lib/komodo_jwt_secret" # For persistent JWT secret for Komodo
     ];
   };
 
@@ -147,9 +150,8 @@ in
     ];
 
     environment = {
-      ENV_FILE = "${./komodo-control/compose.env}"; # Need to pass this in as env argument to work with Nix store
-      KOMODO_CONFIG_PATH = "${./komodo-control/core.config.toml}";
-      KOMODO_SOPS_KEY_PATH = config.sops.secrets.komodo-sops-key.path;
+      KOMODO_CONFIG_TEMPLATE_PATH = "${./komodo-control/core.config.toml.template}}";
+      KOMODO_BOOTSTRAP_SYNC_PATH = "${./komodo-control/bootstrap-sync.toml}";
       # Other secret env variables that need to be passed in directly are listed in script 
     };
 
@@ -160,11 +162,22 @@ in
       # Dynamically export variables from secrets files
       export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
       export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
+      export KOMODO_WEBHOOK_SECRET=$(cat ${config.sops.secrets.komodo-webhook-secret.path})
       export GIT_ACCESS_TOKEN=$(cat ${config.sops.secrets.komodo-git-token.path})
       export DOCKER_ACCESS_TOKEN=$(cat ${config.sops.secrets.komodo-docker-token.path})
-
+      
       # Export other variables
       export TZ=$(timedatectl show --va -p Timezone)
+
+      # Automatically create JWT secret (so that no relogin is needed between restarts)
+      if [ ! -f "/var/lib/komodo_jwt_secret" ]; then
+        ${pkgs.openssl_3}/bin/openssl rand -base64 32 > /var/lib/komodo_jwt_secret
+      fi
+      export KOMODO_JWT_SECRET=$(cat /var/lib/komodo_jwt_secret)
+
+      # Fill in template file with secrets to create full Komodo config file
+      export KOMODO_CONFIG_PATH=$(mktemp)
+      ${pkgs.gettext}/bin/envsubst \'$GIT_ACCESS_TOKEN,$DOCKER_ACCESS_TOKEN\' < $KOMODO_CONFIG_TEMPLATE_PATH > $KOMODO_CONFIG_PATH
 
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';

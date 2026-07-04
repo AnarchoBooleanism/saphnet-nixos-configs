@@ -19,6 +19,7 @@
     vnstat
     bind
     # Miscellaneous
+    gettext
     nfs-utils
     pciutils
     zsh
@@ -33,6 +34,7 @@
     curl
     rsync
     bash-completion
+    openssl_3
   ];
 
   boot.initrd = { # Support nfs systems

@@ -114,8 +114,11 @@ For `control-server`, here is a list of secrets you will need to set:
 - komodo-db-pass: Password for the SQL server of Komodo
 - komodo-sops-key: SOPS key to use for decrypting secrets in saphnet-compose-configs (create with `nix shell nixpkgs#age --command age-keygen`)
 - komodo-public-key: Public key with which to connect to Komodo Core (get from Settings -> Public Key)
+- komodo-webhook-secret: Secret that needs to be used when running Komodo webhooks (create with `nix run nixpkgs#openssl -- rand -base64 32`)
 - komodo-git-token: Git token to allow access to Git repositories (e.g. GitHub)
+  - For GitHub, note that, you will want a token with access to the `repo` scope! 
 - komodo-docker-token: Git token to allow access to Docker registries (e.g. ghcr.io)
+  - For GitHub, note that, you will want a token with access to the `read:packages` scope! 
 - namecheap-api-details: [Namecheap username and API key for DNS challenges](https://www.namecheap.com/support/api/intro/)
   - You will want this in this format:
     ```yaml
@@ -212,4 +215,4 @@ TODO: Finish here, think about how you'd do Ansible
 Something like moving the SSH and age keys into a directory structure that matches root (in persist dir), finding a way to automate the SSH key passphrase process, nixos-anywhere, etc
 
 ## Steps to update `control-server`
-TODO: Finish here
+TODO: Finish here, make sure to add note on the bootstrap.toml file!

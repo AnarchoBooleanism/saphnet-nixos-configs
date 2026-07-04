@@ -1,0 +1,35 @@
+# File to point to from initial Komodo setup, will set up everything else
+# This assumes that the Git provider(s) are already setup
+
+## Repos
+# saphnet-komodo repo
+[[repo]]
+name = "saphnet-komodo"
+description = "The main repository for Komodo resource syncs"
+tags = ["iac"]
+[repo.config]
+server = "control-server"
+git_provider = "github.com"
+git_account = "AnarchoBooleanism"
+repo = "AnarchoBooleanism/saphnet-komodo"
+
+# saphnet-komodo repo
+[[repo]]
+name = "saphnet-compose-configs"
+description = "The main repository for Compose stacks"
+tags = ["iac"]
+[repo.config]
+server = "control-server"
+git_provider = "github.com"
+git_account = "AnarchoBooleanism"
+repo = "AnarchoBooleanism/saphnet-compose-configs"
+
+## Syncs
+# Main saphnet-komodo sync
+[[resource-sync]]
+name = "saphnet-komodo_sync"
+tags = ["iac"]
+[resource-sync.config]
+linked_repo = "saphnet-komodo"
+resource_path = ["variables.toml", "servers.toml", "procedures.toml"]
+include_variables = true
