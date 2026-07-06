@@ -38,15 +38,15 @@ This will be what `$HOME/example-directory/` will look like, with all the aforem
 $HOME/example-directory (/ on the target system)
 │
 ├─ etc
-│   └ ssh
-│      ├─ ssh_host_ed25519_key
-│      ├─ ssh_host_ed25519_key.pub
-│      ├─ ssh_host_rsa_key
-│      └─ ssh_host_rsa_key.pub
+│   └─ ssh
+│       ├─ ssh_host_ed25519_key
+│       ├─ ssh_host_ed25519_key.pub
+│       ├─ ssh_host_rsa_key
+│       └─ ssh_host_rsa_key.pub
 └─ var
-    └ lib
-       └ sops-nix
-          └ keys.txt
+    └─ lib
+        └─ sops-nix
+            └─ keys.txt
 ```
 
 **NOTE**: If you are using Impermanence on your Machine, the whole subdirectory structure, relative to root, will need to be placed in the subdirectory (of the directory representing the root directory) that stores persistent files! Otherwise, these files will not be properly stored on the target system and will be erased after a reboot! For example, if the directory for persistent files is `/persist` (relative to the root subdirectory on the target system), and the directory that you are giving to nixos-anywhere is `$HOME/example-directory/`, you will need to place files in `$HOME/example-directory/persist/<LOCATION RELATIVE TO ROOT WHERE FILE WILL BE LOCATED>`.
@@ -57,15 +57,15 @@ $HOME/example-directory (/ on the target system)
 │
 └─ persist (all files under their respective subdirectories under here will be placed under / on the target system at boot-time!)
     ├─ etc
-    │   └ ssh
-    │      ├─ ssh_host_ed25519_key
-    │      ├─ ssh_host_ed25519_key.pub
-    │      ├─ ssh_host_rsa_key
-    │      └─ ssh_host_rsa_key.pub
+    │   └─ ssh
+    │       ├─ ssh_host_ed25519_key
+    │       ├─ ssh_host_ed25519_key.pub
+    │       ├─ ssh_host_rsa_key
+    │       └─ ssh_host_rsa_key.pub
     └─ var
-        └ lib
-           └ sops-nix
-              └ keys.txt
+        └─ lib
+            └─ sops-nix
+                └─ keys.txt
 ```
 Everything that would be stored in `$HOME/example-directory/` is instead stored in `$HOME/example-directory/persist/`.
 
