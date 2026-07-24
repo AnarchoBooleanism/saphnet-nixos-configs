@@ -24,6 +24,7 @@
       ...
     } @ inputs: let
       inherit (self) outputs;
+      versionLock = nixpkgs.lib.importTOML ./version-lock.toml;
     in {
       # Configuration for NixOS itself
       # nix run github:nix-community/nixos-anywhere -- \
@@ -32,7 +33,7 @@
       # --target-host root@<IP ADDRESS/HOSTNAME>
       nixosConfigurations = {
         "control-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
@@ -46,7 +47,7 @@
           ];
         };
         "dev-server" = nixpkgs.lib.nixosSystem { # Control server for Komodo
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
@@ -63,7 +64,7 @@
           ];
         };
         "docker-host-core" = nixpkgs.lib.nixosSystem { # Docker host for reverse proxy and various web services
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
@@ -77,7 +78,7 @@
           ];
         };
         "docker-host-pve3" = nixpkgs.lib.nixosSystem { # Docker host on node pve3
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
@@ -92,7 +93,7 @@
           ];
         };
         "docker-host-pve4" = nixpkgs.lib.nixosSystem { # Docker host on node pve4
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files
@@ -106,7 +107,7 @@
           ];
         };
         "vpn-server-1" = nixpkgs.lib.nixosSystem { # Server to connect to as a VPN node
-          specialArgs = {inherit inputs outputs;};
+          specialArgs = {inherit inputs outputs versionLock;};
           system = "x86_64-linux";
           modules = [
             # Config-specific files

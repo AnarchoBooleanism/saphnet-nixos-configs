@@ -313,13 +313,13 @@ Even though the disk configuration module being used will be specified when defi
 
 ### version-lock.toml
 
-Another indispensable file in the creation and maintenance of any Machine is the `version-lock.toml` file. In essence, it is a TOML file that prescribes the versions of various components and settings of your Machine, including `system.stateVersion`, and the version of Docker images outside of Docker Compose files; it does the job of the `flake.lock` file for non-flake software and settings. It is specific to the Machine (or Module), not the Instance, and allows us to pin things to specific versions for the sake of reproducibility (mostly, at least, in this form, without using checksums).
+Another indispensable file in the creation and maintenance of a Machine is the global `version-lock.toml` file. In essence, it is a TOML file that prescribes the versions of various components and settings of your Machine(s), including `system.stateVersion`, and the version of Docker images outside of Docker Compose files; it does the job of the `flake.lock` file for non-flake software and settings, allowing us to pin things to specific versions for the sake of reproducibility.
 
-> NOTE: If using Docker Compose, simply specify the container image versions in your `compose.yaml` files, rather than in the `version-lock.toml` files! This allows Dependabot to easily check on these files and propose updates automatically; to enable Dependabot for your `compose.yaml` files, make sure to add the directory containing those files to the `directories` list in `updates` in `.github/dependabot.yml`.
+> NOTE: If using Docker Compose, simply specify the container image versions in your `compose.yaml` files, rather than in the `version-lock.toml` file! This allows Dependabot to easily check on these files and propose updates automatically; to enable Dependabot for your `compose.yaml` files, make sure to add the directory containing those files to the `directories` list in `updates` in `.github/dependabot.yml`.
 
-The `version-lock.toml` generally sits in the same subdirectory as the `configuration.nix` file; that is, it sits in the Machine's own subdirectory.
+The `version-lock.toml` file sits at the root directory of the repository, being a global file.
 
-Here is an example of a `version-lock.toml` file:
+Here is what the `version-lock.toml` file may look like:
 ```toml
 # version-lock.toml
 
@@ -334,11 +334,10 @@ This is how the `version-lock.toml` file from above is used in a Machine's `conf
 {
   lib,
   pkgs,
+  versionLock,
   ... # Extra lines omitted for brevity
 }:
-let
-  versionLock = lib.importTOML ./version-lock.toml; # version-lock.toml is read and parsed, and its values are fed into the versionLock variable
-in
+...
 {
   ...
   # This example service just spins up a Docker container with a specific image, with the specific version
@@ -355,9 +354,30 @@ in
 The `version-lock.toml` pins the `configuration.nix` file's `system.stateVersion` to `25.05`, and the version of the Docker image (`example-program.prorgam-version`) to `v1.0.0`.
 
 This is what each (relevant) line does in this example, in the `users.users` attribute set:
-- `versionLock = lib.importTOML ./version-lock.toml;` - In the let statements section, the `version-lock.toml` file, in the same directory as the `configuration.nix` file itself, is imported and parsed, and `versionLock` is set to the contents of the `version-lock.toml` file.
+- `{..., versionLock, ...}` - `versionLock` is expected to be inherited from the `flake.nix` file (done per Instance).
 - `${pkgs.docker}/bin/docker run example-image:${versionLock.state-version.program-version}` - This is the script of the `example-service` service, which starts a Docker container, with the `example-image` image, with the version of this image being set to the version set in `versionLock.state-version.prorgam-version`, which is `v1.0.0`.
 - `system.stateVersion = "${versionLock.state-version}";` - This sets `system.stateVersion` to the `state-version` value set in the `version-lock.toml` file, being `25.05`.
+
+The `flake.nix` file should do much of the heavy lifting, parsing the `version-lock.toml` file and passing its values when evaluating each Instance as a NixOS configuration. For the values of the `version-lock.toml` file to be passed to an Instance, you should make sure that `versionLock` is listed in the specialArgs parameters of the `nixos.lib.nixosSystem` function, like this:
+```nix
+{
+  ... # Omitting for brevity
+  outputs =
+    {
+      ...
+    } ... {
+      ...
+      nixosConfigurations = {
+        ...
+        "docker-host-core" = nixpkgs.lib.nixosSystem { # Docker host for reverse proxy and various web services
+          specialArgs = {inherit inputs outputs versionLock;};
+          ...
+        };
+        ...
+      };
+    };
+}
+```
 
 With many of the core settings of your Machine's configuration specified, we are getting closer to a complete Machine that we can use to create Instances with. In the next section, we will cover adding major functionality with Modules and Machine-specific features/files, as well as advanced considerations, particularly in terms of secrets management and dealing with persistence.
 

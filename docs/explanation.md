@@ -6,7 +6,7 @@ All NixOS configurations are defined in `flakes.nix`, which we can use in `nixos
 
 - `modules` - This is where each Module is stored, with each Module being its own subdirectory. Each subdirectory has one or more `.nix` files, at least one or more of which are configurations files that can be directly imported by a Machine.
 Here is the overall structure of each main directory and file of the repository:
-- `machines` - This is where each Machine is stored, with each Machine being its own subdirectory. Each subdirectory generally consists of a `configuration.nix` file (or a variety of one), which is the main configuration file that can be imported into `flake.nix`, a `version-lock.toml` file, which describes NixOS's `stateVersion`, as well as the versions/hashes of Docker images and other non-Nix packages (for the sake of reproducibility), and other files that are imported by `configuration.nix` that are needed for certain functionality. They can also contain their own `README.md` files, for Machine-specific details and functionality.
+- `machines` - This is where each Machine is stored, with each Machine being its own subdirectory. Each subdirectory generally consists of a `configuration.nix` file (or a variety of one), which is the main configuration file that can be imported into `flake.nix`, and other files that are imported by `configuration.nix` that are needed for certain functionality. They can also contain their own `README.md` files, for Machine-specific details and functionality.
 - `instances` - This is where the details of each Instance is stored, with each Instance having its own subdirectory. Each subdirectory generally consists of secrets and Instance values files and a `hardware-configuration.nix` file, which is either a stopgap file or an automatically-generated one, all of which can then be imported when instantiating a Machine (as a NixOS configuration) in `flake.nix`.
 - `constants` - This is where each group of Constants are stored, with each group being its own TOML file.
 - `.github` - This is where GitHub-specific configuration files are stored, for GitHub Actions and Dependabot.
@@ -17,6 +17,7 @@ Here is the overall structure of each main directory and file of the repository:
 - `.sops.yaml` - This file contains the information needed for sops to work in this repository, including the names of keys, and where secrets files are located.
 - `flake.lock` - This file contains the versions and hashes of repositories, packages, and dependencies that NixOS installers and rebuilders will install onto systems.
 - `flake.nix` - This file describes all Instances as NixOS configurations, which pull the various Instance, Machine, and Constants files that are needed for instantiating Machines. This file also describes the versions of the repositories and dependencies used for systems.
+- `version-lock.toml` - This file describes NixOS's `stateVersion` and the versions/hashes of Docker images and other non-Nix packages (for the sake of reproducibility).
 - `LICENSE` - This file describes the license being used for this repository, which is the CC0 1.0 Universal.
 - `README.md` - This file is the central starting point for this repository's documentation.
 
@@ -163,7 +164,7 @@ Here is an example of how `flake.nix` imports the `configuration.nix` file of a 
 
 In `outputs.nixosConfigurations`, through the `nixosSystem` function, `control-server` is defined through multiple Nix files, imported as modules. The Instance's auto-generated `hardware-configuration.nix` file is imported, then a specific disk layout configuration file used by Disko to partition the system's disk, and, finally, the Machine's `configuration.nix` file is imported, with the contents of different Instance-related files being passed in as arguments to `configuration.nix`, instantiating it.
 
-Delving into `configuration.nix`, this main configuration file is a two-layered curried function. In the first layer of the function, custom parameters (e.g. `secretsFile`) are taken with values that are used to instantiate a Machine. In the second layer of the function (the main part of the function), various parameters are taken that are generally passed in by `nixpkgs.lib.nixosSystem` (e.g. `pkgs`). The final output of this function, which defines a specific NixOS configuration (also known as an Instance), is composed of various components: imported modules, which include built-in NixOS modules and this repository's Modules, `let` statements that defined Machine-specific values that are commonly used between different settings (e.g. `versionLock`), and the different NixOS settings themselves, for the configuration.
+Delving into `configuration.nix`, this main configuration file is a two-layered curried function. In the first layer of the function, custom parameters (e.g. `secretsFile`) are taken with values that are used to instantiate a Machine. In the second layer of the function (the main part of the function), various parameters are taken that are generally passed in by `nixpkgs.lib.nixosSystem` (e.g. `pkgs`). The final output of this function, which defines a specific NixOS configuration (also known as an Instance), is composed of various components: imported modules, which include built-in NixOS modules and this repository's Modules, `let` statements that defined Machine-specific values that are commonly used across different Nix settings, and the different NixOS settings themselves, for the configuration.
 
 What most defines the Machine are the Modules that it takes in, which define blocks of different functionality, and its individual configuration settings, which include the services and programs that the Machine hosts. These settings define everything from networking settings and user settings, to ones that define systemd services. 
 
@@ -178,10 +179,10 @@ Here is an example of a `configuration.nix` file, for `control-server`:
 }:
 {
   pkgs, # Inputs given by nixpkgs.lib.nixosSystem, used by this configuration
+  versionLock, # The contents of version-lock.toml 
   ...
 }:
 let
-  versionLock = lib.importTOML ./version-lock.toml;
   ...
 in
 {

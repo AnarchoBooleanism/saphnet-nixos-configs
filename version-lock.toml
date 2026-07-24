@@ -1,5 +1,5 @@
 # version-lock.toml
-# Used to lock various versions, like Docker images in Compose files to specific tagged versions
+# Used to lock various versions, besides flakes
 
 state-version = "26.05" # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 

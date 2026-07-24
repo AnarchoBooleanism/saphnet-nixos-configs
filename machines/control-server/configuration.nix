@@ -20,10 +20,10 @@
   modulesPath,
   lib,
   pkgs,
+  versionLock,
   ...
 }:
 let
-  versionLock = lib.importTOML ./version-lock.toml;
   revProxyDomains = [ # Note: Order matters here! The first domain is used for the name of the SSL certificate.
     "komodo.int.saphnet.xyz"
   ];

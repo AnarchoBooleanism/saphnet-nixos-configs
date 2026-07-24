@@ -14,11 +14,9 @@
   modulesPath,
   lib,
   pkgs,
+  versionLock,
   ...
 }:
-let
-  versionLock = lib.importTOML ./version-lock.toml;
-in
 {
   imports = [
     # NixOS modules
