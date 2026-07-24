@@ -5,7 +5,6 @@ hostname = "docker-host-pve3"
 domain = "int-net.saphnet.xyz"
 
 cicd-authorized-keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC03O18a2GH5euD1k5mKW67mC04m1GyvmgymxOqrCypH saphnet-ansible-playbook", # To remove
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIxgsHLvrSPlbMhm4r/KTHgMFZzdNYg/MGcIDCId8ZMH saphnet-ansible-playbook", # ansible: 2026-06-29
 ]
 
