@@ -54,6 +54,8 @@ services:
       - /bin/sh
       - -c
       - |
+        set -e
+
         if [ -e /etc/letsencrypt/reverse-proxy-bootstrap-complete ]; then
           echo "It appears that the reverse proxy bootstrapping process is completed. Exiting..."
           exit 0
