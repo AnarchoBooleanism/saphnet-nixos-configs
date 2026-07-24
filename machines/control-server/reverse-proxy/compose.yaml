@@ -1,11 +1,15 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
 
 x-common:
+  CERTBOT_VERSION: &certbot_version ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
   TIMEZONE: &timezone "${TZ}"
 
 services:
   nginx:
     image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.6.0@sha256:72d76a4c0afcba01c7388cc558f4ea2b9669d37a6d9d30fb5c03948adb028f6b
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
     volumes:
       # Main conf file
       - ${NGINX_PROXIES_FILE}:/etc/nginx/proxies.conf:ro
@@ -21,7 +25,10 @@ services:
     restart: unless-stopped
   
   certbot:
-    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
+    image: *certbot_version
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
     volumes:
       - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
@@ -30,7 +37,37 @@ services:
     # Renew certificates every 12 hours
     entrypoint: |
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
-    restart: unless-stopped
+
+  bootstrap:
+    image: *certbot_version
+    volumes:
+      - certbot-conf:/etc/letsencrypt
+      - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
+    environment:
+      TZ: *timezone
+      CERTBOT_EMAIL: "${CERTBOT_EMAIL}"
+      CERTBOT_DOMAINS: "${CERTBOT_DOMAINS}"
+    # Renew certificates every 12 hours
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        if [ -e /etc/letsencrypt/reverse-proxy-bootstrap-complete ]; then
+          echo "It appears that the reverse proxy bootstrapping process is completed. Exiting..."
+          exit 0
+        else
+          echo "The reverse proxy bootstrapping process has not been started before. Starting now!"
+        fi
+
+        certonly -a dns-namecheap \
+          --dns-namecheap-credentials=/namecheap.ini \
+          --agree-tos --non-interactive -vv \
+          --no-eff-email \
+          --email "$$CERTBOT_EMAIL" \
+          --domains "$$CERTBOT_DOMAINS"
+        
+        echo "Process completed, so we're marking this job as done..."
+        touch /etc/letsencrypt/reverse-proxy-bootstrap-complete
 
 networks:
   central-network:
@@ -40,4 +77,3 @@ networks:
 volumes:
   certbot-conf:
     name: certbot-conf
-    external: true
