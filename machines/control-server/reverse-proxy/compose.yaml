@@ -28,7 +28,6 @@ services:
     restart: unless-stopped
   
   certbot:
-    <<: *certbot_config
     depends_on:
       bootstrap:
         condition: service_completed_successfully
@@ -40,9 +39,9 @@ services:
     # Renew certificates every 12 hours
     entrypoint: |
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
+    <<: *certbot_config
 
   bootstrap:
-    <<: *certbot_config
     volumes:
       - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
@@ -71,6 +70,7 @@ services:
         
         echo "Process completed, so we're marking this job as done..."
         touch /etc/letsencrypt/reverse-proxy-bootstrap-complete
+    <<: *certbot_config
 
 networks:
   central-network:
