@@ -9,12 +9,20 @@ services:
   periphery:
     image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.2.0@sha256:936a4af0ab7141868f1500a757ac37cd8d884aa6281a93555ebb54ea33a79a21 # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
-    labels:
-      komodo.skip: # Prevent Komodo from stopping with StopAllContainers
-    ## If periphery is being run remote from the core server, ports need to be exposed
-    ports:
-      - 8120:8120
-    ## https://komo.do/docs/connect-servers#configuration
+    ## If you want to use a custom periphery config file, use command to pass it to periphery.
+    # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
+    volumes:
+      ## Mount external docker socket
+      - /var/run/docker.sock:/var/run/docker.sock
+      ## Allow Periphery to see processes outside of container
+      - /proc:/proc
+      ## Specify the Periphery agent root directory.
+      ## Must be the same inside and outside the container,
+      ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
+      ## Default: /etc/komodo.
+      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      # SOPS key
+      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
     environment:
       PERIPHERY_ROOT_DIRECTORY: "${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}"
       ## The public key of the Komodo Core connecting to this Periphery agent.
@@ -32,18 +40,10 @@ services:
       # PERIPHERY_EXCLUDE_DISK_MOUNTS: /snap,/etc/repos
       # Key file for SOPS, to use in sops commands
       SOPS_AGE_KEY_FILE: "/root/.config/sops/age/keys.txt"
-    volumes:
-      ## Mount external docker socket
-      - /var/run/docker.sock:/var/run/docker.sock
-      ## Allow Periphery to see processes outside of container
-      - /proc:/proc
-      ## Specify the Periphery agent root directory.
-      ## Must be the same inside and outside the container,
-      ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
-      ## Default: /etc/komodo.
-      - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
-      # SOPS key
-      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
-    ## If you want to use a custom periphery config file, use command to pass it to periphery.
-    # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
+    ## If periphery is being run remote from the core server, ports need to be exposed
+    ports:
+      - "8120:8120"
+    ## https://komo.do/docs/connect-servers#configuration
     restart: unless-stopped
+    labels:
+      komodo.skip: # Prevent Komodo from stopping with StopAllContainers

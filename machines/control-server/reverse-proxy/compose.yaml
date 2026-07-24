@@ -6,38 +6,38 @@ x-common:
 services:
   nginx:
     image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.6.0@sha256:72d76a4c0afcba01c7388cc558f4ea2b9669d37a6d9d30fb5c03948adb028f6b
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      TZ: *timezone
     volumes:
       # Main conf file
       - ${NGINX_PROXIES_FILE}:/etc/nginx/proxies.conf:ro
       # Certificate files
       - certbot-conf:/etc/letsencrypt:ro
+    environment:
+      TZ: *timezone
+    ports:
+      - "80:80"
+      - "443:443"
     networks: # For connecting with other services directly
       - central-network
     restart: unless-stopped
   
   certbot:
     image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
-    entrypoint: |
-      /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
-    environment:
-      TZ: *timezone
     volumes:
       - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
+    environment:
+      TZ: *timezone
     # Renew certificates every 12 hours
+    entrypoint: |
+      /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
     restart: unless-stopped
-
-volumes:
-  certbot-conf:
-    name: certbot-conf
-    external: true
 
 networks:
   central-network:
     name: central-network
+    external: true
+
+volumes:
+  certbot-conf:
+    name: certbot-conf
     external: true
