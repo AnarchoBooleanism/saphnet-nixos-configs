@@ -61,7 +61,7 @@ services:
           echo "The reverse proxy bootstrapping process has not been started before. Starting now!"
         fi
 
-        certonly -a dns-namecheap \
+        certbot certonly -a dns-namecheap \
           --dns-namecheap-credentials=/namecheap.ini \
           --agree-tos --non-interactive -vv \
           --no-eff-email \
