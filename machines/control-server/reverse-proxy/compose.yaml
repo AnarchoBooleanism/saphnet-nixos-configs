@@ -1,8 +1,11 @@
 # Much of this comes from https://dev.to/marrouchi/the-challenge-about-ssl-in-docker-containers-no-one-talks-about-32gh
 
 x-common:
-  CERTBOT_VERSION: &certbot_version ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
   TIMEZONE: &timezone "${TZ}"
+
+x-services:
+  CERTBOT_CONFIG: &certbot_config 
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
 
 services:
   nginx:
@@ -25,7 +28,7 @@ services:
     restart: unless-stopped
   
   certbot:
-    image: *certbot_version
+    <<: *certbot_config
     depends_on:
       bootstrap:
         condition: service_completed_successfully
@@ -39,7 +42,7 @@ services:
       /bin/sh -c 'trap exit TERM; while :; do certbot renew -vv; sleep 12h & wait $${!}; done;'
 
   bootstrap:
-    image: *certbot_version
+    <<: *certbot_config
     volumes:
       - certbot-conf:/etc/letsencrypt
       - ${NAMECHEAP_API_DETAILS_FILE}:/namecheap.ini
