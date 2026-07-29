@@ -108,6 +108,7 @@
     gcc
     gnumake
     git
+    hugo
     jdk25_headless
     kubernetes
     perl
