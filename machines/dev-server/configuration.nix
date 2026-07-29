@@ -106,8 +106,9 @@
     distrobox
     elmPackages.nodejs
     gcc
-    gnumake
     git
+    gnumake
+    go
     hugo
     jdk25_headless
     kubernetes
