@@ -26,7 +26,7 @@ services:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
   
   core:
-    image: ghcr.io/moghtech/komodo-core:2.2.0@sha256:7afbcfa99674bf3f51539ec3aa7235795e9b994af9b7099a6c4c654d5d8a5b6b
+    image: ghcr.io/moghtech/komodo-core:2.3.1@sha256:768faad246f19f4c1ddfbb675346a7fe9a5010506d31ed4a21251199387004a2
     container_name: komodo-core
     init: true
     depends_on:
@@ -72,7 +72,7 @@ services:
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.2.0@sha256:936a4af0ab7141868f1500a757ac37cd8d884aa6281a93555ebb54ea33a79a21 # Temporary for now until Komodo adds SOPS or we build in-house solution
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.1@sha256:6ca9980214f9a3629be0a8a6a3115b882c631d72d5f20cb1fd4570d89a4bd990 # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     volumes:
       ## Mount external docker socket
