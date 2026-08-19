@@ -114,7 +114,7 @@
     kubernetes
     perl
     ruby
-    pipx
+    # pipx # pipx is still broken
     python314
     # python314Packages.pip
     qemu_full
