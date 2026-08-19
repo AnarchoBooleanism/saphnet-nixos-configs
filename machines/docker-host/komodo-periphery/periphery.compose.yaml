@@ -7,7 +7,7 @@
 
 services:
   periphery:
-    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.1@sha256:6ca9980214f9a3629be0a8a6a3115b882c631d72d5f20cb1fd4570d89a4bd990 # Temporary for now until Komodo adds SOPS or we build in-house solution
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.2@sha256:009f539cf042346b15b1dddf7c746767f8d7d61b1a5a499b9d9155251568ee17 # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     ## If you want to use a custom periphery config file, use command to pass it to periphery.
     # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
