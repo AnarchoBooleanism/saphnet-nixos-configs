@@ -71,11 +71,18 @@
     isNormalUser = true;
     openssh.authorizedKeys.keys = value.authorized-keys;
     extraGroups = ["wheel" "docker"];
+    shell = pkgs.zsh;
   }) instanceValues.users;
 
   time.timeZone = constantsValues.timezone;
 
   programs.nix-ld.enable = true; # Needed for VS Code Server to work
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+  };
 
   # The custom Disko setup leads to problems otherwise
   boot.loader.systemd-boot.enable = true;
