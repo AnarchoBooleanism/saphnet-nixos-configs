@@ -160,5 +160,8 @@
     samba
   ];
 
+  # We love cross-compiling
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   system.stateVersion = "${versionLock.state-version}";
 }
