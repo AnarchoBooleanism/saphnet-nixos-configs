@@ -116,19 +116,19 @@ in
       # Check if the network already exists
       if ! ${pkgs.docker}/bin/docker network inspect "$NETWORK_NAME" &> /dev/null; then
         # Network does not exist, so create it
-        echo "Docker network '$NETWORK_NAME' not found. Creating it..."
+        printf "Docker network '%s' not found. Creating it...\n" "$NETWORK_NAME"
         ${pkgs.docker}/bin/docker network create "$NETWORK_NAME"
 
         # Check the creation status
         if [ $? -eq 0 ]; then
-          echo "Docker network '$NETWORK_NAME' created successfully."
+          printf "Docker network \"%s\" created successfully.\n" "$NETWORK_NAME"
         else
-          echo "Error: Failed to create Docker network '$NETWORK_NAME'."
+          printf "Error: Failed to create Docker network \"%s\".\n" "$NETWORK_NAME"
           exit 1
         fi
       else
         # Network already exists
-        echo "Docker network '$NETWORK_NAME' already exists. Leaving it alone."
+        printf "Docker network \"%s\" already exists. Leaving it alone.\n" "$NETWORK_NAME"
       fi
     '';
   };
