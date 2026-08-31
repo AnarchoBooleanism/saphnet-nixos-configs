@@ -185,62 +185,6 @@ in
     '';
   };
 
-  # systemd.services."reverse-proxy-bootstrap" = {
-  #   description = "Creating SSL certs (and volumes), with Certbot";
-
-  #   wantedBy = ["multi-user.target"];
-  #   wants = ["network-online.target"];
-  #   after = [
-  #     "docker.service" # Docker needed, of course
-  #     "docker.socket"
-  #     "sops-nix.service" # Need to get secrets
-  #     "network-online.target"
-  #   ];
-
-  #   serviceConfig.Type = "oneshot"; # Really make sure reverse-proxy waits
-
-  #   environment = {
-  #     CERTBOT_IMAGE_TAG = "${versionLock.reverse-proxy.certbot-version}";
-
-  #     CERTBOT_EMAIL = "${constantsValues.email.address}";
-  #     CERTBOT_DOMAINS = "${lib.strings.concatStringsSep "," revProxyDomains}";
-
-  #     # Other secret env variables that need to be passed in directly are listed in script 
-  #     NAMECHEAP_API_DETAILS_FILE = config.sops.secrets.namecheap-api-details.path;
-  #   };
-
-  #   script = with pkgs; ''
-  #     # Exit early if already started, so reverse-proxy can start
-  #     if [ -e /var/lib/reverse-proxy-bootstrap-complete ]; then
-  #       echo "It appears that the reverse proxy bootstrapping process is completed. Exiting..."
-  #       exit 0
-  #     else
-  #       echo "The reverse proxy bootstrapping process has not been started before. Starting now!"
-  #     fi
-
-  #     # Create the volumes
-  #     echo "Creating volumes..."
-  #     ${pkgs.docker}/bin/docker volume create certbot-conf
-
-  #     # Run certbot standalone (custom image for Namecheap dns01 challenges)
-  #     echo "Running Certbot..."
-  #     ${pkgs.docker}/bin/docker run --rm \
-  #       -v certbot-conf:/etc/letsencrypt \
-  #       -v $NAMECHEAP_API_DETAILS_FILE:/namecheap.ini \
-  #       ghcr.io/anarchobooleanism/certbot-dns-namecheap:$CERTBOT_IMAGE_TAG certonly \
-  #       -a dns-namecheap \
-  #       --dns-namecheap-credentials=/namecheap.ini \
-  #       --agree-tos --non-interactive -vv \
-  #       --no-eff-email \
-  #       --email "$CERTBOT_EMAIL" \
-  #       --domains "$CERTBOT_DOMAINS"
-
-  #     # Now, create the file, marking completion.
-  #     echo "Process completed, so we're marking this job as done..."
-  #     ${pkgs.coreutils}/bin/touch /var/lib/reverse-proxy-bootstrap-complete
-  #   '';
-  # };
-
   # NGINX reverse proxy for accessing the previous services securely
   systemd.services."reverse-proxy" = {
     description = "Reverse proxy, with NGINX";
