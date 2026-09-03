@@ -10,16 +10,16 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/**' # Avoid issues with Dependabot
-      - 'docs/**' # Don't check with documentation
-      - 'README.md'
+      - ".github/**" # Avoid issues with Dependabot
+      - "docs/**" # Don't check with documentation
+      - "README.md"
   push:
     branches:
       - main
     paths-ignore:
-      - '.github/**'
-      - 'docs/**' # Don't check with documentation
-      - 'README.md'
+      - ".github/**"
+      - "docs/**" # Don't check with documentation
+      - "README.md"
 
 jobs:
   flake-check:
