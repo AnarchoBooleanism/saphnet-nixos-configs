@@ -29,9 +29,9 @@ jobs:
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v28
         with:
-          branch: 'chore/update-flake-lock'
-          commit-msg: 'chore[bump]: Update flake.lock'
-          pr-title: 'chore[bump]: Update flake.lock'
+          branch: chore/update-flake-lock
+          commit-msg: "chore[bump]: Update flake.lock"
+          pr-title: "chore[bump]: Update flake.lock"
           sign-commits: true
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-fingerprint: ${{ secrets.GPG_FINGERPRINT }} # specify subkey fingerprint (optional)
