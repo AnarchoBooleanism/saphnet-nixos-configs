@@ -113,6 +113,7 @@
     distrobox
     elmPackages.nodejs
     gcc
+    gh
     git
     gnumake
     go
