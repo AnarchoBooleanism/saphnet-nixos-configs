@@ -5,11 +5,11 @@ x-common:
 
 x-services:
   CERTBOT_CONFIG: &certbot_config 
-    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:d3a16d263a30987cac55ad50f8ed9cf65c1649c913b26827e8e1f05dffdc386d
+    image: ghcr.io/anarchobooleanism/certbot-dns-namecheap:latest@sha256:a62d27d4429b8c05ce5fd74e6e003bf7d4138b2f876783d76f114f70ad3331d2
 
 services:
   nginx:
-    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.7.0@sha256:c44e12b604ef2fce2b9821dd7f9c95350434a3d031e26651551959bd0984ace5
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:v0.8.0@sha256:4e59f40f21f658915821b24d8cc5258a6f459440bc8de502eab166029f0475c6
     depends_on:
       bootstrap:
         condition: service_completed_successfully
