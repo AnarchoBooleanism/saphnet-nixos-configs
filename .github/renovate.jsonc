@@ -5,7 +5,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices",
-    ":semanticCommits"
+    ":semanticCommits",
+    "docker:enableMajor"
   ],
 
   // Scheduling
@@ -19,6 +20,21 @@
     // Main
     {
       "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"]
+    },
+    
+    // Package groups (for tightly-bound packages)
+    {
+      "groupName": "komodo",
+      "matchFileNames": [
+        "machines/control-server/komodo-control/mongo.compose.yaml", // Machine: control-server
+        "machines/docker-host/komodo-periphery/periphery.compose.yaml" // Machine: docker-host
+      ]
+    },
+    {
+      "groupName": "reverse-proxy",
+      "matchFileNames": [
+        "machines/control-server/reverse-proxy/compose.yaml" // Machine: control-server
+      ]
     }
   ]
 }
