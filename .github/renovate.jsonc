@@ -4,24 +4,11 @@
   // Overall Renovate config
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:best-practices",
-    ":semanticCommits",
-    "docker:enableMajor"
+    "github>AnarchoBooleanism/renovate-config"
   ],
 
-  // Scheduling
-  "timezone": "America/Los_Angeles",
-  // NOTE: Renovate does NOT support minute granularity, so it is specified as "*"
-  "schedule": ["* 6 * * 1"], // Every Monday at 6:00 AM
-  "prHourlyLimit": 0,
-  
   // Package rules
   "packageRules": [
-    // Main
-    {
-      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"]
-    },
-    
     // Package groups (for tightly-bound packages)
     {
       "groupName": "komodo",
