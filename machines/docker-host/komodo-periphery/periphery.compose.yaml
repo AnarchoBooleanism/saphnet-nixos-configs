@@ -47,3 +47,5 @@ services:
     restart: unless-stopped
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    # Works around https://github.com/moghtech/komodo/issues/1525
+    init: true

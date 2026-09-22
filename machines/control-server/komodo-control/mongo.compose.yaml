@@ -28,7 +28,6 @@ services:
   core:
     image: ghcr.io/moghtech/komodo-core:2.3.3@sha256:bca73d0eee143066228fb9b80c38a5a2726e573ad2758f7aa92b5c91a8aef1c7
     container_name: komodo-core
-    init: true
     depends_on:
       - mongo
     volumes:
@@ -67,6 +66,7 @@ services:
     restart: unless-stopped
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    init: true
 
   ## Deploy Periphery container using this block,
   ## or deploy the Periphery binary with systemd using 
@@ -90,6 +90,8 @@ services:
     restart: unless-stopped
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
+    # Works around https://github.com/moghtech/komodo/issues/1525
+    init: true
 
 networks:
   komodo-network: # Needed for containers to connect to each other, as central-network is listed in one of them
