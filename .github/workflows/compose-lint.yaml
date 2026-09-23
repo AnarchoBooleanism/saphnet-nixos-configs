@@ -10,13 +10,13 @@ on:
       - main
     paths:
       - "**/compose.yaml"
-      - "**/*.compose.yaml"
+      - "**/compose.*.yaml"
   push:
     branches:
       - main
     paths:
       - "**/compose.yaml"
-      - "**/*.compose.yaml"
+      - "**/compose.*.yaml"
 
 jobs:
   lint:
