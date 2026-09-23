@@ -13,8 +13,8 @@
     {
       "groupName": "komodo",
       "matchFileNames": [
-        "machines/control-server/komodo-control/mongo.compose.yaml", // Machine: control-server
-        "machines/docker-host/komodo-periphery/periphery.compose.yaml" // Machine: docker-host
+        "machines/control-server/komodo-control/compose.yaml", // Machine: control-server
+        "machines/docker-host/komodo-periphery/compose.yaml" // Machine: docker-host
       ]
     },
     {

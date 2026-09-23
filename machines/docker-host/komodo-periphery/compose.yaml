@@ -9,8 +9,6 @@ services:
   periphery:
     image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.3@sha256:d1fa164b44b7baa48ac3f67c4e34b8c794f4ef05a9aa9cedecc06003f1b5c5fd # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
-    ## If you want to use a custom periphery config file, use command to pass it to periphery.
-    # command: periphery --config-path ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}/periphery.config.toml
     volumes:
       ## Mount external docker socket
       - /var/run/docker.sock:/var/run/docker.sock

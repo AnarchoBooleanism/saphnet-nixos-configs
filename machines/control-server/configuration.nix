@@ -181,7 +181,7 @@ in
       export KOMODO_CONFIG_PATH=$(mktemp)
       ${pkgs.gettext}/bin/envsubst \'$GIT_ACCESS_TOKEN,$DOCKER_ACCESS_TOKEN\' < $KOMODO_CONFIG_TEMPLATE_PATH > $KOMODO_CONFIG_PATH
 
-      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
+      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';
   };
 
