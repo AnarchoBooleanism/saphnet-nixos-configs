@@ -9,7 +9,7 @@
 
 services:
   mongo:
-    image: mongo:8@sha256:0f99e1f5827518188f9aa46c847d86b3cbf6e2d3e9e752299630081bc0079380
+    image: mongo:8@sha256:5d7043a4ffe02b9ed1b6e0bab057546981af5ca0a79107e9c461e49bc44c0a7b
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
