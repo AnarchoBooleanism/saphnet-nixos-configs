@@ -106,7 +106,7 @@
       # Dynamically export variables from secrets files
       export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
 
-      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/periphery.compose.yaml} up
+      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/compose.yaml} up
     '';
   };
 

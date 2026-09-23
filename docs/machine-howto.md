@@ -555,7 +555,7 @@ systemd.services."komodo-control" = {
     export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
     export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
-    ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
+    ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
   '';
 };
 ```

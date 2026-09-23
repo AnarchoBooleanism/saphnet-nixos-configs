@@ -220,7 +220,7 @@ in
 
     script = with pkgs; '' # The shell script ran by this service, which runs various commands
       ...
-      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/mongo.compose.yaml} --env-file ${./komodo-control/compose.env} up
+      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';
   };
 
