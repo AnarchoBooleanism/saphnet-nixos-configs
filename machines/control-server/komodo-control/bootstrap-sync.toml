@@ -26,10 +26,10 @@ repo = "AnarchoBooleanism/saphnet-compose-configs"
 
 ## Syncs
 # Main saphnet-komodo sync
-[[resource-sync]]
+[[resource_sync]]
 name = "saphnet-komodo_sync"
 tags = ["bootstrap", "iac"]
 [resource-sync.config]
 linked_repo = "saphnet-komodo"
-resource_path = ["actions.toml", "procedures.toml", "servers.toml", "variables.toml"]
+resource_path = ["resources"] # Yes, a single "resources" directory
 include_variables = true
