@@ -39,9 +39,7 @@ include_variables = true
 [[procedure]]
 name = "saphnet-komodo_run-sync"
 description = """
-Regularly update all IaC repositories and sync Komodo state with the state of the repositories.
-
-Updates variables, syncs the saphnet-compose-configs repo, and then runs saphnet-run-iac-stack-sync.
+Regularly update the saphnet-komodo repository and sync Komodo state with its state.
 """
 tags = ["main", "bootstrap", "iac"]
 config.schedule_enabled = true
