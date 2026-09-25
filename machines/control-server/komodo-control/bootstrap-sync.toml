@@ -33,3 +33,31 @@ tags = ["bootstrap", "iac"]
 linked_repo = "saphnet-komodo"
 resource_path = ["resources"] # Yes, a single "resources" directory
 include_variables = true
+
+## Procedures
+# Auto-update saphnet-komodo
+[[procedure]]
+name = "saphnet-komodo_run-sync"
+description = """
+Regularly update all IaC repositories and sync Komodo state with the state of the repositories.
+
+Updates variables, syncs the saphnet-compose-configs repo, and then runs saphnet-run-iac-stack-sync.
+"""
+tags = ["main", "bootstrap", "iac"]
+config.schedule_enabled = true
+config.schedule_format = "Cron"
+config.schedule = "0 15,45 * * * *" # :15 and :45 of every hour
+
+[[procedure.config.stage]]
+name = "Pull Repositories"
+enabled = true
+executions = [
+  { execution.type = "PullRepo", execution.params.repo = "saphnet-komodo", enabled = true }
+]
+
+[[procedure.config.stage]]
+name = "Run Syncs"
+enabled = true
+executions = [
+  { execution.type = "RunSync", execution.params.sync = "saphnet-komodo_sync", enabled = true }
+]
