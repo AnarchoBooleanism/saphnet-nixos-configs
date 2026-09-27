@@ -50,9 +50,11 @@ in
     })
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
+    (../.. + "/modules/virtualization/docker-extras/for-impermanence.nix")
     (import (../.. + "/modules/networking/tailscale.nix") {
       inherit inputs secretsFile;
     })
+    (../.. + "/modules/networking/tailscale-extras/for-impermanence.nix")
   ];
 
   sops = {
@@ -69,14 +71,15 @@ in
   };
 
   environment.persistence."/persist" = { # Additional files to base ones
-    directories = [
-      "/var/lib/docker/" # Docker
-      "/var/lib/tailscale/" # Tailscale
-      "/etc/komodo" # Komodo
-    ];
     files = [
       "/var/lib/reverse-proxy-bootstrap-complete" # For initial SSL cert bootstrapping
       "/var/lib/komodo_jwt_secret" # For persistent JWT secret for Komodo
+    ];
+  };
+
+  environment.persistence."/persist-data" = {
+    directories = [
+      "/etc/komodo" # Komodo
     ];
   };
 
