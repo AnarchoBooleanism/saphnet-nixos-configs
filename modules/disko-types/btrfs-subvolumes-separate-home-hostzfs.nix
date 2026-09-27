@@ -80,10 +80,6 @@ in
                     mountOptions = btrfsMountOptions;
                     mountpoint = "/nix";
                   };
-                  "@var-log" = {
-                    mountOptions = btrfsMountOptions;
-                    mountpoint = "/var/log";
-                  };
                 };
               };
             };
@@ -109,6 +105,10 @@ in
                   "@home" = {
                     mountOptions = btrfsMountOptions;
                     mountpoint = "/home";
+                  };
+                  "@var-log" = {
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/var/log";
                   };
                 };
               };
