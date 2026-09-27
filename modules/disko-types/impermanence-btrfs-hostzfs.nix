@@ -1,6 +1,7 @@
 # Configuration with a boot, ESP, and swap, based on BTRFS, designed for use with Impermanence
 # Single-disk setup.
-# The subvolumes to look out here for are @ (root), @persist, and @nix. (Don't forget about /boot too!)
+# The subvolumes to look out here for are @ (root), @persist, @nix, and @var-log. (Don't forget
+# about /boot too!)
 # The names of their mount points should match with their subvolume names, for consistency reasons.
 # This is for a VM that uses a ZFS zvol, so CoW, checksumming, and compression are disabled
 # As well, block sizes are set to 16K, the default in Proxmox.
@@ -30,7 +31,7 @@ in
   ];
 
   disko.devices = {
-    disk.main = {
+    disk.root = {
       inherit device;
       type = "disk";
       content = {
