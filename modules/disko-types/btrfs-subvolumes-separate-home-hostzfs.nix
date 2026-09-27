@@ -2,6 +2,8 @@
 # This should allow for easy snapshots of the root filesystem, as well as the easy migration of user data between systems.
 # The first disk (for non-home purposes) has the BIOS boot partition, the ESP, swap, and the btrfs partition that has / and /nix in separate subvols.
 # The second disk has a btrfs partition with just the @home subvol for /home.
+# This is for a VM that uses a ZFS zvol on an SSD, so CoW, checksumming, and compression are disabled
+# As well, block sizes are set to 16K, the default in Proxmox.
 # Much of this comes from https://github.com/nix-community/disko/blob/master/example/btrfs-subvolumes.nix
 {
   rootDevice ? throw "Set this to your disk device, e.g. /dev/sda",
@@ -11,7 +13,19 @@
 { 
   inputs,
   ...
-}: {
+}:
+let
+  btrfsMountOptions = [
+    "discard=async"
+    "noatime"
+    "nodatacow"
+    "nodatasum"
+    "space_cache=v2"
+    "ssd"
+  ];
+  nodeSize = "16k"; # 16K is the default Proxmox ZFS block size
+in
+{
   imports = [
     inputs.disko.nixosModules.disko
   ];
@@ -48,25 +62,27 @@
                 discardPolicy = "both"; # My proxmox nodes generally use SSDs, so yes here
               };
             };
-            root = {
+            root = { # Referred to with the "disk-root-root" label
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = [ "-f" ]; # Override existing partition
+                extraArgs = [ "-f" "-n" nodeSize ]; # Override existing partition
                 # Subvolumes must set a mountpoint in order to be mounted,
                 # unless their parent is mounted
                 subvolumes = {
                   # Subvolume name is different from mountpoint
                   "@" = {
+                    mountOptions = btrfsMountOptions;
                     mountpoint = "/";
                   };
                   # Parent is not mounted so the mountpoint must be set
                   "@nix" = {
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
+                    mountOptions = btrfsMountOptions;
                     mountpoint = "/nix";
+                  };
+                  "@var-log" = {
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/var/log";
                   };
                 };
               };
@@ -81,17 +97,17 @@
         content = {
           type = "gpt";
           partitions = {
-            home = {
+            home = { # Referred to with the "disk-home-home" label
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = [ "-f" ]; # Override existing partition
+                extraArgs = [ "-f" "-n" nodeSize ]; # Override existing partition
                 # Subvolumes must set a mountpoint in order to be mounted,
                 # unless their parent is mounted
                 subvolumes = {
                   # Subvolume name is the same as the mountpoint
                   "@home" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = btrfsMountOptions;
                     mountpoint = "/home";
                   };
                 };
