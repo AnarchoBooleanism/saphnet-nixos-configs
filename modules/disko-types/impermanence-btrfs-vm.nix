@@ -1,5 +1,5 @@
-# Configuration with a boot, ESP, swap, and LVM partition, based on BTRFS, designed for use with Impermanence
-# The subvolumes to look out here for are / (root), /persist/, and /nix. (Don't forget about /boot too!)
+# Configuration with a boot, ESP, and swap, based on BTRFS, designed for use with Impermanence
+# The subvolumes to look out here for are @ (root), @persist, and @nix. (Don't forget about /boot too!)
 # The names of their mount points should match with their subvolume names, for consistency reasons.
 # Much of this comes from https://github.com/vimjoyer/impermanent-setup/blob/main/final/disko.nix
 {
@@ -44,39 +44,21 @@
               discardPolicy = "both"; # My proxmox nodes generally use SSDs, so yes here
             };
           };
-          root = {
-            name = "root";
+          root = { # Referred to with the "disk-root-root" label
             size = "100%";
-            content = {
-              type = "lvm_pv";
-              vg = "root_vg";
-            };
-          };
-        };
-      };
-    };
-    lvm_vg = {
-      root_vg = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
             content = {
               type = "btrfs";
               extraArgs = ["-f"];
-
               subvolumes = {
-                "/root" = {
+                "@" = {
                   mountpoint = "/";
                 };
-
-                "/persist" = {
-                  mountOptions = ["subvol=persist" "noatime"];
+                "@persist" = {
+                  mountOptions = ["noatime"];
                   mountpoint = "/persist";
                 };
-
-                "/nix" = {
-                  mountOptions = ["subvol=nix" "noatime"];
+                "@nix" = {
+                  mountOptions = ["noatime"];
                   mountpoint = "/nix";
                 };
               };

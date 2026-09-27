@@ -1,5 +1,7 @@
 # Configuration for using Impermanence, for keeping your system clean between reboots.
 # This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs.nix.
+# As well, it assumes that the @ subvolume (in the root directory of the top-level btrfs filesystem) is
+# mounted to the root directory of the system (/), and that this subvolume is on a disk labeled "root". 
 # If using sops-nix, make sure to use modules/sops-nix-types/default-impermanence.nix.
 {
   inputs,
@@ -53,8 +55,8 @@
     # Also, before you ask, all of the packages needed for this job are already included with the
     # initrd environment of NixOS.
     script = ''
-      /bin/mkdir /btrfs_tmp
-      /bin/mount /dev/root_vg/root /btrfs_tmp
+      /bin/mkdir -p /btrfs_tmp
+      /bin/mount -o subvol=/ /dev/disk/by-partlabel/disk-root-root /btrfs_tmp
       if [[ -e /btrfs_tmp/root ]]; then
           /bin/mkdir -p /btrfs_tmp/old_roots
           timestamp=$(/bin/date --date="@$(/bin/stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
@@ -73,7 +75,7 @@
           delete_subvolume_recursively "$i"
       done
 
-      /bin/btrfs subvolume create /btrfs_tmp/root
+      /bin/btrfs subvolume create /btrfs_tmp/@
       /bin/umount /btrfs_tmp
     '';
   };
