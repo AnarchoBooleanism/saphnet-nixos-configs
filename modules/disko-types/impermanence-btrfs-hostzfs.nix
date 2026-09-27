@@ -1,11 +1,27 @@
 # Configuration with a boot, ESP, and swap, based on BTRFS, designed for use with Impermanence
-# Single-disk setup.
-# The subvolumes to look out here for are @ (root), @persist, @nix, and @var-log. (Don't forget
-# about /boot too!)
-# The names of their mount points should match with their subvolume names, for consistency reasons.
-# This is for a VM that uses a ZFS zvol, so CoW, checksumming, and compression are disabled
+# Recommended for when you can only use one VM disk
+
+# Single-disk setup. (Use impermanence-btrfs-split-hostzfs for dual-disk)
+
+# The subvolumes to look out here for are:
+# - @ (root),
+# - @nix (/nix)
+# - @persist (/persist)
+# - @persist-data (/persist-data) 
+# - @docker-volumes (/var/lib/docker/volumes)
+# (Don't forget about /boot too!)
+
+# Note that there is no /home directory, as this is intended for non-user-facing systems.
+
+# Persistent data is split between these two kinds:
+# - Data that should be persistent between restarts, but not reinstalls (in @persist)
+# - Data that should be persistent between restarts AND reinstalls (in @persist-data)
+
+# This is for a VM that uses a ZFS zvol, so CoW, checksumming, and compression are disabled.
 # As well, block sizes are set to 16K, the default in Proxmox.
+
 # Much of this comes from https://github.com/vimjoyer/impermanent-setup/blob/main/final/disko.nix
+
 {
   device ? throw "Set this to your disk device, e.g. /dev/sda",
   ...
@@ -78,9 +94,18 @@ in
                   mountOptions = btrfsMountOptions;
                   mountpoint = "/persist";
                 };
-                "@var-log" = {
+
+                # The below two are not necessarily needed for this config,
+                # but we do want flexibility between this and the split approach.
+                "@persist-data" = { # This should also be marked with Impermanence
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/persist-data";
+                  };
+                # Since Docker is commonly used, placing this as default
+                # Trying to avoid potential weirdness by putting this in persist-data
+                "@docker-volumes" = {
                   mountOptions = btrfsMountOptions;
-                  mountpoint = "/var/log";
+                  mountpoint = "/var/lib/docker/volumes";
                 };
               };
             };
