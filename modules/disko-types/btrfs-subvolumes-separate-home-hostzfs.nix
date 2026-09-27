@@ -4,7 +4,7 @@
 # The second disk has a btrfs partition with just the @home subvol for /home.
 # This is for a VM that uses a ZFS zvol on an SSD, so CoW, checksumming, and compression are disabled
 # As well, block sizes are set to 16K, the default in Proxmox.
-# Much of this comes from https://github.com/nix-community/disko/blob/master/example/btrfs-subvolumes.nix
+# Much of this comes from https://github.com/nix-community/disko/blob/master/example/btrfs-subvolumes-hostzfs.nix
 {
   rootDevice ? throw "Set this to your disk device, e.g. /dev/sda",
   homeDevice ? throw "Set this to your disk device, e.g. /dev/sdb",

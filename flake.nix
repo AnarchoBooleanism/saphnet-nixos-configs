@@ -38,7 +38,7 @@
           modules = [
             # Config-specific files
             instances/control-server/hardware-configuration.nix
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; }) # Need to set device name here
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; }) # Need to set device name here
             (import machines/control-server/configuration.nix {
               secretsFile = "${./instances/control-server/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/control-server/instance-values.toml}"); 
@@ -52,7 +52,7 @@
           modules = [
             # Config-specific files
             instances/dev-server/hardware-configuration.nix
-            (import modules/disko-types/btrfs-subvolumes-separate-home.nix {
+            (import modules/disko-types/btrfs-subvolumes-separate-home-hostzfs.nix {
               rootDevice = "/dev/sda";
               homeDevice = "/dev/sdb";
             }) # Need to set device name here
@@ -69,7 +69,7 @@
           modules = [
             # Config-specific files
             instances/docker-host-core/hardware-configuration.nix
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-core/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-core/instance-values.toml}"); 
@@ -84,7 +84,7 @@
             # Config-specific files
             instances/docker-host-pve3/hardware-configuration.nix
             modules/system-extras/intel-arc-gpu.nix # Since the target system has an Intel Arc A310
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-pve3/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve3/instance-values.toml}"); 
@@ -98,7 +98,7 @@
           modules = [
             # Config-specific files
             instances/docker-host-pve4/hardware-configuration.nix
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-pve4/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-pve4/instance-values.toml}"); 
@@ -112,7 +112,7 @@
           modules = [
             # Config-specific files
             instances/docker-host-core/hardware-configuration.nix
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; })
             (import machines/vpn-server/configuration.nix {
               secretsFile = "${./instances/vpn-server-1/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/vpn-server-1/instance-values.toml}"); 

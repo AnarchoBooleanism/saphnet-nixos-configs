@@ -1,5 +1,5 @@
 # Configuration for using Impermanence, for keeping your system clean between reboots.
-# This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs.nix.
+# This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs-hostzfs.nix.
 # As well, it assumes that the @ subvolume (in the root directory of the top-level btrfs filesystem) is
 # mounted to the root directory of the system (/), and that this subvolume is on a disk labeled "root". 
 # If using sops-nix, make sure to use modules/sops-nix-types/default-impermanence.nix.
