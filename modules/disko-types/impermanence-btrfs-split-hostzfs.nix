@@ -124,12 +124,6 @@ in
                     mountOptions = btrfsMountOptions;
                     mountpoint = "/persist-data";
                   };
-                  # Since Docker is commonly used, placing this as default
-                  # Trying to avoid potential weirdness by putting this in persist-data
-                  "@docker-volumes" = {
-                    mountOptions = btrfsMountOptions;
-                    mountpoint = "/var/lib/docker/volumes";
-                  };
                 };
               };
             };
