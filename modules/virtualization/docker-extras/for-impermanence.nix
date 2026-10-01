@@ -9,7 +9,7 @@
 
   # The rest of Docker's data (e.g. images) can simply be persisted between reboots
   environment.persistence."/persist" = {
-    files = [
+    directories = [
       "/var/lib/docker"
     ];
   };

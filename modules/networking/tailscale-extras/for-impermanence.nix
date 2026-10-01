@@ -6,7 +6,7 @@
 {
   # We want to avoid having to reauthenticate with the key every single time, between reboots
   environment.persistence."/persist" = {
-    files = [
+    directories = [
       "/var/lib/tailscale"
     ];
   };
