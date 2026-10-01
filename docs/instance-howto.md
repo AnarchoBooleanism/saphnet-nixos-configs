@@ -24,7 +24,7 @@ Here is an example, for `docker-host-core`:
           modules = [
             # Config-specific files
             instances/docker-host-core/hardware-configuration.nix
-            (import modules/disko-types/impermanence-btrfs.nix { device = "/dev/sda"; })
+            (import modules/disko-types/impermanence-btrfs-hostzfs.nix { device = "/dev/sda"; })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-core/secrets.enc.yaml}"; 
               instanceValues = builtins.fromTOML (builtins.readFile "${./instances/docker-host-core/instance-values.toml}"); 

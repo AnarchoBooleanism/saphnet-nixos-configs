@@ -40,11 +40,13 @@
     })
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/virtualization/docker-extras/autoprune.nix")
+    (../.. + "/modules/virtualization/docker-extras/for-impermanence.nix")
     (import (../.. + "/modules/networking/tailscale.nix") {
       inherit inputs secretsFile;
       routesAdvertised = [ constantsValues.networking.subnet ];
       isExitNode = true;
     })
+    (../.. + "/modules/networking/tailscale-extras/for-impermanence.nix")
   ];
 
   sops = {
@@ -55,14 +57,11 @@
     };
   };
 
-  environment.persistence."/persist" = { # Additional files to base ones
+  environment.persistence."/persist-data" = {
     directories = [
-      "/var/lib/docker/" # Docker
       "/etc/komodo" # Komodo
-      "/var/lib/tailscale" # Tailscale
       "/var/lib/pterodactyl" # Pterodactyl (for docker-host-pve4)
     ];
-    files = [];
   };
 
   networking.hostName = instanceValues.hostname;

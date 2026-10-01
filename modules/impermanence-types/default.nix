@@ -1,6 +1,32 @@
 # Configuration for using Impermanence, for keeping your system clean between reboots.
-# This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs.nix.
+# This configuration assumes you are using BTRFS, like with modules/disko-types/impermanence-btrfs-hostzfs.nix.
+
+# As well, it assumes that the @ subvolume (in the root directory of the top-level btrfs filesystem) is
+# mounted to the root directory of the system (/), and that this subvolume is on a disk labeled "root". 
+
+# Furthermore, this configuration assumes that the Disko config contains certain subvolumes that are
+# mounted in /persist and /persist-data. (They generally should)
+# /persist is for data that should be persistent between restarts, but not reinstalls
+# /persist-data is for data that should be persistent between restarts AND reinstalls
+# Be considerate of which location you list your directories/files in.
+# Listing directories/files to persist works similar for both locations, as you set the same settings
+# under the environment.persistence."/LOCATION" attribute, just substituting "/LOCATION" with
+# "/persist" or "/persist-data".
+
 # If using sops-nix, make sure to use modules/sops-nix-types/default-impermanence.nix.
+
+# For many Modules, you will not need to mark their relevant directories/files as persistent, one-by-one.
+# Many of the Modules (e.g. tailscale) already have sub-Modules that mark the right directories/files
+# under either /persist or /persist-data. They are generally named "for-impermanence".
+# In such cases, you will only need to import the relevant sub-Modules, like in this example:
+# imports = [
+#   ... # Omitting for brevity
+#   (import (../.. + "/modules/networking/tailscale.nix") {
+#     inherit inputs secretsFile;
+#   })
+#   (../.. + "/modules/networking/tailscale-extras/for-impermanence.nix")
+# ];
+
 {
   inputs,
   lib,
@@ -10,24 +36,33 @@
     inputs.impermanence.nixosModules.impermanence
   ];
 
+  # Again, note that /persist is for data that should persist between reboots, but not reinstalls.
+
   # This is a basic list of directories/files that will be hosted in /persist.
   # If you want to add any of your own for your machine's configuration, make sure that
   # your configuration.nix file contains environment.persistence."/persist", with
   # subvalues for directories and files.
-  # Examples of directories/files you might want to add:
-  # - /var/lib/docker - If you have Docker
-  # - /etc/komodo - For the Komodo control server
+
+  # Note that various Modules already have sub-Modules that handle the relevant
+  # Impermanence settings, so you should import those.
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
       "/etc/nixos"
-      "/var/log"
       "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
       "/etc/NetworkManager/system-connections"
     ];
     files = [
       "/etc/machine-id"
+    ];
+  };
+
+  # This is a list of directories/files that should persist for both reboots AND reinstalls
+  environment.persistence."/persist-data" = {
+    hideMounts = true;
+    directories = [
+      "/var/lib/systemd/coredump"
+      "/var/log"
     ];
   };
 
@@ -52,13 +87,17 @@
     # run the necessary binary.
     # Also, before you ask, all of the packages needed for this job are already included with the
     # initrd environment of NixOS.
+
+    # Also, IMPORTANT NOTE: This assumes @ exists at the btrfs root!
     script = ''
-      /bin/mkdir /btrfs_tmp
-      /bin/mount /dev/root_vg/root /btrfs_tmp
-      if [[ -e /btrfs_tmp/root ]]; then
+      /bin/mkdir -p /btrfs_tmp
+      /bin/mount -o subvol=/ /dev/disk/by-partlabel/disk-root-root /btrfs_tmp
+      /bin/mkdir -p /btrfs_tmp/old_roots
+
+      if [[ -e /btrfs_tmp/@ ]]; then
           /bin/mkdir -p /btrfs_tmp/old_roots
-          timestamp=$(/bin/date --date="@$(/bin/stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-          /bin/mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+          timestamp=$(/bin/date --date="@$(/bin/stat -c %Y /btrfs_tmp/@)" "+%Y-%m-%-d_%H:%M:%S")
+          /bin/mv /btrfs_tmp/@ "/btrfs_tmp/old_roots/$timestamp"
       fi
 
       delete_subvolume_recursively() {
@@ -73,10 +112,11 @@
           delete_subvolume_recursively "$i"
       done
 
-      /bin/btrfs subvolume create /btrfs_tmp/root
+      /bin/btrfs subvolume create /btrfs_tmp/@
       /bin/umount /btrfs_tmp
     '';
   };
 
   fileSystems."/persist".neededForBoot = true;
+  fileSystems."/persist-data".neededForBoot = true;
 }

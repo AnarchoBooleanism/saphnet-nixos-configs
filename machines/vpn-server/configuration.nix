@@ -41,6 +41,7 @@
       routesAdvertised = [ constantsValues.networking.subnet ];
       isExitNode = true;
     })
+    (../.. + "/modules/networking/tailscale-extras/for-impermanence.nix")
   ];
 
   sops = {
@@ -50,9 +51,7 @@
   };
 
   environment.persistence."/persist" = { # Additional files to base ones
-    directories = [
-      "/var/lib/tailscale/" # Tailscale
-    ];
+    directories = [];
     files = [];
   };
 
