@@ -11,7 +11,7 @@
     ];
   };
 
-  environment.persistence."/persist" = {
+  environment.persistence."/persist-data" = {
     directories = [
       "/var/lib/docker/volumes"
     ];
