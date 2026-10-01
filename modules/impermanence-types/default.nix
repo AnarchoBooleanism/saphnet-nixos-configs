@@ -87,13 +87,17 @@
     # run the necessary binary.
     # Also, before you ask, all of the packages needed for this job are already included with the
     # initrd environment of NixOS.
+
+    # Also, IMPORTANT NOTE: This assumes @ exists at the btrfs root!
     script = ''
       /bin/mkdir -p /btrfs_tmp
       /bin/mount -o subvol=/ /dev/disk/by-partlabel/disk-root-root /btrfs_tmp
-      if [[ -e /btrfs_tmp/root ]]; then
+      /bin/mkdir -p /btrfs_tmp/old_roots
+
+      if [[ -e /btrfs_tmp/@ ]]; then
           /bin/mkdir -p /btrfs_tmp/old_roots
-          timestamp=$(/bin/date --date="@$(/bin/stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
-          /bin/mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+          timestamp=$(/bin/date --date="@$(/bin/stat -c %Y /btrfs_tmp/@)" "+%Y-%m-%-d_%H:%M:%S")
+          /bin/mv /btrfs_tmp/@ "/btrfs_tmp/old_roots/$timestamp"
       fi
 
       delete_subvolume_recursively() {
