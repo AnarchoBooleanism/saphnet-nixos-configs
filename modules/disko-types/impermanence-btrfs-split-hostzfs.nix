@@ -8,9 +8,8 @@
 # - @nix (/nix)
 # - @persist (/persist)
 # - @persist-data (/persist-data) 
-# - @docker-volumes (/var/lib/docker/volumes)
 # (Don't forget about /boot too!)
-# NOTE: @persist-data and @docker-volumes are on a separate disk (dataDevice).
+# NOTE: @persist-data is on a separate disk (dataDevice).
 # This allows you to only back up that disk, and be able to have your data back after a reinstall.
 
 # Note that there is no /home directory, as this is intended for non-user-facing systems.

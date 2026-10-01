@@ -7,8 +7,7 @@
 # - @ (root),
 # - @nix (/nix)
 # - @persist (/persist)
-# - @persist-data (/persist-data) 
-# - @docker-volumes (/var/lib/docker/volumes)
+# - @persist-data (/persist-data)
 # (Don't forget about /boot too!)
 
 # Note that there is no /home directory, as this is intended for non-user-facing systems.

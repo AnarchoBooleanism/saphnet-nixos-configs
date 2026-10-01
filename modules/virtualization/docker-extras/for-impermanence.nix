@@ -4,13 +4,16 @@
   ...
 }:
 {
-  # Note that, for many Disko configs, that /var/lib/docker/volumes is handled by a separate
-  # @docker-volumes subvolume, so that its data can persist between reinstalls.
-
   # The rest of Docker's data (e.g. images) can simply be persisted between reboots
   environment.persistence."/persist" = {
     directories = [
       "/var/lib/docker"
+    ];
+  };
+
+  environment.persistence."/persist" = {
+    directories = [
+      "/var/lib/docker/volumes"
     ];
   };
 }
