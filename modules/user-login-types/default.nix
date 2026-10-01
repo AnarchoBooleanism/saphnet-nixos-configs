@@ -41,7 +41,7 @@
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
       openssh.authorizedKeys.keys = authorizedKeys;
-      extraGroups = ["wheel" "docker" "video" "render"];
+      extraGroups = ["wheel" "video" "render"];
     };
 
     "${cicdUsername}" = {

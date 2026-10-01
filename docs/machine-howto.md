@@ -644,7 +644,7 @@ For example, this is the configuration for the default `user-login-types` Module
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
       openssh.authorizedKeys.keys = authorizedKeys;
-      extraGroups = ["wheel" "docker" "video" "render"];
+      extraGroups = ["wheel" "video" "render"];
     };
 
     "${cicdUsername}" = {
