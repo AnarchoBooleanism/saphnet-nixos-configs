@@ -98,8 +98,8 @@ in
                 # The below two are not necessarily needed for this config,
                 # but we do want flexibility between this and the split approach.
                 "@persist-data" = { # This should also be marked with Impermanence
-                    mountOptions = btrfsMountOptions;
-                    mountpoint = "/persist-data";
+                  mountOptions = btrfsMountOptions;
+                  mountpoint = "/persist-data";
                 };
               };
             };
