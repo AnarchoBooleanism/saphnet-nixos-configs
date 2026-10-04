@@ -40,6 +40,7 @@
     "${defaultUsername}" = {
       hashedPasswordFile = config.sops.secrets.main-password-hashed.path;
       isNormalUser = true;
+      uid = 1000;
       openssh.authorizedKeys.keys = authorizedKeys;
       extraGroups = ["wheel" "video" "render"];
     };
@@ -47,6 +48,7 @@
     "${cicdUsername}" = {
       hashedPassword = "!";
       isNormalUser = true;
+      uid = 1001;
       openssh.authorizedKeys.keys = cicdAuthorizedKeys;
       extraGroups = ["wheel"];
     };

@@ -69,6 +69,7 @@
   users.users = lib.attrsets.mapAttrs (name: value: { # Allows us to define users in TOML file
     hashedPasswordFile = config.sops.secrets."${name}-password-hashed".path;
     isNormalUser = true;
+    uid = value.uid;
     openssh.authorizedKeys.keys = value.authorized-keys;
     extraGroups = ["wheel" "docker"];
     shell = pkgs.zsh;
