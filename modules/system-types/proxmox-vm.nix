@@ -34,7 +34,7 @@
     curl
     rsync
     bash-completion
-    openssl_3
+    openssl
   ];
 
   boot.initrd = { # Support nfs systems
