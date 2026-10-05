@@ -176,7 +176,7 @@ in
 
       # Automatically create JWT secret (so that no relogin is needed between restarts)
       if [ ! -f "/var/lib/komodo_jwt_secret" ]; then
-        ${pkgs.openssl_3}/bin/openssl rand -base64 32 > /var/lib/komodo_jwt_secret
+        ${pkgs.openssl}/bin/openssl rand -base64 32 > /var/lib/komodo_jwt_secret
       fi
       export KOMODO_JWT_SECRET=$(cat /var/lib/komodo_jwt_secret)
 
