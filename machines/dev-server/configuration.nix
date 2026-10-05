@@ -131,6 +131,7 @@
     # User tools
     age
     curl
+    delta
     dool
     emacs
     fzf
