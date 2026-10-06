@@ -9,7 +9,7 @@ x-services:
 
 services:
   nginx:
-    image: ghcr.io/anarchobooleanism/saphnet-nginx:v1.0.0@sha256:629816ba58a4955bc03336f78a8c554e9fbff92a7e1dd6177287f6d72afabd23
+    image: ghcr.io/anarchobooleanism/saphnet-nginx:v1.1.0@sha256:0c8304eded29d855c916630a6c66d578c9456054760e1a92a42fa831e79d1187
     depends_on:
       bootstrap:
         condition: service_completed_successfully
