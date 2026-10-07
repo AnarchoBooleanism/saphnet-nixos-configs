@@ -22,6 +22,13 @@
       "matchFileNames": [
         "machines/control-server/reverse-proxy/compose.yaml" // Machine: control-server
       ]
-    }
+    },
+
+    // Major/minor version pins
+    {
+      "matchFileNames": ["machines/control-server/komodo-control/compose.yaml"],
+      "matchPackageNames": ["mongo"],
+      "allowedVersions": "^8.0.0" // 9 came out, staying here until we figure it out
+    },
   ]
 }
