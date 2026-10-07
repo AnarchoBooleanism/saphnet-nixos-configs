@@ -9,7 +9,7 @@
 
 services:
   mongo:
-    image: mongo:8@sha256:d731d77bfd7afd66bd487bdf627b5bf7ce4c3602ec461d635977021db529ebbc
+    image: mongo:8.3.11@sha256:d731d77bfd7afd66bd487bdf627b5bf7ce4c3602ec461d635977021db529ebbc
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
     labels:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
-  
+
   core:
     image: ghcr.io/moghtech/komodo-core:2.3.3@sha256:bca73d0eee143066228fb9b80c38a5a2726e573ad2758f7aa92b5c91a8aef1c7
     container_name: komodo-core
