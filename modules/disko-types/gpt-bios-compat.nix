@@ -1,6 +1,6 @@
 # Configuration with a boot, ESP, swap, and a root partition, BIOS-compatible (good for default Proxmox VM)
 {
-  device ? throw "Set this to your disk device, e.g. /dev/sda",
+  device ? throw "Set this to your disk device, e.g. /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0",
   ...
 }:
 { 
