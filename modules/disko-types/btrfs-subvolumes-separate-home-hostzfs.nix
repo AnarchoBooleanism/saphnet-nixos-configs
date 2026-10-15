@@ -6,8 +6,8 @@
 # As well, block sizes are set to 16K, the default in Proxmox.
 # Much of this comes from https://github.com/nix-community/disko/blob/master/example/btrfs-subvolumes-hostzfs.nix
 {
-  rootDevice ? throw "Set this to your disk device, e.g. /dev/sda",
-  homeDevice ? throw "Set this to your disk device, e.g. /dev/sdb",
+  rootDevice ? throw "Set this to your disk device, e.g. /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0",
+  homeDevice ? throw "Set this to your disk device, e.g. /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1",
   ...
 }:
 { 

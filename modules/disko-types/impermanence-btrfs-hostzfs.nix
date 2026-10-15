@@ -22,7 +22,7 @@
 # Much of this comes from https://github.com/vimjoyer/impermanent-setup/blob/main/final/disko.nix
 
 {
-  device ? throw "Set this to your disk device, e.g. /dev/sda",
+  device ? throw "Set this to your disk device, e.g. /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0",
   ...
 }:
 { 

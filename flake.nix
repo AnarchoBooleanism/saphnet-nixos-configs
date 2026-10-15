@@ -39,8 +39,8 @@
             # Config-specific files
             instances/control-server/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs-split-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              dataDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              dataDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             })
             (import machines/control-server/configuration.nix {
               secretsFile = "${./instances/control-server/secrets.enc.yaml}"; 
@@ -56,8 +56,8 @@
             # Config-specific files
             instances/dev-server/hardware-configuration.nix
             (import modules/disko-types/btrfs-subvolumes-separate-home-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              homeDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              homeDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             }) # Need to set device name here
             (import machines/dev-server/configuration.nix {
               secretsFile = "${./instances/dev-server/secrets.enc.yaml}"; 
@@ -73,8 +73,8 @@
             # Config-specific files
             instances/docker-host-core/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs-split-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              dataDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              dataDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-core/secrets.enc.yaml}"; 
@@ -91,8 +91,8 @@
             instances/docker-host-pve3/hardware-configuration.nix
             modules/system-extras/intel-arc-gpu.nix # Since the target system has an Intel Arc A310
             (import modules/disko-types/impermanence-btrfs-split-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              dataDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              dataDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-pve3/secrets.enc.yaml}"; 
@@ -108,8 +108,8 @@
             # Config-specific files
             instances/docker-host-pve4/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs-split-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              dataDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              dataDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             })
             (import machines/docker-host/configuration.nix {
               secretsFile = "${./instances/docker-host-pve4/secrets.enc.yaml}"; 
@@ -125,8 +125,8 @@
             # Config-specific files
             instances/docker-host-core/hardware-configuration.nix
             (import modules/disko-types/impermanence-btrfs-split-hostzfs.nix {
-              rootDevice = "/dev/sda";
-              dataDevice = "/dev/sdb";
+              rootDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
+              dataDevice = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
             })
             (import machines/vpn-server/configuration.nix {
               secretsFile = "${./instances/vpn-server-1/secrets.enc.yaml}"; 
