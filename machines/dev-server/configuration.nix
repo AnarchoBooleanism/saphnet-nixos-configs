@@ -159,6 +159,7 @@
     keychain
     man-db
     nfs-utils
+    nixos-anywhere
     pciutils
     samba
   ];

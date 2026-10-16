@@ -35,6 +35,8 @@
     rsync
     bash-completion
     openssl
+    parted
+    efibootmgr
   ];
 
   boot.initrd = { # Support nfs systems
