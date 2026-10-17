@@ -24,7 +24,7 @@
     (modulesPath + "/profiles/qemu-guest.nix")
     # Internal modules
     (../.. + "/modules/nix-setup-types/default.nix")
-    (../.. + "/modules/system-types/proxmox-vm.nix")
+    (../.. + "/modules/system-types/qemu-kvm-vm.nix")
     (import (../.. + "/modules/user-login-types/default.nix") {
       # Note: This expects you to have something for the "main-password-hashed" sops-nix secret
       inherit inputs secretsFile;
@@ -90,7 +90,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   environment.systemPackages = with pkgs; [
-    # Important tools to have for dev server, does overlap with proxmox-vm Module
+    # Important tools to have for dev server, does overlap with qemu-kvm-vm Module
     # System monitoring
     btop
     dmidecode
