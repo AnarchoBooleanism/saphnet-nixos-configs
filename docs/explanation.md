@@ -33,10 +33,10 @@ They can be imported inside a Machine's `configuration.nix`, or imported alongsi
 
 **NOTE:** Modules are files with functionality that can be shared among Machines, and aren't tied to the inner workings of a specific Machine; if the workings of a specific set of settings and services can't be cleanly separated from a Machine, it should not be made into a Module.
 
-Here is an example of a Module, for configuring Machines that are meant to be run as virtual machines within Proxmox, `<REPO>/modules/system-types/proxmox-vm.nix`:
+Here is an example of a Module, for configuring Machines that are meant to be run as virtual machines within Proxmox, `<REPO>/modules/system-types/qemu-kvm-vm.nix`:
 ```nix
-# modules/system-types/proxmox-vm.nix
-# Setup configured to work best for servers running as VMs on Proxmox
+# modules/system-types/qemu-kvm-vm.nix
+# Setup configured to work best for servers running as VMs with QEMU and KVM
 {
   pkgs,
   ...
@@ -192,7 +192,7 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
     # Internal repository Modules
     (../.. + "/modules/nix-setup-types/default.nix")
-    (../.. + "/modules/system-types/proxmox-vm.nix")
+    (../.. + "/modules/system-types/qemu-kvm-vm.nix")
     ...
     (../.. + "/modules/virtualization/docker.nix")
     (../.. + "/modules/networking/tailscale.nix") # <- An example of a Module, for Tailscale functionality

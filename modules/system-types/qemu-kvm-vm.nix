@@ -1,4 +1,4 @@
-# Setup configured to work best for servers running as VMs on Proxmox
+# Setup configured to work best for servers running as VMs with QEMU and KVM
 {
   pkgs,
   ...
