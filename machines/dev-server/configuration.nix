@@ -122,12 +122,13 @@
     jdk25_headless
     kubernetes
     perl
-    ruby
     # pipx # pipx is still broken
     python314
     # python314Packages.pip
-    qemu_full
+    ruby
     rustc
+    qemu_full
+    uv
     # User tools
     age
     curl
