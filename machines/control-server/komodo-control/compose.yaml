@@ -9,7 +9,7 @@
 
 services:
   mongo:
-    image: mongo:8.3.13@sha256:d0c8f51bb63fb1f992f4ff05293adb3f0967aaaae32c3e5fa567907800819b3b
+    image: mongo:8.3.13@sha256:0e900a3364da37b76d642b73b0bba56bd4c6c509ab470cf700436fd866bee3ff
     volumes:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
@@ -26,7 +26,7 @@ services:
       komodo.skip: # Prevent Komodo from stopping with StopAllContainers
 
   core:
-    image: ghcr.io/moghtech/komodo-core:2.3.3@sha256:bca73d0eee143066228fb9b80c38a5a2726e573ad2758f7aa92b5c91a8aef1c7
+    image: ghcr.io/moghtech/komodo-core:2.3.4@sha256:bc2f9ae27030091a3468c641f50530cac79edccf993aa37049cd10f626dde0e7
     container_name: komodo-core
     depends_on:
       - mongo
@@ -72,7 +72,7 @@ services:
   ## or deploy the Periphery binary with systemd using 
   ## https://github.com/moghtech/komodo/tree/main/scripts
   periphery:
-    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.3@sha256:d1fa164b44b7baa48ac3f67c4e34b8c794f4ef05a9aa9cedecc06003f1b5c5fd # Temporary for now until Komodo adds SOPS or we build in-house solution
+    image: ghcr.io/nikhil-gohil/komodo-periphery-sops:v2.3.4@sha256:0514b7c0bb384fd5090f2b7e22caa45c2ab8947993db315494c910586f9ca8bc # Temporary for now until Komodo adds SOPS or we build in-house solution
     container_name: komodo-periphery
     volumes:
       ## Mount external docker socket
