@@ -34,7 +34,7 @@ services:
       ## whitelist / blacklist the disks to filter them, whichever is easier.
       ## Accepts comma separated list of paths.
       ## Usually whitelisting just /etc/hostname gives correct size for single root disk.
-      PERIPHERY_INCLUDE_DISK_MOUNTS: "/etc/hostname"
+      PERIPHERY_INCLUDE_DISK_MOUNTS: "${PERIPHERY_INCLUDE_DISK_MOUNTS:?}"
       # PERIPHERY_EXCLUDE_DISK_MOUNTS: /snap,/etc/repos
       # Key file for SOPS, to use in sops commands
       SOPS_AGE_KEY_FILE: "/root/.config/sops/age/keys.txt"

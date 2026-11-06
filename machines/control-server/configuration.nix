@@ -184,6 +184,25 @@ in
       export KOMODO_CONFIG_PATH=$(mktemp)
       ${pkgs.gettext}/bin/envsubst \'$GIT_ACCESS_TOKEN,$DOCKER_ACCESS_TOKEN\' < $KOMODO_CONFIG_TEMPLATE_PATH > $KOMODO_CONFIG_PATH
 
+      # Set up PERIPHERY_INCLUDE_DISK_MOUNTS
+      dir1="/persist"
+      dir2="/persist-data"
+
+      # Note: We want to check the actual partition UUIDs, since we are using btrfs subvols
+      uuid1=$(findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      uuid2=$(findmnt -no UUID --target "$(realpath "$dir2")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+      if [ -z "$uuid1" ] || [ -z "$uuid2" ]; then
+        printf "Error: Could not determine the filesystem for one or both directories.\n"
+        exit 1
+      fi
+
+      if [ "$uuid1" = "$uuid2" ]; then
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist"
+      else
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist,/persist-data"
+      fi
+
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';
   };

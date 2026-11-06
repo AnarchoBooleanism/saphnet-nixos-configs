@@ -105,6 +105,25 @@
       # Dynamically export variables from secrets files
       export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
 
+      # Set up PERIPHERY_INCLUDE_DISK_MOUNTS
+      dir1="/persist"
+      dir2="/persist-data"
+
+      # Note: We want to check the actual partition UUIDs, since we are using btrfs subvols
+      uuid1=$(findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      uuid2=$(findmnt -no UUID --target "$(realpath "$dir2")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+      if [ -z "$uuid1" ] || [ -z "$uuid2" ]; then
+        printf "Error: Could not determine the filesystem for one or both directories.\n"
+        exit 1
+      fi
+
+      if [ "$uuid1" = "$uuid2" ]; then
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist"
+      else
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist,/persist-data"
+      fi
+
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/compose.yaml} up
     '';
   };
