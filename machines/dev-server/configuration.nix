@@ -108,6 +108,7 @@
     tcpdump
     vnstat
     # Development
+    act
     ansible
     bundler
     cargo
