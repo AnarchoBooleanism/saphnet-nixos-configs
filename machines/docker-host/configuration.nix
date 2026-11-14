@@ -127,7 +127,7 @@
           export PERIPHERY_INCLUDE_DISK_MOUNTS="$dir1,$dir2"
       fi
 
-      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/compose.yaml} up
+      exec ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/compose.yaml} up
     '';
   };
 

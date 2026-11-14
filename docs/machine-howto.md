@@ -344,7 +344,7 @@ This is how the `version-lock.toml` file from above is used in a Machine's `conf
   systemd.services."example-service" = {
     ...
     script = with pkgs; ''
-      ${pkgs.docker}/bin/docker run example-image:${versionLock.state-version.program-version} # The version of the image, from version-lock.yaml
+      exec ${pkgs.docker}/bin/docker run example-image:${versionLock.state-version.program-version} # The version of the image, from version-lock.yaml
     '';
   };
   
@@ -555,7 +555,7 @@ systemd.services."komodo-control" = {
     export KOMODO_DB_PASSWORD=$(cat ${config.sops.secrets.komodo-db-pass.path})
     export KOMODO_PASSKEY=$(cat ${config.sops.secrets.komodo-passkey.path})
 
-    ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
+    exec ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
   '';
 };
 ```
@@ -726,7 +726,7 @@ systemd.services."hello-world" = {
     # Waiting for the network to actually come online
     sleep 5
 
-    ${pkgs.docker}/bin/docker compose -p hello-world -f ${./hello-world/compose.yaml} up
+    exec ${pkgs.docker}/bin/docker compose -p hello-world -f ${./hello-world/compose.yaml} up
   '';
 };
 ```
@@ -740,7 +740,7 @@ This is what each line does in our example:
   - `"network-online.target"` - This has us wait for the network to be online and accessible before starting, as we need the Internet in order to download the necessary Docker images. We also have this in our `wants` section to be extra sure the network is online when starting. Note that this does not guarantee that the Internet is in working order when the systemd service starts, which we will handle in the `script` section.
 - `script = with pkgs; '' ... ''` - This is the shell script (as a multi-line string) that the systemd service runs when it is started. We use `with pkgs` so that we can easily access the paths to NixOS packages (e.g. Docker) when evaluating the final contents of the script.
   - `sleep 5` - Since the Internet may not be in working order when the systemd service is started, we wait for 5 seconds before continuing (this is generally a sufficient amount of time to wait).
-  - `${pkgs.docker}/bin/docker compose -p hello-world -f ${./hello-world/compose.yaml} up` - This command actually starts the Docker Compose file (with `docker compose up`). Note that we refer to `pkgs.docker` here, which will automatically resolve to the path of the Docker package in the Nix store during the evaluation stage with our NixOS configuration; furthermore, this location is just a directory, so we have to specify `/bin/docker` in order to use the Docker binary. We set our project name (`-p`) as `hello-world`. The file here being used as the Docker Compose file is our `compose.yml` file from earlier, which is being referred to by its relative location to the `configuration.nix` file; this will be automatically resolved to its path in the Nix store during the evaluation stage with our NixOS configuration.
+  - `exec ${pkgs.docker}/bin/docker compose -p hello-world -f ${./hello-world/compose.yaml} up` - This command actually starts the Docker Compose file (with `docker compose up`). Note that we refer to `pkgs.docker` here, which will automatically resolve to the path of the Docker package in the Nix store during the evaluation stage with our NixOS configuration; furthermore, this location is just a directory, so we have to specify `/bin/docker` in order to use the Docker binary. We set our project name (`-p`) as `hello-world`. The file here being used as the Docker Compose file is our `compose.yml` file from earlier, which is being referred to by its relative location to the `configuration.nix` file; this will be automatically resolved to its path in the Nix store during the evaluation stage with our NixOS configuration. As well, `exec` is used so that the Docker process takes over the service PID and can properly handle signals (e.g. `SIGTERM`).
 
 Of course, we want to do more than just run hello-world: we also want to mount files and volumes for our Docker containers to work with. When it comes to local data that isn't shipped with the Nix flake repository, we just do the usual procedure for Docker Compose files (and if using Impermanence, ensuring their locations are saved as persistent).
 
@@ -765,7 +765,7 @@ systemd.services."reverse-proxy" = {
 
   script = with pkgs; ''
     ...
-    ${pkgs.docker}/bin/docker compose -p reverse-proxy -f ${./reverse-proxy/compose.yaml} up
+    exec ${pkgs.docker}/bin/docker compose -p reverse-proxy -f ${./reverse-proxy/compose.yaml} up
   '';
 };
 ```
@@ -805,7 +805,7 @@ systemd.services."example-service" = {
   script = with pkgs; ''
     export SECRET_2=$(cat ${config.sops.secrets.secret2.path})
 
-    ${pkgs.docker}/bin/docker compose -f ${./example-service/compose.yaml} up
+    exec ${pkgs.docker}/bin/docker compose -f ${./example-service/compose.yaml} up
   '';
 };
 ```
