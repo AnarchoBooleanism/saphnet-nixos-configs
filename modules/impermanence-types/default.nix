@@ -54,6 +54,7 @@
     ];
     files = [
       "/etc/machine-id"
+      "/etc/persist-dummy" # For disk size reporting
     ];
   };
 
@@ -63,6 +64,7 @@
     directories = [
       "/var/lib/systemd/coredump"
       "/var/log"
+      "/etc/persist-data-dummy" # For disk size reporting
     ];
   };
 

@@ -106,8 +106,8 @@
       export KOMODO_PUBLIC_KEY=$(cat ${config.sops.secrets.komodo-public-key.path})
 
       # Set up PERIPHERY_INCLUDE_DISK_MOUNTS
-      dir1="/persist"
-      dir2="/persist-data"
+      dir1="/etc/persist-dummy"
+      dir2="/etc/persist-data-dummy"
 
       # Note: We want to check the actual partition UUIDs, since we are using btrfs subvols
       uuid1=$(${pkgs.util-linux}/bin/findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
@@ -119,9 +119,9 @@
       fi
 
       if [ "$uuid1" = "$uuid2" ]; then
-          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist"
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="$dir1"
       else
-          export PERIPHERY_INCLUDE_DISK_MOUNTS="/persist,/persist-data"
+          export PERIPHERY_INCLUDE_DISK_MOUNTS="$dir1,$dir2"
       fi
 
       ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-periphery/compose.yaml} up
