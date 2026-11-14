@@ -188,6 +188,9 @@ in
       dir1="/etc/persist-dummy"
       dir2="/etc/persist-data-dummy"
 
+      # Make sure they exist
+      touch "$dir1" "$dir2"
+
       # Note: We want to check the actual partition UUIDs, since we are using btrfs subvols
       uuid1=$(${pkgs.util-linux}/bin/findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
       uuid2=$(${pkgs.util-linux}/bin/findmnt -no UUID --target "$(realpath "$dir2")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
