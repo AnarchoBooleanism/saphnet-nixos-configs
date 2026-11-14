@@ -189,8 +189,8 @@ in
       dir2="/persist-data"
 
       # Note: We want to check the actual partition UUIDs, since we are using btrfs subvols
-      uuid1=$(findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-      uuid2=$(findmnt -no UUID --target "$(realpath "$dir2")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      uuid1=$(${pkgs.util-linux}/bin/findmnt -no UUID --target "$(realpath "$dir1")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      uuid2=$(${pkgs.util-linux}/bin/findmnt -no UUID --target "$(realpath "$dir2")" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
       if [ -z "$uuid1" ] || [ -z "$uuid2" ]; then
         printf "Error: Could not determine the filesystem for one or both directories.\n"
