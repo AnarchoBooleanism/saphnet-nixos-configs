@@ -206,7 +206,7 @@ in
           export PERIPHERY_INCLUDE_DISK_MOUNTS="$dir1,$dir2"
       fi
 
-      ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
+      exec ${pkgs.docker}/bin/docker compose -p komodo -f ${./komodo-control/compose.yaml} --env-file ${./komodo-control/compose.env} up
     '';
   };
 
@@ -242,7 +242,7 @@ in
 
       export TZ=$(timedatectl show --va -p Timezone)
 
-      ${pkgs.docker}/bin/docker compose -p reverse-proxy -f ${./reverse-proxy/compose.yaml} up
+      exec ${pkgs.docker}/bin/docker compose -p reverse-proxy -f ${./reverse-proxy/compose.yaml} up
     '';
   };
 
