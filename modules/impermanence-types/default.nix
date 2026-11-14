@@ -64,6 +64,8 @@
     directories = [
       "/var/lib/systemd/coredump"
       "/var/log"
+    ];
+    files = [
       "/etc/persist-data-dummy" # For disk size reporting
     ];
   };
