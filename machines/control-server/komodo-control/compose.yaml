@@ -84,6 +84,9 @@ services:
       ## or docker will get confused. See https://github.com/moghtech/komodo/discussions/180.
       ## Default: /etc/komodo.
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
+      # To use for disk size reporting
+      - /etc/persist-dummy:/etc/persist-dummy:ro
+      - /etc/persist-data-dummy:/etc/persist-data-dummy:ro
     env_file: ${ENV_FILE}
     networks:
       - komodo-network

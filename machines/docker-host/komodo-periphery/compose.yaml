@@ -21,6 +21,9 @@ services:
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
       # SOPS key
       - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
+      # To use for disk size reporting
+      - /etc/persist-dummy:/etc/persist-dummy:ro
+      - /etc/persist-data-dummy:/etc/persist-data-dummy:ro
     environment:
       PERIPHERY_ROOT_DIRECTORY: "${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}"
       ## The public key of the Komodo Core connecting to this Periphery agent.
