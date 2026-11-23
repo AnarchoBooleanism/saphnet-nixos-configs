@@ -20,14 +20,14 @@ services:
       ## Default: /etc/komodo.
       - ${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}:${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}
       # SOPS key
-      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
+      - ${KOMODO_SOPS_KEY_PATH:?}:/root/.config/sops/age/keys.txt:ro
       # To use for disk size reporting
       - /etc/persist-dummy:/etc/persist-dummy:ro
       - /etc/persist-data-dummy:/etc/persist-data-dummy:ro
     environment:
       PERIPHERY_ROOT_DIRECTORY: "${PERIPHERY_ROOT_DIRECTORY:-/etc/komodo}"
       ## The public key of the Komodo Core connecting to this Periphery agent.
-      PERIPHERY_CORE_PUBLIC_KEYS: "${KOMODO_PUBLIC_KEY}"
+      PERIPHERY_CORE_PUBLIC_KEYS: "${KOMODO_PUBLIC_KEY:?}"
       ## Make server run over https
       PERIPHERY_SSL_ENABLED: "true"
       ## Specify whether to disable the terminals feature

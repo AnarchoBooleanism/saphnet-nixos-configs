@@ -14,8 +14,8 @@ services:
       - mongo-data:/data/db
       - mongo-config:/data/configdb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "${KOMODO_DB_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${KOMODO_DB_PASSWORD}"
+      MONGO_INITDB_ROOT_USERNAME: "${KOMODO_DB_USERNAME:?}"
+      MONGO_INITDB_ROOT_PASSWORD: "${KOMODO_DB_PASSWORD:?}"
     # ports:
     #   - "27017:27017"
     networks:
@@ -33,27 +33,27 @@ services:
     volumes:
       - komodo-keys:/config/keys
       ## Store dated backups of the database - https://komo.do/docs/setup/backup
-      - ${COMPOSE_KOMODO_BACKUPS_PATH}:/backups
+      - ${COMPOSE_KOMODO_BACKUPS_PATH:?}:/backups
       ## Store sync files on server
       # - /path/to/syncs:/syncs
       ## Optionally mount a custom core.config.toml
-      - ${KOMODO_CONFIG_PATH}:/config/config.toml
+      - ${KOMODO_CONFIG_PATH:?}:/config/config.toml
       # SOPS key
-      - ${KOMODO_SOPS_KEY_PATH}:/root/.config/sops/age/keys.txt:ro
+      - ${KOMODO_SOPS_KEY_PATH:?}:/root/.config/sops/age/keys.txt:ro
       # Bootstrap sync file
-      - ${KOMODO_BOOTSTRAP_SYNC_PATH}:/syncs/bootstrap.toml
+      - ${KOMODO_BOOTSTRAP_SYNC_PATH:?}:/syncs/bootstrap.toml
     environment:
       KOMODO_DATABASE_ADDRESS: mongo:27017
-      KOMODO_DATABASE_USERNAME: "${KOMODO_DB_USERNAME}"
-      KOMODO_DATABASE_PASSWORD: "${KOMODO_DB_PASSWORD}"
+      KOMODO_DATABASE_USERNAME: "${KOMODO_DB_USERNAME:?}"
+      KOMODO_DATABASE_PASSWORD: "${KOMODO_DB_PASSWORD:?}"
       # Key file for SOPS, to use in sops commands
       SOPS_AGE_KEY_FILE: "/root/.config/sops/age/keys.txt"
       # More custom vars
-      GIT_ACCESS_TOKEN: "${GIT_ACCESS_TOKEN}"
-      DOCKER_ACCESS_TOKEN: "${DOCKER_ACCESS_TOKEN}"
-      KOMODO_WEBHOOK_SECRET: "${KOMODO_WEBHOOK_SECRET}"
-      KOMODO_JWT_SECRET: "${KOMODO_JWT_SECRET}"
-    env_file: "${ENV_FILE}"
+      GIT_ACCESS_TOKEN: "${GIT_ACCESS_TOKEN:?}"
+      DOCKER_ACCESS_TOKEN: "${DOCKER_ACCESS_TOKEN:?}"
+      KOMODO_WEBHOOK_SECRET: "${KOMODO_WEBHOOK_SECRET:?}"
+      KOMODO_JWT_SECRET: "${KOMODO_JWT_SECRET:?}"
+    env_file: "${ENV_FILE:?}"
     ports:
       - "9120:9120"
     networks: # For connecting with other services directly
@@ -87,7 +87,7 @@ services:
       # To use for disk size reporting
       - /etc/persist-dummy:/etc/persist-dummy:ro
       - /etc/persist-data-dummy:/etc/persist-data-dummy:ro
-    env_file: ${ENV_FILE}
+    env_file: ${ENV_FILE:?}
     networks:
       - komodo-network
     restart: unless-stopped
